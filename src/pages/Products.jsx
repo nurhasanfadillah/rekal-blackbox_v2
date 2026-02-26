@@ -9,8 +9,10 @@ import {
   Trash2, 
   ArrowRight,
   Calculator,
-  Copy
+  Copy,
+  Camera
 } from 'lucide-react'
+
 
 
 const Products = () => {
@@ -106,9 +108,17 @@ const Products = () => {
               <a href={`/products/${product.id}`} className="block">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500/30 to-accent-violet/30 flex items-center justify-center">
-                      <Calculator className="w-6 h-6 text-primary-400" />
-                    </div>
+                    {product.photo_url ? (
+                      <img 
+                        src={product.photo_url} 
+                        alt={product.name}
+                        className="w-12 h-12 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500/30 to-accent-violet/30 flex items-center justify-center">
+                        <Camera className="w-6 h-6 text-primary-400" />
+                      </div>
+                    )}
                     <div>
                       <h3 className="font-medium text-white">{product.name}</h3>
                       {product.description && (
@@ -118,6 +128,7 @@ const Products = () => {
                   </div>
                   <ArrowRight className="w-5 h-5 text-slate-600" />
                 </div>
+
 
                 {/* Cost Summary */}
                 <div className="grid grid-cols-3 gap-2 text-center">

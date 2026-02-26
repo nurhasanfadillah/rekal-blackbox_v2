@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS products (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   description TEXT,
+  photo_url TEXT,
   overhead_percentage DECIMAL(5, 2) NOT NULL DEFAULT 20,
   target_margin_percentage DECIMAL(5, 2) NOT NULL DEFAULT 30,
   total_material_cost DECIMAL(12, 2) NOT NULL DEFAULT 0,
@@ -37,6 +38,7 @@ CREATE TABLE IF NOT EXISTS products (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
 
 -- Bill of Materials Table
 CREATE TABLE IF NOT EXISTS bill_of_materials (

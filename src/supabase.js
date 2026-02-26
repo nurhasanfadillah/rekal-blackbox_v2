@@ -132,10 +132,12 @@ export const db = {
         total_material_cost: totalMaterialCost,
         production_cost: productionCost,
         estimated_selling_price: sellingPrice,
-        gross_profit_per_unit: grossProfit
+        gross_profit_per_unit: grossProfit,
+        photo_url: product.photo_url || null
       }])
       .select()
       .single()
+
     
     if (productError) throw productError
     
@@ -177,6 +179,7 @@ export const db = {
         production_cost: productionCost,
         estimated_selling_price: sellingPrice,
         gross_profit_per_unit: grossProfit,
+        photo_url: product.photo_url || null,
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -184,6 +187,7 @@ export const db = {
       .single()
     
     if (productError) throw productError
+
     
     // Delete existing BoM items
     await supabase.from('bill_of_materials').delete().eq('product_id', id)
@@ -230,5 +234,23 @@ export const db = {
       .from('product-images')
       .getPublicUrl(path)
     return data.publicUrl
+  },
+  
+  async deleteImage(path) {
+    const { error } = await supabase.storage
+      .from('product-images')
+      .remove([path])
+    if (error) throw error
+  },
+  
+  async updateProductPhoto(id, photoUrl) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ photo_url: photoUrl, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw error
+    return data
   }
 }

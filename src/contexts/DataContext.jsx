@@ -207,7 +207,18 @@ export const DataProvider = ({ children }) => {
     }
   }
 
+  const updateProductPhoto = async (id, photoUrl) => {
+    try {
+      const updated = await db.updateProductPhoto(id, photoUrl)
+      setProducts(prev => prev.map(p => p.id === id ? { ...p, photo_url: photoUrl } : p))
+      return updated
+    } catch (err) {
+      throw err
+    }
+  }
+
   const refreshAll = useCallback(async () => {
+
     await Promise.all([
       fetchCategories(),
       fetchMaterials(),
@@ -243,8 +254,10 @@ export const DataProvider = ({ children }) => {
     createProduct,
     updateProduct,
     deleteProduct,
+    updateProductPhoto,
     
     refreshAll
+
   }
 
   return (

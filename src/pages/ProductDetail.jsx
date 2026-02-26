@@ -11,8 +11,10 @@ import {
   DollarSign,
   Calculator,
   Layers,
-  Copy
+  Copy,
+  Camera
 } from 'lucide-react'
+
 
 
 const ProductDetail = () => {
@@ -85,11 +87,27 @@ const ProductDetail = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex-1">
-          <h1 className="page-title mb-0">{product.name}</h1>
-          {product.description && (
-            <p className="text-sm text-slate-500">{product.description}</p>
-          )}
+          <div className="flex items-center gap-4">
+            {product.photo_url ? (
+              <img 
+                src={product.photo_url} 
+                alt={product.name}
+                className="w-16 h-16 rounded-2xl object-cover"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/30 to-accent-violet/30 flex items-center justify-center">
+                <Camera className="w-8 h-8 text-primary-400" />
+              </div>
+            )}
+            <div>
+              <h1 className="page-title mb-0">{product.name}</h1>
+              {product.description && (
+                <p className="text-sm text-slate-500">{product.description}</p>
+              )}
+            </div>
+          </div>
         </div>
+
         <div className="flex gap-2">
           <a 
             href={`/products/copy/${id}`}

@@ -15,6 +15,8 @@ import {
   ChevronDown,
   Loader2
 } from 'lucide-react'
+import ProductPhotoUpload from '../components/ProductPhotoUpload'
+
 
 const ProductForm = () => {
   const { id } = useParams()
@@ -40,9 +42,11 @@ const ProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    photo_url: '',
     overhead_percentage: '20',
     target_margin_percentage: '30'
   })
+
   const [bomItems, setBomItems] = useState([])
   const [formErrors, setFormErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
@@ -87,9 +91,11 @@ const ProductForm = () => {
       setFormData({
         name: isCopyMode ? '' : product.name,
         description: product.description || '',
+        photo_url: product.photo_url || '',
         overhead_percentage: product.overhead_percentage.toString(),
         target_margin_percentage: product.target_margin_percentage.toString()
       })
+
       
       // Store original name for copy mode validation
       if (isCopyMode) {
@@ -178,9 +184,11 @@ const ProductForm = () => {
       const productData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
+        photo_url: formData.photo_url || null,
         overhead_percentage: parseFloat(formData.overhead_percentage),
         target_margin_percentage: parseFloat(formData.target_margin_percentage)
       }
+
       
       const bomData = bomItems.map(item => ({
         material_id: item.material_id,
@@ -236,9 +244,22 @@ const ProductForm = () => {
             Informasi Dasar
           </h3>
           
+          {/* Product Photo Upload */}
+          <div className="mb-4">
+            <label className="input-label">Foto Produk</label>
+            <ProductPhotoUpload
+              productId={isEditMode ? id : null}
+              currentPhotoUrl={formData.photo_url}
+              onPhotoChange={(url) => setFormData({ ...formData, photo_url: url })}
+              size="large"
+              editable={true}
+            />
+          </div>
+          
           <div className="space-y-4">
             <div>
               <label className="input-label">Nama Produk</label>
+
               <input
                 type="text"
                 value={formData.name}

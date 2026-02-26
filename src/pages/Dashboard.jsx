@@ -9,8 +9,10 @@ import {
   ArrowUpRight,
   Calculator,
   AlertCircle,
-  Database
+  Database,
+  Camera
 } from 'lucide-react'
+
 
 const Dashboard = () => {
   const { 
@@ -171,12 +173,24 @@ const Dashboard = () => {
                 className="list-item block"
               >
                 <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-medium text-white mb-1">{product.name}</h4>
-
-                    <p className="text-xs text-slate-500">
-                      HPP: {formatRupiah(product.production_cost)}
-                    </p>
+                  <div className="flex items-center gap-3">
+                    {product.photo_url ? (
+                      <img 
+                        src={product.photo_url} 
+                        alt={product.name}
+                        className="w-10 h-10 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/30 to-accent-violet/30 flex items-center justify-center">
+                        <Camera className="w-5 h-5 text-primary-400" />
+                      </div>
+                    )}
+                    <div>
+                      <h4 className="font-medium text-white mb-1">{product.name}</h4>
+                      <p className="text-xs text-slate-500">
+                        HPP: {formatRupiah(product.production_cost)}
+                      </p>
+                    </div>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-accent-emerald text-sm">
@@ -189,6 +203,7 @@ const Dashboard = () => {
                 </div>
               </a>
             ))}
+
           </div>
         )}
       </div>

@@ -289,12 +289,68 @@ export const db = {
   },
   
   async deleteProduct(id) {
+    // First, delete all associated photos from storage
+    await this.deleteProductPhotosFromStorage(id)
+    
+    // Then delete the product (cascade will delete photo records)
     const { error } = await supabase
       .from('products')
       .delete()
       .eq('id', id)
     if (error) throw error
   },
+
+  // Helper to extract storage path from photo URL
+  getStoragePathFromUrl(photoUrl) {
+    try {
+      const url = new URL(photoUrl)
+      const pathMatch = url.pathname.match(/\/product-images\/(.+)$/)
+      return pathMatch ? pathMatch[1] : null
+    } catch (err) {
+      console.error('Failed to parse photo URL:', err)
+      return null
+    }
+  },
+
+  // Delete all photos for a product from storage
+  async deleteProductPhotosFromStorage(productId) {
+    try {
+      // Get all photos for this product
+      const { data: photos, error: fetchError } = await supabase
+        .from('product_photos')
+        .select('photo_url')
+        .eq('product_id', productId)
+      
+      if (fetchError) {
+        console.error('Failed to fetch product photos:', fetchError)
+        return
+      }
+
+      if (!photos || photos.length === 0) return
+
+      // Extract storage paths and delete files
+      const pathsToDelete = []
+      for (const photo of photos) {
+        const path = this.getStoragePathFromUrl(photo.photo_url)
+        if (path) {
+          pathsToDelete.push(path)
+        }
+      }
+
+      if (pathsToDelete.length > 0) {
+        const { error: deleteError } = await supabase.storage
+          .from('product-images')
+          .remove(pathsToDelete)
+        
+        if (deleteError) {
+          console.error('Failed to delete some images from storage:', deleteError)
+        }
+      }
+    } catch (err) {
+      console.error('Error deleting product photos from storage:', err)
+    }
+  },
+
   
   // File upload
   async uploadImage(file, path) {
@@ -392,7 +448,28 @@ export const db = {
     }
   },
 
-  async updateProductPhotos(productId, photos) {
+  async updateProductPhotos(productId, photos, removedPhotoUrls = []) {
+    // Delete removed photos from storage first
+    if (removedPhotoUrls.length > 0) {
+      const pathsToDelete = []
+      for (const photoUrl of removedPhotoUrls) {
+        const path = this.getStoragePathFromUrl(photoUrl)
+        if (path) {
+          pathsToDelete.push(path)
+        }
+      }
+      
+      if (pathsToDelete.length > 0) {
+        try {
+          await supabase.storage
+            .from('product-images')
+            .remove(pathsToDelete)
+        } catch (err) {
+          console.error('Failed to delete removed images from storage:', err)
+        }
+      }
+    }
+
     // Delete existing photos not in the new list
     const { error: deleteError } = await supabase
       .from('product_photos')
@@ -417,4 +494,5 @@ export const db = {
       if (insertError) throw insertError
     }
   }
+
 }

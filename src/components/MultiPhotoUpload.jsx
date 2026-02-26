@@ -8,8 +8,9 @@ const MultiPhotoUpload = ({
   existingPhotos = [],
   onPhotosChange,
   maxPhotos = 10,
-  maxFileSize = 5 * 1024 * 1024 // 5MB
+  maxFileSize = 2 * 1024 * 1024 // 2MB
 }) => {
+
   const [uploading, setUploading] = useState(false)
   const [photos, setPhotos] = useState(existingPhotos)
   const [draggingIndex, setDraggingIndex] = useState(null)
@@ -27,17 +28,24 @@ const MultiPhotoUpload = ({
     }
 
     setUploading(true)
+    
+    // Track current photos in a local variable to avoid stale state issues
+    let currentPhotos = [...photos]
+    let uploadedCount = 0
+    let failedCount = 0
 
     for (const file of files) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
         showError(`File "${file.name}" harus berupa gambar`)
+        failedCount++
         continue
       }
 
       // Validate file size
       if (file.size > maxFileSize) {
-        showError(`File "${file.name}" melebihi 5MB`)
+        showError(`File "${file.name}" melebihi 2MB`)
+        failedCount++
         continue
       }
 
@@ -56,20 +64,19 @@ const MultiPhotoUpload = ({
         // Get public URL
         const publicUrl = db.getImageUrl(filePath)
 
-        // Add to photos array
+        // Add to photos array using the local variable
         const newPhoto = {
           id: `temp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           photo_url: publicUrl,
           file_name: file.name,
           file_size: file.size,
           mime_type: file.type,
-          display_order: photos.length,
+          display_order: currentPhotos.length,
           isNew: true // Mark as new photo
         }
 
-        const updatedPhotos = [...photos, newPhoto]
-        setPhotos(updatedPhotos)
-        onPhotosChange?.(updatedPhotos)
+        currentPhotos = [...currentPhotos, newPhoto]
+        uploadedCount++
 
         // Cleanup preview URL
         URL.revokeObjectURL(objectUrl)
@@ -77,17 +84,27 @@ const MultiPhotoUpload = ({
       } catch (err) {
         console.error('Upload error:', err)
         showError(`Gagal mengupload ${file.name}: ${err.message}`)
+        failedCount++
       }
     }
 
+    // Update state once after all uploads complete
+    setPhotos(currentPhotos)
+    onPhotosChange?.(currentPhotos)
+    
     setUploading(false)
-    success(`${files.length} foto berhasil diupload`)
+    
+    // Show appropriate success message
+    if (uploadedCount > 0) {
+      success(`${uploadedCount} foto berhasil diupload`)
+    }
     
     // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
   }
+
 
   const handleRemovePhoto = async (photoId, index) => {
     const photo = photos[index]
@@ -242,8 +259,9 @@ const MultiPhotoUpload = ({
       {/* Info Text */}
       <div className="flex items-center justify-between text-xs text-slate-500">
         <span>{photos.length} / {maxPhotos} foto</span>
-        <span>Maks 5MB per foto (JPG, PNG, WebP)</span>
+        <span>Maks 2MB per foto (JPG, PNG, WebP)</span>
       </div>
+
 
       {/* Upload Progress */}
       {uploading && (

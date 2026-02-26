@@ -51,9 +51,11 @@ const ProductForm = () => {
   })
 
   const [productPhotos, setProductPhotos] = useState([])
+  const [removedPhotoUrls, setRemovedPhotoUrls] = useState([]) // Track deleted photos for storage cleanup
   const [bomItems, setBomItems] = useState([])
 
   const [formErrors, setFormErrors] = useState({})
+
   const [submitting, setSubmitting] = useState(false)
   const [loadingProduct, setLoadingProduct] = useState(isEditMode || isCopyMode)
   const [originalProductName, setOriginalProductName] = useState(null)
@@ -103,6 +105,8 @@ const ProductForm = () => {
       // Load product photos
       const photos = product.product_photos || []
       setProductPhotos(photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)))
+      setRemovedPhotoUrls([]) // Reset removed photos tracking
+
 
 
       
@@ -222,11 +226,11 @@ const ProductForm = () => {
         file_size: photo.file_size || null,
         mime_type: photo.mime_type || null
       }))
-      await db.updateProductPhotos(productId, photosToSave)
-
+      await db.updateProductPhotos(productId, photosToSave, removedPhotoUrls)
 
       
       navigate('/products')
+
     } catch (err) {
       showError(err.message || 'Gagal menyimpan produk')
       setSubmitting(false)
@@ -271,12 +275,24 @@ const ProductForm = () => {
               <Images className="w-4 h-4 text-primary-400" />
               Foto Produk
             </label>
-            <MultiPhotoUpload
-              productId={isEditMode ? id : null}
-              existingPhotos={productPhotos}
-              onPhotosChange={setProductPhotos}
-              maxPhotos={10}
-            />
+          <MultiPhotoUpload
+            productId={isEditMode ? id : null}
+            existingPhotos={productPhotos}
+            onPhotosChange={(newPhotos) => {
+              // Track removed photos for storage cleanup
+              const removed = productPhotos.filter(
+                oldPhoto => !newPhotos.find(newPhoto => newPhoto.id === oldPhoto.id)
+              ).map(p => p.photo_url)
+              
+              if (removed.length > 0) {
+                setRemovedPhotoUrls(prev => [...prev, ...removed])
+              }
+              
+              setProductPhotos(newPhotos)
+            }}
+            maxPhotos={10}
+          />
+
           </div>
 
           

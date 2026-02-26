@@ -11,11 +11,9 @@ import {
   Calculator,
   Copy,
   Camera,
-  Images,
-  TrendingUp,
-  DollarSign,
-  Package
+  Images
 } from 'lucide-react'
+
 
 
 
@@ -158,30 +156,12 @@ const Products = () => {
                     )}
                   </a>
 
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-2 mb-4">
-                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <Package className="w-3 h-3 text-slate-500" />
-                      </div>
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">HPP</p>
-                      <p className="text-sm font-semibold text-white truncate">{formatRupiah(product.production_cost)}</p>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <DollarSign className="w-3 h-3 text-accent-emerald" />
-                      </div>
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">Jual</p>
-                      <p className="text-sm font-semibold text-accent-emerald truncate">{formatRupiah(product.estimated_selling_price)}</p>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <TrendingUp className="w-3 h-3 text-accent-cyan" />
-                      </div>
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">Laba</p>
-                      <p className="text-sm font-semibold text-accent-cyan truncate">{formatRupiah(product.gross_profit_per_unit)}</p>
-                    </div>
+                  {/* COGS */}
+                  <div className="flex items-center justify-between py-3 border-t border-slate-700/50 mb-3">
+                    <span className="text-sm text-slate-400">HPP</span>
+                    <span className="text-base font-semibold text-white">{formatRupiah(product.production_cost)}</span>
                   </div>
+
 
                   {/* Action Buttons */}
                   <div className="flex gap-2">

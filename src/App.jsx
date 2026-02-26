@@ -117,7 +117,16 @@ function AppContent() {
           </ProtectedRoute>
         } />
         
+        <Route path="/products/copy/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProductForm />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
+
         </Routes>
         <Toast />
       </Router>

@@ -10,8 +10,10 @@ import {
   TrendingUp, 
   DollarSign,
   Calculator,
-  Layers
+  Layers,
+  Copy
 } from 'lucide-react'
+
 
 const ProductDetail = () => {
   const { id } = useParams()
@@ -90,8 +92,16 @@ const ProductDetail = () => {
         </div>
         <div className="flex gap-2">
           <a 
+            href={`/products/copy/${id}`}
+            className="p-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+            title="Salin Produk"
+          >
+            <Copy className="w-5 h-5" />
+          </a>
+          <a 
             href={`/products/${id}/edit`}
             className="p-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+            title="Edit Produk"
           >
             <Edit2 className="w-5 h-5" />
           </a>
@@ -99,6 +109,7 @@ const ProductDetail = () => {
             onClick={handleDelete}
             disabled={deleting}
             className="p-2 text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors disabled:opacity-50"
+            title="Hapus Produk"
           >
             {deleting ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-accent-rose"></div>
@@ -107,6 +118,7 @@ const ProductDetail = () => {
             )}
           </button>
         </div>
+
       </div>
 
       {/* Cost Summary Cards */}

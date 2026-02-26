@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
 import { validateProductForm, hasErrors } from '../utils/validators'
@@ -19,7 +19,10 @@ import {
 const ProductForm = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const isEditMode = !!id
+  const location = useLocation()
+  const isEditMode = !!id && !location.pathname.includes('/copy/')
+  const isCopyMode = location.pathname.includes('/copy/')
+
   
   const { 
     materials, 
@@ -43,9 +46,10 @@ const ProductForm = () => {
   const [bomItems, setBomItems] = useState([])
   const [formErrors, setFormErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
-  const [loadingProduct, setLoadingProduct] = useState(isEditMode)
+  const [loadingProduct, setLoadingProduct] = useState(isEditMode || isCopyMode)
 
   // Calculated values
+
   const [calculations, setCalculations] = useState({
     totalMaterialCost: 0,
     productionCost: 0,
@@ -59,12 +63,13 @@ const ProductForm = () => {
 
   useEffect(() => {
     fetchMaterials()
-    if (isEditMode) {
+    if (isEditMode || isCopyMode) {
       loadProduct()
     } else {
       fetchProducts()
     }
-  }, [fetchMaterials, fetchProducts, isEditMode])
+  }, [fetchMaterials, fetchProducts, isEditMode, isCopyMode])
+
 
   useEffect(() => {
     // Recalculate whenever BoM or percentages change
@@ -78,7 +83,7 @@ const ProductForm = () => {
     try {
       const product = await getProduct(id)
       setFormData({
-        name: product.name,
+        name: isCopyMode ? '' : product.name,
         description: product.description || '',
         overhead_percentage: product.overhead_percentage.toString(),
         target_margin_percentage: product.target_margin_percentage.toString()
@@ -100,6 +105,7 @@ const ProductForm = () => {
       setLoadingProduct(false)
     }
   }
+
 
   const handleAddBomItem = () => {
     setBomItems([...bomItems, { material_id: '', material: null, price: 0, quantity: 1 }])
@@ -149,6 +155,7 @@ const ProductForm = () => {
     
     const errors = validateProductForm(dataToValidate, bomItems, products, isEditMode ? id : null)
     setFormErrors(errors)
+
     
     if (hasErrors(errors)) {
       if (errors.bom) {
@@ -177,8 +184,9 @@ const ProductForm = () => {
         success('Produk berhasil diperbarui')
       } else {
         await createProduct(productData, bomData)
-        success('Produk berhasil ditambahkan')
+        success(isCopyMode ? 'Produk berhasil disalin' : 'Produk berhasil ditambahkan')
       }
+
       
       navigate('/products')
     } catch (err) {
@@ -206,8 +214,9 @@ const ProductForm = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="page-title mb-0">
-          {isEditMode ? 'Edit Produk' : 'Tambah Produk'}
+          {isEditMode ? 'Edit Produk' : isCopyMode ? 'Salin Produk' : 'Tambah Produk'}
         </h1>
+
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -439,9 +448,10 @@ const ProductForm = () => {
             {submitting ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              isEditMode ? 'Simpan' : 'Tambah'
+              isEditMode ? 'Simpan' : isCopyMode ? 'Salin' : 'Tambah'
             )}
           </button>
+
         </div>
       </form>
 

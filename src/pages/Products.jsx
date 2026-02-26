@@ -8,8 +8,10 @@ import {
   Search, 
   Trash2, 
   ArrowRight,
-  Calculator
+  Calculator,
+  Copy
 } from 'lucide-react'
+
 
 const Products = () => {
   const { products, loading, errors, fetchProducts, deleteProduct } = useData()
@@ -134,7 +136,14 @@ const Products = () => {
                 </div>
               </a>
 
-              <div className="flex justify-end mt-3 pt-3 border-t border-slate-700/50">
+              <div className="flex justify-end mt-3 pt-3 border-t border-slate-700/50 gap-2">
+                <a
+                  href={`/products/copy/${product.id}`}
+                  className="flex items-center gap-2 px-3 py-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors text-sm"
+                >
+                  <Copy className="w-4 h-4" />
+                  Salin
+                </a>
                 <button
                   onClick={() => handleDelete(product.id)}
                   disabled={deletingId === product.id}
@@ -148,6 +157,7 @@ const Products = () => {
                   Hapus
                 </button>
               </div>
+
             </div>
           ))}
         </div>

@@ -39,12 +39,26 @@ export const db = {
   },
   
   async deleteCategory(id) {
+    // Check if any materials are linked to this category
+    const { data: linkedMaterials, error: checkError } = await supabase
+      .from('materials')
+      .select('id')
+      .eq('category_id', id)
+      .limit(1)
+    
+    if (checkError) throw checkError
+    
+    if (linkedMaterials && linkedMaterials.length > 0) {
+      throw new Error('Kategori tidak dapat dihapus karena masih memiliki material terkait')
+    }
+    
     const { error } = await supabase
       .from('categories')
       .delete()
       .eq('id', id)
     if (error) throw error
   },
+
   
   // Materials
   async getMaterials() {

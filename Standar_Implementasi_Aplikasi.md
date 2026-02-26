@@ -1,0 +1,42 @@
+Implementasi Aplikasi Mobile
+
+1. Teknologi & Arsitektur9
+
+1.1 Approach: Mobile-first dan modular scalable.
+
+1.2 Frontend:
+1.2.1 React (versi terbaru)
+1.2.3 Vite (versi terbaru)
+1.2.3 Tailwind CSS (versi terbaru)
+1.2.4 Progressive Web App (PWA)
+
+1.3 Backend: Supabase
+
+1.4 Database: PostgreSQL
+
+1.5 Deployment:
+1.5.1 Netlify
+1.5.2 Implementasikan aplikasi mobile berdasarkan dokumen yang telah diberikan.
+1.5.3 Integrasikan Supabase sebagai backend, database, dan penyimpanan file.
+1.5.4 Implementasikan PWA secara optimal pada sisi frontend.
+
+2. Standar UX & UI
+2.1 Optimalkan UI untuk layar mobile dengan gaya modern, elegan, dan futuristik.
+2.2 Gunakan tema UI/UX Corporate Modern.
+2.3 Navigasi harus ringkas dan intuitif.
+2.4 Proses input data harus cepat dan efisien.
+2.5 Gunakan Bahasa Indonesia pada antarmuka (UI).
+
+3. Standar Regional
+3.1 Gunakan format Indonesia untuk mata uang, angka, dan tanggal.
+3.2 Tetapkan timezone: Indonesia/Jakarta.
+
+4. Dokumentasi, Pengujian & Referensi Teknis
+4.1 Dokumentasikan alur (flow) sistem sejak tahap awal pengembangan dan gunakan ToDo.
+4.2 Lakukan pengujian setelah setiap tugas diselesaikan dan perbaiki jika ditemukan kesalahan.
+4.3 Selalu gunakan Context7 MCP untuk kebutuhan dokumentasi library/API, code generation, serta langkah setup atau konfigurasi tanpa perlu diminta secara eksplisit.
+
+Gunakan kredensial supabase berikut:
+API URL: https://rtvprftiezzyyyqglydv.supabase.co
+API Keys: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0dnByZnRpZXp6eXl5cWdseWR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjQ4MDgsImV4cCI6MjA4NzcwMDgwOH0.n6x2WiM3N8Qzi3PZtlf0aHGfqdX30D7NAaAWCOV84nE
+

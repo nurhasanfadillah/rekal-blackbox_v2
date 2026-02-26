@@ -10,8 +10,13 @@ import {
   ArrowRight,
   Calculator,
   Copy,
-  Camera
+  Camera,
+  Images,
+  TrendingUp,
+  DollarSign,
+  Package
 } from 'lucide-react'
+
 
 
 
@@ -85,9 +90,8 @@ const Products = () => {
         </div>
       )}
 
-      {/* Products List */}
+      {/* Products Grid */}
       {loading.products ? (
-
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
         </div>
@@ -102,77 +106,111 @@ const Products = () => {
           </a>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filteredProducts.map(product => (
-            <div key={product.id} className="list-item">
-              <a href={`/products/${product.id}`} className="block">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    {product.photo_url ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProducts.map(product => {
+            const photos = product.product_photos || []
+            const hasPhotos = photos.length > 0
+            const firstPhoto = hasPhotos ? photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))[0] : null
+            
+            return (
+              <div 
+                key={product.id} 
+                className="group bg-slate-800/50 hover:bg-slate-800 rounded-2xl border border-slate-700/50 hover:border-primary-500/30 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-primary-500/5"
+              >
+                {/* Product Image */}
+                <a href={`/products/${product.id}`} className="block relative aspect-[4/3] overflow-hidden bg-slate-900">
+                  {firstPhoto ? (
+                    <>
                       <img 
-                        src={product.photo_url} 
+                        src={firstPhoto.photo_url} 
                         alt={product.name}
-                        className="w-12 h-12 rounded-xl object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                    ) : (
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500/30 to-accent-violet/30 flex items-center justify-center">
-                        <Camera className="w-6 h-6 text-primary-400" />
-                      </div>
-                    )}
-                    <div>
-                      <h3 className="font-medium text-white">{product.name}</h3>
-                      {product.description && (
-                        <p className="text-xs text-slate-500 line-clamp-1">{product.description}</p>
+                      {/* Photo Count Badge */}
+                      {photos.length > 1 && (
+                        <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-lg flex items-center gap-1.5 text-white text-xs">
+                          <Images className="w-3.5 h-3.5" />
+                          <span>{photos.length}</span>
+                        </div>
                       )}
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-violet/20 flex items-center justify-center mb-3">
+                        <Camera className="w-8 h-8 text-primary-400/60" />
+                      </div>
+                      <span className="text-slate-600 text-sm">Belum ada foto</span>
+                    </div>
+                  )}
+                  
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </a>
+
+                {/* Product Info */}
+                <div className="p-4">
+                  <a href={`/products/${product.id}`} className="block mb-3">
+                    <h3 className="font-semibold text-white text-lg leading-tight group-hover:text-primary-400 transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    {product.description && (
+                      <p className="text-sm text-slate-500 mt-1 line-clamp-2">{product.description}</p>
+                    )}
+                  </a>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-2 mb-4">
+                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
+                      <div className="flex items-center justify-center gap-1 mb-1">
+                        <Package className="w-3 h-3 text-slate-500" />
+                      </div>
+                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">HPP</p>
+                      <p className="text-sm font-semibold text-white truncate">{formatRupiah(product.production_cost)}</p>
+                    </div>
+                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
+                      <div className="flex items-center justify-center gap-1 mb-1">
+                        <DollarSign className="w-3 h-3 text-accent-emerald" />
+                      </div>
+                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">Jual</p>
+                      <p className="text-sm font-semibold text-accent-emerald truncate">{formatRupiah(product.estimated_selling_price)}</p>
+                    </div>
+                    <div className="bg-slate-900/50 rounded-xl p-2.5 text-center">
+                      <div className="flex items-center justify-center gap-1 mb-1">
+                        <TrendingUp className="w-3 h-3 text-accent-cyan" />
+                      </div>
+                      <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-0.5">Laba</p>
+                      <p className="text-sm font-semibold text-accent-cyan truncate">{formatRupiah(product.gross_profit_per_unit)}</p>
                     </div>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-slate-600" />
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <a
+                      href={`/products/copy/${product.id}`}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-primary-500/20 text-slate-400 hover:text-primary-400 rounded-xl transition-all text-sm font-medium"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Salin
+                    </a>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      disabled={deletingId === product.id}
+                      className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-accent-rose/20 text-slate-400 hover:text-accent-rose rounded-xl transition-all text-sm font-medium disabled:opacity-50"
+                    >
+                      {deletingId === product.id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-rose"></div>
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-
-
-                {/* Cost Summary */}
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-slate-800/50 rounded-lg p-2">
-                    <p className="text-xs text-slate-500 mb-1">HPP</p>
-                    <p className="text-sm font-semibold text-white">{formatRupiah(product.production_cost)}</p>
-                  </div>
-                  <div className="bg-slate-800/50 rounded-lg p-2">
-                    <p className="text-xs text-slate-500 mb-1">Harga Jual</p>
-                    <p className="text-sm font-semibold text-accent-emerald">{formatRupiah(product.estimated_selling_price)}</p>
-                  </div>
-                  <div className="bg-slate-800/50 rounded-lg p-2">
-                    <p className="text-xs text-slate-500 mb-1">Laba</p>
-                    <p className="text-sm font-semibold text-accent-cyan">{formatRupiah(product.gross_profit_per_unit)}</p>
-                  </div>
-                </div>
-              </a>
-
-              <div className="flex justify-end mt-3 pt-3 border-t border-slate-700/50 gap-2">
-                <a
-                  href={`/products/copy/${product.id}`}
-                  className="flex items-center gap-2 px-3 py-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors text-sm"
-                >
-                  <Copy className="w-4 h-4" />
-                  Salin
-                </a>
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  disabled={deletingId === product.id}
-                  className="flex items-center gap-2 px-3 py-2 text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors text-sm disabled:opacity-50"
-                >
-                  {deletingId === product.id ? (
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-rose"></div>
-                  ) : (
-                    <Trash2 className="w-4 h-4" />
-                  )}
-                  Hapus
-                </button>
               </div>
-
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
+
     </div>
   )
 }

@@ -97,23 +97,85 @@ export const db = {
   
   // Products
   async getProducts() {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (error) throw error
-    return data
+    // Try with product_photos (new schema), fallback to old schema
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*, product_photos(*)')
+        .order('created_at', { ascending: false })
+      if (error) {
+        // If product_photos table doesn't exist, query without it
+        if (error.message?.includes('product_photos') || error.code === 'PGRST200') {
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false })
+          if (fallbackError) throw fallbackError
+          // Convert old photo_url to new format
+          return fallbackData.map(p => ({
+            ...p,
+            product_photos: p.photo_url ? [{ id: 'legacy', photo_url: p.photo_url, display_order: 0 }] : []
+          }))
+        }
+        throw error
+      }
+      return data
+    } catch (err) {
+      // Final fallback
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return data.map(p => ({
+        ...p,
+        product_photos: p.photo_url ? [{ id: 'legacy', photo_url: p.photo_url, display_order: 0 }] : []
+      }))
+    }
   },
   
   async getProductById(id) {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*, bill_of_materials(*, materials(*, categories(name)))')
-      .eq('id', id)
-      .single()
-    if (error) throw error
-    return data
+    // Try with product_photos (new schema), fallback to old schema
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*, bill_of_materials(*, materials(*, categories(name))), product_photos(*)')
+        .eq('id', id)
+        .single()
+      if (error) {
+        // If product_photos table doesn't exist, query without it
+        if (error.message?.includes('product_photos') || error.code === 'PGRST200') {
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('products')
+            .select('*, bill_of_materials(*, materials(*, categories(name)))')
+            .eq('id', id)
+            .single()
+          if (fallbackError) throw fallbackError
+          // Convert old photo_url to new format
+          return {
+            ...fallbackData,
+            product_photos: fallbackData.photo_url ? [{ id: 'legacy', photo_url: fallbackData.photo_url, display_order: 0 }] : []
+          }
+        }
+        throw error
+      }
+      return data
+    } catch (err) {
+      // Final fallback
+      const { data, error } = await supabase
+        .from('products')
+        .select('*, bill_of_materials(*, materials(*, categories(name)))')
+        .eq('id', id)
+        .single()
+      if (error) throw error
+      return {
+        ...data,
+        product_photos: data.photo_url ? [{ id: 'legacy', photo_url: data.photo_url, display_order: 0 }] : []
+      }
+    }
   },
+
+
   
   async createProduct(product, bomItems) {
     // Calculate costs
@@ -252,5 +314,93 @@ export const db = {
       .single()
     if (error) throw error
     return data
+  },
+
+  // Product Photos (Multiple)
+  async getProductPhotos(productId) {
+    const { data, error } = await supabase
+      .from('product_photos')
+      .select('*')
+      .eq('product_id', productId)
+      .order('display_order', { ascending: true })
+    if (error) throw error
+    return data
+  },
+
+  async addProductPhoto(productId, photoUrl, fileInfo = {}) {
+    // Get current max display order
+    const { data: existingPhotos } = await supabase
+      .from('product_photos')
+      .select('display_order')
+      .eq('product_id', productId)
+      .order('display_order', { ascending: false })
+      .limit(1)
+
+    const nextOrder = existingPhotos?.[0]?.display_order + 1 || 0
+
+    const { data, error } = await supabase
+      .from('product_photos')
+      .insert([{
+        product_id: productId,
+        photo_url: photoUrl,
+        display_order: nextOrder,
+        file_name: fileInfo.name || null,
+        file_size: fileInfo.size || null,
+        mime_type: fileInfo.type || null
+      }])
+      .select()
+      .single()
+    if (error) throw error
+    return data
+  },
+
+  async deleteProductPhoto(photoId) {
+    const { error } = await supabase
+      .from('product_photos')
+      .delete()
+      .eq('id', photoId)
+    if (error) throw error
+  },
+
+  async reorderProductPhotos(productId, photoOrders) {
+    // photoOrders should be an array of { id, display_order }
+    const updates = photoOrders.map(({ id, display_order }) =>
+      supabase
+        .from('product_photos')
+        .update({ display_order, updated_at: new Date().toISOString() })
+        .eq('id', id)
+    )
+
+    const results = await Promise.all(updates)
+    const errors = results.filter(r => r.error)
+    if (errors.length > 0) {
+      throw new Error('Failed to reorder photos: ' + errors[0].error.message)
+    }
+  },
+
+  async updateProductPhotos(productId, photos) {
+    // Delete existing photos not in the new list
+    const { error: deleteError } = await supabase
+      .from('product_photos')
+      .delete()
+      .eq('product_id', productId)
+    
+    if (deleteError) throw deleteError
+
+    // Insert new photos
+    if (photos.length > 0) {
+      const { error: insertError } = await supabase
+        .from('product_photos')
+        .insert(photos.map((photo, index) => ({
+          product_id: productId,
+          photo_url: photo.photo_url,
+          display_order: index,
+          file_name: photo.file_name || null,
+          file_size: photo.file_size || null,
+          mime_type: photo.mime_type || null
+        })))
+      
+      if (insertError) throw insertError
+    }
   }
 }

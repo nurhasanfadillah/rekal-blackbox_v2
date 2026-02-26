@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
+import { db } from '../supabase'
+
 import { validateProductForm, hasErrors } from '../utils/validators'
 import { calculateAllCosts } from '../utils/calculations'
 import { formatRupiah } from '../utils/formatters'
@@ -13,9 +15,11 @@ import {
   Package,
   Calculator,
   ChevronDown,
-  Loader2
+  Loader2,
+  Images
 } from 'lucide-react'
-import ProductPhotoUpload from '../components/ProductPhotoUpload'
+import MultiPhotoUpload from '../components/MultiPhotoUpload'
+
 
 
 const ProductForm = () => {
@@ -42,12 +46,13 @@ const ProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    photo_url: '',
     overhead_percentage: '20',
     target_margin_percentage: '30'
   })
 
+  const [productPhotos, setProductPhotos] = useState([])
   const [bomItems, setBomItems] = useState([])
+
   const [formErrors, setFormErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [loadingProduct, setLoadingProduct] = useState(isEditMode || isCopyMode)
@@ -91,10 +96,14 @@ const ProductForm = () => {
       setFormData({
         name: isCopyMode ? '' : product.name,
         description: product.description || '',
-        photo_url: product.photo_url || '',
         overhead_percentage: product.overhead_percentage.toString(),
         target_margin_percentage: product.target_margin_percentage.toString()
       })
+      
+      // Load product photos
+      const photos = product.product_photos || []
+      setProductPhotos(photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)))
+
 
       
       // Store original name for copy mode validation
@@ -184,7 +193,6 @@ const ProductForm = () => {
       const productData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
-        photo_url: formData.photo_url || null,
         overhead_percentage: parseFloat(formData.overhead_percentage),
         target_margin_percentage: parseFloat(formData.target_margin_percentage)
       }
@@ -196,13 +204,26 @@ const ProductForm = () => {
         quantity: item.quantity
       }))
       
+      let savedProduct
       if (isEditMode) {
-        await updateProduct(id, productData, bomData)
+        savedProduct = await updateProduct(id, productData, bomData)
         success('Produk berhasil diperbarui')
       } else {
-        await createProduct(productData, bomData)
+        savedProduct = await createProduct(productData, bomData)
         success(isCopyMode ? 'Produk berhasil disalin' : 'Produk berhasil ditambahkan')
       }
+      
+      // Save product photos
+      const productId = isEditMode ? id : savedProduct.id
+      const photosToSave = productPhotos.map((photo, index) => ({
+        photo_url: photo.photo_url,
+        display_order: index,
+        file_name: photo.file_name || null,
+        file_size: photo.file_size || null,
+        mime_type: photo.mime_type || null
+      }))
+      await db.updateProductPhotos(productId, photosToSave)
+
 
       
       navigate('/products')
@@ -244,17 +265,20 @@ const ProductForm = () => {
             Informasi Dasar
           </h3>
           
-          {/* Product Photo Upload */}
+          {/* Product Photos Upload */}
           <div className="mb-4">
-            <label className="input-label">Foto Produk</label>
-            <ProductPhotoUpload
+            <label className="input-label flex items-center gap-2">
+              <Images className="w-4 h-4 text-primary-400" />
+              Foto Produk
+            </label>
+            <MultiPhotoUpload
               productId={isEditMode ? id : null}
-              currentPhotoUrl={formData.photo_url}
-              onPhotoChange={(url) => setFormData({ ...formData, photo_url: url })}
-              size="large"
-              editable={true}
+              existingPhotos={productPhotos}
+              onPhotosChange={setProductPhotos}
+              maxPhotos={10}
             />
           </div>
+
           
           <div className="space-y-4">
             <div>

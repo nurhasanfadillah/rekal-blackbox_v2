@@ -113,10 +113,10 @@ const Products = () => {
             return (
               <div 
                 key={product.id} 
-                className="group bg-slate-800/50 hover:bg-slate-800 rounded-2xl border border-slate-700/50 hover:border-primary-500/30 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-primary-500/5"
+                className="group bg-slate-800/50 hover:bg-slate-800 rounded-2xl border border-slate-700/50 hover:border-primary-500/30 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl hover:shadow-primary-500/5 flex"
               >
-                {/* Product Image */}
-                <a href={`/products/${product.id}`} className="block relative aspect-[4/3] overflow-hidden bg-slate-900">
+                {/* Section 1: Product Image */}
+                <a href={`/products/${product.id}`} className="block relative w-32 sm:w-40 flex-shrink-0 overflow-hidden bg-slate-900">
                   {firstPhoto ? (
                     <>
                       <img 
@@ -126,18 +126,18 @@ const Products = () => {
                       />
                       {/* Photo Count Badge */}
                       {photos.length > 1 && (
-                        <div className="absolute top-3 right-3 px-2 py-1 bg-black/60 backdrop-blur-sm rounded-lg flex items-center gap-1.5 text-white text-xs">
-                          <Images className="w-3.5 h-3.5" />
+                        <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-black/60 backdrop-blur-sm rounded-md flex items-center gap-1 text-white text-xs">
+                          <Images className="w-3 h-3" />
                           <span>{photos.length}</span>
                         </div>
                       )}
                     </>
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-violet/20 flex items-center justify-center mb-3">
-                        <Camera className="w-8 h-8 text-primary-400/60" />
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 min-h-[120px]">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-accent-violet/20 flex items-center justify-center mb-2">
+                        <Camera className="w-5 h-5 text-primary-400/60" />
                       </div>
-                      <span className="text-slate-600 text-sm">Belum ada foto</span>
+                      <span className="text-slate-600 text-xs">Belum ada foto</span>
                     </div>
                   )}
                   
@@ -145,47 +145,49 @@ const Products = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
 
-                {/* Product Info */}
-                <div className="p-4">
-                  <a href={`/products/${product.id}`} className="block mb-3">
-                    <h3 className="font-semibold text-white text-lg leading-tight group-hover:text-primary-400 transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                    {product.description && (
-                      <p className="text-sm text-slate-500 mt-1 line-clamp-2">{product.description}</p>
-                    )}
-                  </a>
+                {/* Section 2: Product Info */}
+                <div className="flex-1 p-3 flex flex-col justify-between min-w-0">
+                  <div>
+                    <a href={`/products/${product.id}`} className="block mb-2">
+                      <h3 className="font-semibold text-white text-base leading-tight group-hover:text-primary-400 transition-colors line-clamp-1">
+                        {product.name}
+                      </h3>
+                      {product.description && (
+                        <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{product.description}</p>
+                      )}
+                    </a>
 
-                  {/* COGS */}
-                  <div className="flex items-center justify-between py-3 border-t border-slate-700/50 mb-3">
-                    <span className="text-sm text-slate-400">HPP</span>
-                    <span className="text-base font-semibold text-white">{formatRupiah(product.production_cost)}</span>
+                    {/* COGS */}
+                    <div className="flex items-center justify-between py-2 border-t border-slate-700/50">
+                      <span className="text-xs text-slate-400">HPP</span>
+                      <span className="text-sm font-semibold text-white">{formatRupiah(product.production_cost)}</span>
+                    </div>
                   </div>
 
-
                   {/* Action Buttons */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-2">
                     <a
                       href={`/products/copy/${product.id}`}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-primary-500/20 text-slate-400 hover:text-primary-400 rounded-xl transition-all text-sm font-medium"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 bg-slate-700/50 hover:bg-primary-500/20 text-slate-400 hover:text-primary-400 rounded-lg transition-all text-xs font-medium"
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-3.5 h-3.5" />
                       Salin
                     </a>
                     <button
                       onClick={() => handleDelete(product.id)}
                       disabled={deletingId === product.id}
-                      className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-700/50 hover:bg-accent-rose/20 text-slate-400 hover:text-accent-rose rounded-xl transition-all text-sm font-medium disabled:opacity-50"
+                      className="flex items-center justify-center gap-1.5 px-2 py-1.5 bg-slate-700/50 hover:bg-accent-rose/20 text-slate-400 hover:text-accent-rose rounded-lg transition-all text-xs font-medium disabled:opacity-50"
                     >
                       {deletingId === product.id ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-rose"></div>
+                        <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-accent-rose"></div>
                       ) : (
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       )}
                     </button>
                   </div>
                 </div>
               </div>
+
             )
           })}
         </div>

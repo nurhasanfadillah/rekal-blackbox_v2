@@ -204,20 +204,27 @@ export const validateMaterialForm = (formData, existingMaterials, currentId = nu
  * @param {Array} bomItems - BoM items
  * @param {Array} existingProducts - Existing products
  * @param {string} currentId - Current product ID (for edit)
+ * @param {string} originalName - Original product name (for copy mode validation)
  * @returns {Object} Object with field errors
  */
-export const validateProductForm = (formData, bomItems, existingProducts, currentId = null) => {
+export const validateProductForm = (formData, bomItems, existingProducts, currentId = null, originalName = null) => {
   const errors = {}
   
   const nameError = validateRequired(formData.name)
   if (nameError) {
     errors.name = nameError
   } else {
-    const uniqueError = validateUniqueName(formData.name, existingProducts, currentId)
-    if (uniqueError) {
-      errors.name = uniqueError
+    // Check if name is same as original in copy mode
+    if (originalName && formData.name.trim().toLowerCase() === originalName.trim().toLowerCase()) {
+      errors.name = 'Nama produk harus berbeda dari produk asli saat menyalin'
+    } else {
+      const uniqueError = validateUniqueName(formData.name, existingProducts, currentId)
+      if (uniqueError) {
+        errors.name = uniqueError
+      }
     }
   }
+
   
   const overheadError = validatePercentage(formData.overhead_percentage, 'Overhead')
   if (overheadError) {

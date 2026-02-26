@@ -47,6 +47,8 @@ const ProductForm = () => {
   const [formErrors, setFormErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [loadingProduct, setLoadingProduct] = useState(isEditMode || isCopyMode)
+  const [originalProductName, setOriginalProductName] = useState(null)
+
 
   // Calculated values
 
@@ -89,6 +91,11 @@ const ProductForm = () => {
         target_margin_percentage: product.target_margin_percentage.toString()
       })
       
+      // Store original name for copy mode validation
+      if (isCopyMode) {
+        setOriginalProductName(product.name)
+      }
+      
       // Convert BoM items to form format
       const bomData = product.bill_of_materials?.map(item => ({
         material_id: item.material_id,
@@ -105,6 +112,7 @@ const ProductForm = () => {
       setLoadingProduct(false)
     }
   }
+
 
 
   const handleAddBomItem = () => {
@@ -153,8 +161,9 @@ const ProductForm = () => {
       target_margin_percentage: parseFloat(formData.target_margin_percentage) || 0
     }
     
-    const errors = validateProductForm(dataToValidate, bomItems, products, isEditMode ? id : null)
+    const errors = validateProductForm(dataToValidate, bomItems, products, isEditMode ? id : null, isCopyMode ? originalProductName : null)
     setFormErrors(errors)
+
 
     
     if (hasErrors(errors)) {

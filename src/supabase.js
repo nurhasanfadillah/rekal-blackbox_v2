@@ -125,18 +125,18 @@ export const db = {
   
   // Products
   async getProducts() {
-    // Try with product_photos (new schema), fallback to old schema
+    // Try with product_photos and bill_of_materials (new schema), fallback to old schema
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('*, product_photos(*)')
+        .select('*, product_photos(*), bill_of_materials(*, materials(*, categories(name)))')
         .order('created_at', { ascending: false })
       if (error) {
         // If product_photos table doesn't exist, query without it
         if (error.message?.includes('product_photos') || error.code === 'PGRST200') {
           const { data: fallbackData, error: fallbackError } = await supabase
             .from('products')
-            .select('*')
+            .select('*, bill_of_materials(*, materials(*, categories(name)))')
             .order('created_at', { ascending: false })
           if (fallbackError) throw fallbackError
           // Convert old photo_url to new format
@@ -152,7 +152,7 @@ export const db = {
       // Final fallback
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('*, bill_of_materials(*, materials(*, categories(name)))')
         .order('created_at', { ascending: false })
       if (error) throw error
       return data.map(p => ({
@@ -161,6 +161,7 @@ export const db = {
       }))
     }
   },
+
   
   async getProductById(id) {
     // Try with product_photos (new schema), fallback to old schema

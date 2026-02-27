@@ -14,6 +14,8 @@ import Materials from './pages/Materials'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import ProductForm from './pages/ProductForm'
+import PriceSimulation from './pages/PriceSimulation'
+
 
 // Components
 import BottomNav from './components/BottomNav'
@@ -127,7 +129,16 @@ function AppContent() {
           </ProtectedRoute>
         } />
         
+        <Route path="/price-simulation" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <PriceSimulation />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
         <Route path="*" element={<Navigate to="/" replace />} />
+
 
         </Routes>
         <Toast />

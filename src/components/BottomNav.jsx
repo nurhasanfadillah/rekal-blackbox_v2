@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Layers, Package, ShoppingBag } from 'lucide-react'
+import { LayoutDashboard, Layers, Package, ShoppingBag, Calculator } from 'lucide-react'
 
 const BottomNav = () => {
   const navItems = [
@@ -7,7 +7,9 @@ const BottomNav = () => {
     { to: '/categories', icon: Layers, label: 'Kategori' },
     { to: '/materials', icon: Package, label: 'Material' },
     { to: '/products', icon: ShoppingBag, label: 'Produk' },
+    { to: '/price-simulation', icon: Calculator, label: 'Simulasi' },
   ]
+
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 safe-area-bottom z-40">

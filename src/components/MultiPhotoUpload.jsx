@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import { Camera, X, Upload, Loader2, Check, GripVertical } from 'lucide-react'
 import { supabase, db } from '../supabase'
 import { useToast } from './Toast'
+import { useConfirmation } from '../contexts/ConfirmationContext'
+
 
 const MultiPhotoUpload = ({ 
   productId, 
@@ -16,6 +18,8 @@ const MultiPhotoUpload = ({
   const [draggingIndex, setDraggingIndex] = useState(null)
   const fileInputRef = useRef(null)
   const { success, error: showError } = useToast()
+  const { confirm } = useConfirmation()
+
 
   const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files)
@@ -109,6 +113,17 @@ const MultiPhotoUpload = ({
   const handleRemovePhoto = async (photoId, index) => {
     const photo = photos[index]
     
+    // Show confirmation dialog
+    const isConfirmed = await confirm({
+      title: 'Hapus Foto',
+      message: `Yakin ingin menghapus foto ${index + 1}? Tindakan ini tidak dapat dibatalkan.`,
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
+    
     // If it's a new photo (not saved to DB yet), just remove from state
     if (photo.isNew) {
       try {
@@ -133,6 +148,7 @@ const MultiPhotoUpload = ({
     setPhotos(reorderedPhotos)
     onPhotosChange?.(reorderedPhotos)
   }
+
 
   const handleDragStart = (index) => {
     setDraggingIndex(index)

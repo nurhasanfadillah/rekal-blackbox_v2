@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
+import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateMaterialForm, hasErrors } from '../utils/validators'
 import { formatRupiah } from '../utils/formatters'
 import { 
@@ -13,6 +14,7 @@ import {
   Layers,
   ShoppingBag
 } from 'lucide-react'
+
 
 const Materials = () => {
   const { 
@@ -29,9 +31,11 @@ const Materials = () => {
   } = useData()
 
   const { success, error: showError } = useToast()
+  const { confirm } = useConfirmation()
 
   
   const [searchQuery, setSearchQuery] = useState('')
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingMaterial, setEditingMaterial] = useState(null)
   const [formData, setFormData] = useState({
@@ -128,7 +132,15 @@ const Materials = () => {
       return
     }
 
-    if (!confirm('Yakin ingin menghapus material ini?')) return
+    const isConfirmed = await confirm({
+      title: 'Hapus Material',
+      message: 'Yakin ingin menghapus material ini? Tindakan ini tidak dapat dibatalkan.',
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
 
     setDeletingId(id)
     try {
@@ -140,6 +152,7 @@ const Materials = () => {
       setDeletingId(null)
     }
   }
+
 
   const unitOptions = [
     { value: 'Pcs', label: 'Pcs (Pieces)' },

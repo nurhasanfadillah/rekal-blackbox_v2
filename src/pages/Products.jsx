@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
+import { useConfirmation } from '../contexts/ConfirmationContext'
 import { formatRupiah } from '../utils/formatters'
 import { 
   ShoppingBag, 
@@ -18,10 +19,12 @@ import {
 
 
 
+
 const Products = () => {
   const { products, loading, errors, fetchProducts, deleteProduct } = useData()
 
   const { success, error: showError } = useToast()
+  const { confirm } = useConfirmation()
 
   
   const [searchQuery, setSearchQuery] = useState('')
@@ -36,7 +39,15 @@ const Products = () => {
   )
 
   const handleDelete = async (id) => {
-    if (!confirm('Yakin ingin menghapus produk ini? Semua data BoM juga akan dihapus.')) return
+    const isConfirmed = await confirm({
+      title: 'Hapus Produk',
+      message: 'Yakin ingin menghapus produk ini? Semua data BoM juga akan dihapus.',
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
 
     setDeletingId(id)
     try {
@@ -48,6 +59,7 @@ const Products = () => {
       setDeletingId(null)
     }
   }
+
 
   return (
     <div className="page-container">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useData } from '../contexts/DataContext'
+import { useConfirmation } from '../contexts/ConfirmationContext'
 import { formatRupiah, formatPercentage } from '../utils/formatters'
 import ProductPhotoGallery from '../components/ProductPhotoGallery'
 import { 
@@ -21,10 +22,12 @@ import {
 
 
 
+
 const ProductDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { getProduct, deleteProduct } = useData()
+  const { confirm } = useConfirmation()
   
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -46,7 +49,15 @@ const ProductDetail = () => {
   }
 
   const handleDelete = async () => {
-    if (!confirm('Yakin ingin menghapus produk ini?')) return
+    const isConfirmed = await confirm({
+      title: 'Hapus Produk',
+      message: 'Yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.',
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
     
     setDeleting(true)
     try {
@@ -57,6 +68,7 @@ const ProductDetail = () => {
       setDeleting(false)
     }
   }
+
 
   if (loading) {
     return (

@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
+import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateCategoryForm, hasErrors } from '../utils/validators'
 import { Layers, Plus, Search, Edit2, Trash2, X, Package } from 'lucide-react'
+
 
 const Categories = () => {
   const { categories, materials, loading, errors, fetchCategories, createCategory, updateCategory, deleteCategory } = useData()
 
   const { success, error: showError } = useToast()
+  const { confirm } = useConfirmation()
 
   
   const [searchQuery, setSearchQuery] = useState('')
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState(null)
   const [formData, setFormData] = useState({ name: '' })
@@ -76,7 +80,15 @@ const Categories = () => {
       return
     }
 
-    if (!confirm('Yakin ingin menghapus kategori ini?')) return
+    const isConfirmed = await confirm({
+      title: 'Hapus Kategori',
+      message: 'Yakin ingin menghapus kategori ini? Tindakan ini tidak dapat dibatalkan.',
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
 
     setDeletingId(id)
     try {
@@ -88,6 +100,7 @@ const Categories = () => {
       setDeletingId(null)
     }
   }
+
 
   return (
     <div className="page-container">

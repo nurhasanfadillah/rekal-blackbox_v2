@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { DataProvider } from './contexts/DataContext'
 import { ToastProvider } from './components/Toast'
+import { ConfirmationProvider } from './contexts/ConfirmationContext'
+
 
 // Pages
 import Login from './pages/Login'
@@ -139,10 +141,13 @@ function App() {
   return (
     <AuthProvider>
       <DataProvider>
-        <AppContent />
+        <ConfirmationProvider>
+          <AppContent />
+        </ConfirmationProvider>
       </DataProvider>
     </AuthProvider>
   )
 }
+
 
 export default App

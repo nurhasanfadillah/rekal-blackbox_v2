@@ -2,6 +2,8 @@ import { useState, useRef } from 'react'
 import { Camera, X, Upload, Loader2 } from 'lucide-react'
 import { supabase, db } from '../supabase'
 import { useToast } from './Toast'
+import { useConfirmation } from '../contexts/ConfirmationContext'
+
 
 const ProductPhotoUpload = ({ 
   productId, 
@@ -14,6 +16,8 @@ const ProductPhotoUpload = ({
   const [previewUrl, setPreviewUrl] = useState(currentPhotoUrl)
   const fileInputRef = useRef(null)
   const { success, error: showError } = useToast()
+  const { confirm } = useConfirmation()
+
 
   const handleFileSelect = async (e) => {
     const file = e.target.files[0]
@@ -77,9 +81,18 @@ const ProductPhotoUpload = ({
       return
     }
 
-    if (!confirm('Yakin ingin menghapus foto produk?')) return
+    const isConfirmed = await confirm({
+      title: 'Hapus Foto Produk',
+      message: 'Yakin ingin menghapus foto produk ini? Tindakan ini tidak dapat dibatalkan.',
+      confirmLabel: 'Hapus',
+      cancelLabel: 'Batal',
+      variant: 'danger'
+    })
+    
+    if (!isConfirmed) return
 
     try {
+
       // Extract path from URL
       const url = new URL(currentPhotoUrl)
       const pathMatch = url.pathname.match(/products\/(.+)$/)

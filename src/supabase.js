@@ -102,12 +102,26 @@ export const db = {
   },
   
   async deleteMaterial(id) {
+    // Check if material is used in any bill_of_materials
+    const { data: linkedBomItems, error: checkError } = await supabase
+      .from('bill_of_materials')
+      .select('id')
+      .eq('material_id', id)
+      .limit(1)
+    
+    if (checkError) throw checkError
+    
+    if (linkedBomItems && linkedBomItems.length > 0) {
+      throw new Error('Material tidak dapat dihapus karena masih digunakan dalam produk')
+    }
+    
     const { error } = await supabase
       .from('materials')
       .delete()
       .eq('id', id)
     if (error) throw error
   },
+
   
   // Products
   async getProducts() {

@@ -3,7 +3,8 @@ import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
 import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateCategoryForm, hasErrors } from '../utils/validators'
-import { Layers, Plus, Search, Edit2, Trash2, X, Package } from 'lucide-react'
+import { Layers, Plus, Search, Edit2, Trash2, X, Package, Link } from 'lucide-react'
+
 
 
 const Categories = () => {
@@ -157,6 +158,7 @@ const Categories = () => {
         <div className="space-y-3">
           {filteredCategories.map(category => {
             const materialCount = getMaterialCount(category.id)
+            const hasMaterials = materialCount > 0
             
             return (
               <div key={category.id} className="list-item">
@@ -167,9 +169,18 @@ const Categories = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-white">{category.name}</h3>
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <Package className="w-3 h-3" />
-                        {materialCount} material
+                      <div className="flex items-center gap-2 text-xs mt-1 flex-wrap">
+                        {hasMaterials ? (
+                          <span className="badge-primary bg-accent-amber/20 text-accent-amber border-accent-amber/30">
+                            <Link className="w-3 h-3 mr-1" />
+                            {materialCount} material
+                          </span>
+                        ) : (
+                          <span className="text-slate-500 flex items-center gap-1">
+                            <Package className="w-3 h-3" />
+                            {materialCount} material
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -183,8 +194,9 @@ const Categories = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(category.id)}
-                      disabled={deletingId === category.id || materialCount > 0}
-                      className="p-2 text-slate-400 hover:text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors disabled:opacity-50"
+                      disabled={deletingId === category.id || hasMaterials}
+                      title={hasMaterials ? `Kategori memiliki ${materialCount} material. Kosongkan terlebih dahulu.` : 'Hapus kategori'}
+                      className="p-2 text-slate-400 hover:text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {deletingId === category.id ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-rose"></div>
@@ -197,6 +209,7 @@ const Categories = () => {
               </div>
             )
           })}
+
         </div>
       )}
 

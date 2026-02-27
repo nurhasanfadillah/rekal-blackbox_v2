@@ -4,6 +4,8 @@ import { useToast } from '../components/Toast'
 import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateMaterialForm, hasErrors } from '../utils/validators'
 import { formatRupiah } from '../utils/formatters'
+import { supabase } from '../supabase'
+
 import { 
   Package, 
   Plus, 
@@ -12,8 +14,11 @@ import {
   Trash2, 
   X, 
   Layers,
-  ShoppingBag
+  ShoppingBag,
+  Link
 } from 'lucide-react'
+
+
 
 
 const Materials = () => {
@@ -47,22 +52,51 @@ const Materials = () => {
   const [formErrors, setFormErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [deletingId, setDeletingId] = useState(null)
+  const [materialUsageCounts, setMaterialUsageCounts] = useState({})
 
   useEffect(() => {
     fetchMaterials()
     fetchCategories()
   }, [fetchMaterials, fetchCategories])
 
+  // Fetch material usage counts when materials change
+  useEffect(() => {
+    const fetchUsageCounts = async () => {
+      const counts = {}
+      for (const material of materials) {
+        const count = await getMaterialUsageCount(material.id)
+        counts[material.id] = count
+      }
+      setMaterialUsageCounts(counts)
+    }
+    
+    if (materials.length > 0) {
+      fetchUsageCounts()
+    }
+  }, [materials])
+
+
   const filteredMaterials = materials.filter(mat => 
     mat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     mat.categories?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const getMaterialUsageCount = (materialId) => {
-    // This would need to be fetched from bill_of_materials
-    // For now, return 0 as placeholder
-    return 0
+  const getMaterialUsageCount = async (materialId) => {
+    try {
+      const { data, error } = await supabase
+        .from('bill_of_materials')
+        .select('id')
+        .eq('material_id', materialId)
+      
+      if (error) throw error
+      return data ? data.length : 0
+    } catch (err) {
+      console.error('Failed to get material usage count:', err)
+      return 0
+    }
   }
+
+
 
   const openModal = (material = null) => {
     setEditingMaterial(material)
@@ -126,7 +160,7 @@ const Materials = () => {
   }
 
   const handleDelete = async (id) => {
-    const usageCount = getMaterialUsageCount(id)
+    const usageCount = await getMaterialUsageCount(id)
     if (usageCount > 0) {
       showError(`Gagal menghapus: Material masih digunakan dalam ${usageCount} produk.`)
       return
@@ -152,6 +186,7 @@ const Materials = () => {
       setDeletingId(null)
     }
   }
+
 
 
   const unitOptions = [
@@ -214,6 +249,8 @@ const Materials = () => {
         <div className="space-y-3">
           {filteredMaterials.map(material => {
             const category = categories.find(c => c.id === material.category_id)
+            const usageCount = materialUsageCounts[material.id] || 0
+            const isInUse = usageCount > 0
             
             return (
               <div key={material.id} className="list-item">
@@ -224,7 +261,7 @@ const Materials = () => {
                     </div>
                     <div>
                       <h3 className="font-medium text-white">{material.name}</h3>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {category && (
                           <span className="badge-secondary">
                             <Layers className="w-3 h-3 mr-1" />
@@ -232,6 +269,12 @@ const Materials = () => {
                           </span>
                         )}
                         <span className="badge-primary">{material.unit}</span>
+                        {isInUse && (
+                          <span className="badge-primary bg-accent-amber/20 text-accent-amber border-accent-amber/30">
+                            <Link className="w-3 h-3 mr-1" />
+                            {usageCount} produk
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -247,8 +290,9 @@ const Materials = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(material.id)}
-                        disabled={deletingId === material.id}
-                        className="p-2 text-slate-400 hover:text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors disabled:opacity-50"
+                        disabled={deletingId === material.id || isInUse}
+                        title={isInUse ? `Material digunakan dalam ${usageCount} produk` : 'Hapus material'}
+                        className="p-2 text-slate-400 hover:text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {deletingId === material.id ? (
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-rose"></div>
@@ -262,6 +306,7 @@ const Materials = () => {
               </div>
             )
           })}
+
         </div>
       )}
 

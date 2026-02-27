@@ -42,3 +42,5 @@ Gunakan kredensial supabase berikut:
 API URL: https://rtvprftiezzyyyqglydv.supabase.co
 API Keys: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0dnByZnRpZXp6eXl5cWdseWR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjQ4MDgsImV4cCI6MjA4NzcwMDgwOH0.n6x2WiM3N8Qzi3PZtlf0aHGfqdX30D7NAaAWCOV84nE
 
+use cd rekal-app; npm run dev
+not cd rekal-app && npm run dev

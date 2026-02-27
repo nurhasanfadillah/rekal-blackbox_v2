@@ -5,7 +5,7 @@ import { useToast } from '../components/Toast'
 import { db } from '../supabase'
 
 import { validateProductForm, hasErrors } from '../utils/validators'
-import { calculateAllCosts } from '../utils/calculations'
+import { calculateAllCosts, calculateMaterialUsage } from '../utils/calculations'
 import { formatRupiah } from '../utils/formatters'
 import { 
   ArrowLeft, 
@@ -16,8 +16,11 @@ import {
   Calculator,
   ChevronDown,
   Loader2,
-  Images
+  Images,
+  Copy,
+  Check
 } from 'lucide-react'
+
 import MultiPhotoUpload from '../components/MultiPhotoUpload'
 
 
@@ -54,7 +57,14 @@ const ProductForm = () => {
   const [removedPhotoUrls, setRemovedPhotoUrls] = useState([]) // Track deleted photos for storage cleanup
   const [bomItems, setBomItems] = useState([])
 
+  // Material usage calculation state
+  const [materialWidth, setMaterialWidth] = useState('')
+  const [usageItems, setUsageItems] = useState([{ L: '', W: '', x: '' }])
+  const [materialUsageResult, setMaterialUsageResult] = useState(0)
+  const [copied, setCopied] = useState(false)
+
   const [formErrors, setFormErrors] = useState({})
+
 
   const [submitting, setSubmitting] = useState(false)
   const [loadingProduct, setLoadingProduct] = useState(isEditMode || isCopyMode)
@@ -91,6 +101,14 @@ const ProductForm = () => {
     const newCalculations = calculateAllCosts(bomItems, overhead, margin)
     setCalculations(newCalculations)
   }, [bomItems, formData.overhead_percentage, formData.target_margin_percentage])
+
+  // Calculate material usage in real-time
+  useEffect(() => {
+    const width = parseFloat(materialWidth) || 0
+    const result = calculateMaterialUsage(usageItems, width)
+    setMaterialUsageResult(result)
+  }, [materialWidth, usageItems])
+
 
   const loadProduct = async () => {
     try {
@@ -170,6 +188,79 @@ const ProductForm = () => {
     setSelectedMaterialIndex(index)
     setShowMaterialSelector(true)
   }
+
+  // Material usage handlers
+  const handleAddUsageItem = () => {
+    setUsageItems([...usageItems, { L: '', W: '', x: '' }])
+  }
+
+  const handleRemoveUsageItem = (index) => {
+    setUsageItems(usageItems.filter((_, i) => i !== index))
+  }
+
+  const handleUsageChange = (index, field, value) => {
+    const newItems = [...usageItems]
+    newItems[index] = { ...newItems[index], [field]: value }
+    setUsageItems(newItems)
+  }
+
+  const handleCopyResult = async () => {
+    const resultText = materialUsageResult.toFixed(1)
+    console.log('Attempting to copy:', resultText)
+    
+    // Try modern Clipboard API first
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(resultText)
+        console.log('Clipboard API success')
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+        return
+      } catch (err) {
+        console.log('Clipboard API failed:', err.message)
+      }
+    } else {
+      console.log('Clipboard API not available or not secure context')
+    }
+    
+    // Fallback 1: use document.execCommand('copy')
+    let textArea = null
+    try {
+      textArea = document.createElement('textarea')
+      textArea.value = resultText
+      textArea.setAttribute('readonly', '')
+      textArea.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;'
+      document.body.appendChild(textArea)
+      
+      // Use setSelectionRange for better compatibility
+      textArea.focus()
+      textArea.setSelectionRange(0, textArea.value.length)
+      
+      const successful = document.execCommand('copy')
+      console.log('execCommand result:', successful)
+      
+      if (successful) {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+        return
+      }
+    } catch (err) {
+      console.log('execCommand failed:', err.message)
+    } finally {
+      if (textArea && textArea.parentNode) {
+        textArea.parentNode.removeChild(textArea)
+      }
+    }
+    
+    // Fallback 2: Show the result in a prompt for manual copy
+    console.log('All copy methods failed, showing prompt')
+    showError('Gagal menyalin hasil perhitungan')
+  }
+
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -370,6 +461,116 @@ const ProductForm = () => {
           </div>
         </div>
 
+        {/* Material Usage Calculation */}
+        <div className="glass-panel p-4">
+          <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+            <Calculator className="w-4 h-4 text-primary-400" />
+            Perhitungan Penggunaan Material
+          </h3>
+
+          {/* Material Width Input */}
+          <div className="mb-4">
+            <label className="input-label">Lebar Material</label>
+            <input
+              type="number"
+              value={materialWidth}
+              onChange={(e) => setMaterialWidth(e.target.value)}
+              className="input-field"
+              placeholder="Contoh: 140"
+              min="0"
+            />
+          </div>
+
+          {/* Usage Items */}
+          <div className="space-y-3 mb-4">
+            {usageItems.map((item, index) => (
+              <div key={index} className="glass-card p-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="text-xs text-slate-500 mb-1 block">P (Panjang)</label>
+                      <input
+                        type="number"
+                        value={item.L}
+                        onChange={(e) => handleUsageChange(index, 'L', e.target.value)}
+                        className="input-field py-2"
+                        placeholder="L"
+                        min="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 mb-1 block">L (Lebar)</label>
+                      <input
+                        type="number"
+                        value={item.W}
+                        onChange={(e) => handleUsageChange(index, 'W', e.target.value)}
+                        className="input-field py-2"
+                        placeholder="W"
+                        min="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 mb-1 block">x (Qty)</label>
+                      <input
+                        type="number"
+                        value={item.x}
+                        onChange={(e) => handleUsageChange(index, 'x', e.target.value)}
+                        className="input-field py-2"
+                        placeholder="x"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                  {usageItems.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveUsageItem(index)}
+                      className="p-2 text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors mt-5"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Add Usage Item Button */}
+          <button
+            type="button"
+            onClick={handleAddUsageItem}
+            className="w-full py-2 border border-dashed border-slate-600 rounded-xl text-slate-400 hover:text-primary-400 hover:border-primary-400/50 transition-colors flex items-center justify-center gap-2 mb-4"
+          >
+            <Plus className="w-4 h-4" />
+            Tambah Item
+          </button>
+
+          {/* Calculation Result */}
+          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-slate-500 mb-1">Hasil Perhitungan</p>
+                <p className="text-lg font-semibold text-primary-400">
+                  {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyResult}
+                className="p-2 text-slate-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
+                title="Salin hasil"
+              >
+                {copied ? <Check className="w-5 h-5 text-accent-emerald" /> : <Copy className="w-5 h-5" />}
+              </button>
+            </div>
+            {materialWidth > 0 && (
+              <p className="text-xs text-slate-500 mt-2">
+                Total: {usageItems.reduce((sum, item) => sum + ((parseFloat(item.L) || 0) * (parseFloat(item.W) || 0) * (parseFloat(item.x) || 0)), 0)} / {materialWidth} = {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
+              </p>
+            )}
+          </div>
+        </div>
+
         {/* Bill of Materials */}
         <div className="glass-panel p-4">
           <div className="flex items-center justify-between mb-4">
@@ -377,6 +578,7 @@ const ProductForm = () => {
               <Package className="w-4 h-4 text-primary-400" />
               Komposisi Material
             </h3>
+
             <button
               type="button"
               onClick={handleAddBomItem}

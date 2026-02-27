@@ -100,3 +100,23 @@ export const isValidPositiveNumber = (value) => {
   const num = parseFloat(value)
   return !isNaN(num) && num >= 0
 }
+
+/**
+ * Calculate material usage
+ * Formula: totalUsage = Σ(L × W × x) / materialWidth
+ * @param {Array} usageItems - Array of usage items with L, W, x properties
+ * @param {number} materialWidth - Material width
+ * @returns {number} Calculated material usage
+ */
+export const calculateMaterialUsage = (usageItems, materialWidth) => {
+  if (!materialWidth || materialWidth <= 0) return 0
+  
+  const totalArea = usageItems.reduce((sum, item) => {
+    const L = parseFloat(item.L) || 0
+    const W = parseFloat(item.W) || 0
+    const x = parseFloat(item.x) || 0
+    return sum + (L * W * x)
+  }, 0)
+  
+  return totalArea / materialWidth
+}

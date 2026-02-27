@@ -54,14 +54,19 @@ const Dashboard = () => {
       {/* Header */}
       <div className="page-header">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet flex items-center justify-center shadow-glow">
-            <Calculator className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet flex items-center justify-center shadow-glow overflow-hidden">
+            <img 
+              src="https://lh3.googleusercontent.com/d/17d-UmkhNv1FxnkAZVuTt805LubWTPU9f" 
+              alt="ReKal Logo" 
+              className="w-8 h-8 object-contain"
+            />
           </div>
           <div>
             <h1 className="page-title">Dashboard</h1>
             <p className="page-subtitle">Ringkasan data HPP</p>
           </div>
         </div>
+
       </div>
 
       {/* Connection Status */}

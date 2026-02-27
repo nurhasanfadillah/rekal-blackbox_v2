@@ -11,14 +11,16 @@
   "lang": "id",
   "icons": [
     {
-      "src": "https://lh3.googleusercontent.com/d/17d-UmkhNv1FxnkAZVuTt805LubWTPU9f",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
+
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://lh3.googleusercontent.com/d/17d-UmkhNv1FxnkAZVuTt805LubWTPU9f",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
+
       "type": "image/png",
       "purpose": "any maskable"
     }

@@ -109,6 +109,7 @@ const Products = () => {
         <div className="empty-state">
           <ShoppingBag className="empty-state-icon" />
           <p className="empty-state-title">Belum ada produk</p>
+
           <p className="empty-state-desc">Tambahkan produk untuk menghitung HPP dan estimasi harga jual</p>
           <a href="/products/new" className="btn-primary mt-4 inline-flex items-center gap-2">
             <Plus className="w-4 h-4" />
@@ -116,7 +117,8 @@ const Products = () => {
           </a>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4">
+
           {filteredProducts.map(product => {
             const photos = product.product_photos || []
             const hasPhotos = photos.length > 0
@@ -174,6 +176,13 @@ const Products = () => {
                       <span className="text-xs text-slate-400">HPP</span>
                       <span className="text-sm font-semibold text-white">{formatRupiah(product.production_cost)}</span>
                     </div>
+
+                    {/* Selling Price */}
+                    <div className="flex items-center justify-between py-2 border-t border-slate-700/50">
+                      <span className="text-xs text-slate-400">Harga Jual</span>
+                      <span className="text-sm font-semibold text-white">{formatRupiah(product.estimated_selling_price)}</span>
+                    </div>
+
                   </div>
 
                   {/* Action Buttons */}

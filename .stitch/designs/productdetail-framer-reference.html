@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReKal — Detail Produk</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#090909',
+            'surface-1': '#141414',
+            'surface-2': '#1c1c1c',
+            ink: '#ffffff',
+            'ink-muted': '#999999',
+            'accent-blue': '#0099ff',
+            success: '#22c55e',
+            'gradient-violet': '#6a4cf5',
+            hairline: '#262626',
+            danger: '#ef4444'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightish: '-0.15px',
+            heading: '-0.8px',
+            hero: '-1.0px'
+          },
+          borderRadius: {
+            'card': '20px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090909;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.15px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero-radial-glow {
+      background: radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.09) 0%, rgba(20, 20, 20, 1) 60%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #090909;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #262626;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-canvas min-h-screen flex antialiased selection:bg-accent-blue/30 selection:text-white">
+
+  <!-- 1. LEFT SIDEBAR (256px fixed, #090909 bg) -->
+  <aside class="w-64 fixed inset-y-0 left-0 bg-canvas border-r border-hairline flex flex-col justify-between p-6 z-30 select-none">
+    <div class="space-y-8">
+      <!-- ReKal Wordmark top-left -->
+      <div class="flex items-center gap-2.5 px-2">
+        <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-black font-bold text-sm tracking-tight shadow-sm">
+          RK
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-ink text-base tracking-tight flex items-center gap-1.5">
+            ReKal
+            <span class="text-[10px] uppercase font-semibold tracking-wider text-accent-blue bg-accent-blue/10 px-1.5 py-0.5 rounded border border-accent-blue/20">HPP</span>
+          </span>
+          <span class="text-[11px] text-ink-muted leading-tight">Cost Calculator</span>
+        </div>
+      </div>
+
+      <!-- Monochrome Nav Links -->
+      <nav class="space-y-1.5">
+        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-ink-muted hover:text-ink hover:bg-surface-1 transition-all duration-150 text-sm font-medium">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          Dashboard
+        </a>
+
+        <!-- "Produk" Active with White Pill Highlight -->
+        <a href="#" class="flex items-center justify-between px-3.5 py-2.5 rounded-full bg-white text-black font-semibold text-sm shadow-md transition-all">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            Produk
+          </div>
+          <span class="w-1.5 h-1.5 rounded-full bg-black"></span>
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-ink-muted hover:text-ink hover:bg-surface-1 transition-all duration-150 text-sm font-medium">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          Material
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-ink-muted hover:text-ink hover:bg-surface-1 transition-all duration-150 text-sm font-medium">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Simulasi HPP
+        </a>
+
+        <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-ink-muted hover:text-ink hover:bg-surface-1 transition-all duration-150 text-sm font-medium">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Laporan Batch
+        </a>
+      </nav>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="pt-4 border-t border-hairline space-y-3">
+      <div class="flex items-center justify-between px-2 text-xs text-ink-muted">
+        <span>Fashion Mfg v2.4</span>
+        <span class="inline-flex items-center gap-1 text-[11px] text-success">
+          <span class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span> Ready
+        </span>
+      </div>
+      <a href="#" class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-ink-muted hover:text-ink hover:bg-surface-1 transition text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
+        </svg>
+        Pengaturan
+      </a>
+    </div>
+  </aside>
+
+  <!-- 2. MAIN CONTENT AREA (flex-1, ml-64, padding 24px) -->
+  <main class="flex-1 ml-64 p-6 min-h-screen custom-scroll max-w-[1184px]">
+    
+    <!-- Page Header: Back arrow button + "Detail Produk" title (22px bold, -0.8px tracking) -->
+    <header class="flex items-center justify-between pb-6 mb-6 border-b border-hairline">
+      <div class="flex items-center gap-3">
+        <a href="#" class="w-9 h-9 rounded-full bg-surface-1 hover:bg-surface-2 border border-hairline flex items-center justify-center text-ink transition-all duration-150 group">
+          <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </a>
+        <div>
+          <h1 class="text-[22px] font-bold text-ink tracking-heading leading-tight">Detail Produk</h1>
+          <p class="text-xs text-ink-muted">SKU: PROD-FSH-0482 · Terakhir diperbarui 2 jam yang lalu</p>
+        </div>
+      </div>
+
+      <!-- Quick Header Status / SKU Badge -->
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-1 border border-hairline text-xs text-ink font-medium">
+          <span class="w-2 h-2 rounded-full bg-success"></span>
+          Status: Aktif Diproduksi
+        </span>
+      </div>
+    </header>
+
+    <!-- Two-column layout (gap-6) -->
+    <div class="grid grid-cols-12 gap-6 items-start">
+
+      <!-- ================= LEFT COLUMN (42% width ~ 5 cols out of 12, sticky top-4) ================= -->
+      <div class="col-span-12 lg:col-span-5 sticky top-6 space-y-6">
+        
+        <!-- a. Product Photo Area: surface-1 card, 16:9 image placeholder with centered camera icon + high quality product render -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-3 overflow-hidden group relative">
+          <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-surface-2 border border-hairline/60 flex items-center justify-center">
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPO-NTzGjolgzgwQb70O49XqXjlpvGffH83NAkI1ZzBaVMfDo38f8ydV6h7dS4JDBs3aj9VA-rMgpGDD3PxBGU5QoRPcgLTk7rGYH_LBu-TQPRDN53b5ktjt6RUT-dbzfRIMHv7KVtGpeqmB6xesNtXtKhTGoVv6mtXHVQNf9ZOoQwA_ZXRx-N_PQA8uhVANeuI5pQgA41vM8uoE0zlhtMSlARJj8NVwZ7wIha6XiJ6I0iT3ukvYAG-UDBf-lh8zG1Se1mbHtP7oPk" 
+              alt="Tas Selempang Canvas Premium" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            />
+            <!-- Subtle Badge Overlay -->
+            <div class="absolute top-3 left-3 bg-canvas/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-hairline text-[11px] font-medium text-white/90 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-accent-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              <span>Foto Katalog 16:9</span>
+            </div>
+            <div class="absolute bottom-3 right-3 bg-canvas/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono text-ink-muted border border-hairline">
+              1376 × 768 px
+            </div>
+          </div>
+        </div>
+
+        <!-- b. Product Name Card (surface-1, 20px radius, p-4) -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-5 space-y-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="text-[11px] uppercase tracking-wider text-ink-muted font-semibold">Nama Produk</span>
+              <h2 class="text-[18px] font-bold text-ink tracking-heading mt-0.5">Tas Selempang Canvas Premium</h2>
+            </div>
+            <!-- Category Chip (surface-2 bg, 6px radius) -->
+            <span class="px-2.5 py-1 bg-surface-2 border border-hairline text-ink text-xs font-medium rounded-[6px] shrink-0">
+              Tas Selempang
+            </span>
+          </div>
+
+          <div class="pt-3 border-t border-hairline/80 grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <span class="text-ink-muted block text-[11px]">Batch Produksi</span>
+              <span class="font-medium text-white">Batch #014 — Musim Dingin</span>
+            </div>
+            <div>
+              <span class="text-ink-muted block text-[11px]">Target Output</span>
+              <span class="font-medium text-white">1.000 Pcs / Bulan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manufacturing Quick Meta Card -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-4 text-xs space-y-2.5">
+          <div class="flex items-center justify-between text-ink-muted">
+            <span>Standar Toleransi Jahitan</span>
+            <span class="text-white font-mono font-medium">± 1.5 mm</span>
+          </div>
+          <div class="flex items-center justify-between text-ink-muted">
+            <span>Estimasi Waktu Jahit (CMT)</span>
+            <span class="text-white font-mono font-medium">35 Menit / Unit</span>
+          </div>
+          <div class="flex items-center justify-between text-ink-muted">
+            <span>Efisiensi Pemakaian Bahan</span>
+            <span class="text-success font-mono font-medium">94.2% (Tinggi)</span>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ================= RIGHT COLUMN (58% width ~ 7 cols out of 12, scrollable) ================= -->
+      <div class="col-span-12 lg:col-span-7 space-y-6">
+
+        <!-- a. HERO CARD - Harga Jual: surface-1 card with green atmospheric radial glow (rgba(34,197,94,0.08) at top-left corner) -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-6 relative overflow-hidden hero-radial-glow shadow-2xl">
+          <!-- Subtle corner highlight accent border -->
+          <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-success/40 via-transparent to-transparent"></div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[11px] uppercase tracking-wider text-ink-muted font-bold">Harga Jual</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+              </div>
+              <div class="text-[32px] font-bold text-white tracking-hero leading-none">
+                Rp 485.000
+              </div>
+            </div>
+
+            <!-- "+28.5% margin" success badge (green bg/10, green text, pill shape) -->
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-success/10 border border-success/20 text-success text-xs font-semibold self-start sm:self-auto">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+              </svg>
+              <span>+28.5% margin</span>
+            </div>
+          </div>
+
+          <!-- Mini Progress comparison -->
+          <div class="mt-5 pt-4 border-t border-hairline/60 flex flex-col gap-2">
+            <div class="flex justify-between text-xs">
+              <span class="text-ink-muted">Breakdown Harga Jual: <span class="text-white font-medium">HPP (38.6%)</span> vs <span class="text-success font-medium">Gross Profit (61.4%)</span></span>
+              <span class="text-success font-mono font-medium">Laba Rp 297.500 / unit</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-2 rounded-full overflow-hidden flex">
+              <div class="h-full bg-accent-blue" style="width: 38.6%"></div>
+              <div class="h-full bg-success" style="width: 61.4%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- b. Three Stat Cards in a row (surface-1, equal width): HPP, Harga Pabrik, Harga Marketplace -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          
+          <!-- HPP Card -->
+          <div class="bg-surface-1 rounded-card border border-hairline p-4 flex flex-col justify-between hover:border-hairline/90 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-ink-muted text-xs font-medium">HPP (COGS)</span>
+              <span class="w-2 h-2 rounded-full bg-accent-blue/80"></span>
+            </div>
+            <div class="text-[19px] font-bold text-accent-blue tracking-heading">
+              Rp 187.500
+            </div>
+            <span class="text-[10px] text-ink-muted mt-1">Biaya riil produksi</span>
+          </div>
+
+          <!-- Harga Pabrik Card -->
+          <div class="bg-surface-1 rounded-card border border-hairline p-4 flex flex-col justify-between hover:border-hairline/90 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-ink-muted text-xs font-medium">Harga Pabrik</span>
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            </div>
+            <div class="text-[19px] font-bold text-cyan-400 tracking-heading">
+              Rp 220.000
+            </div>
+            <span class="text-[10px] text-ink-muted mt-1">Wholesale / Maklon</span>
+          </div>
+
+          <!-- Harga Marketplace Card -->
+          <div class="bg-surface-1 rounded-card border border-hairline p-4 flex flex-col justify-between hover:border-hairline/90 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-ink-muted text-xs font-medium">Harga Marketplace</span>
+              <span class="w-2 h-2 rounded-full bg-white/60"></span>
+            </div>
+            <div class="text-[19px] font-bold text-white tracking-heading">
+              Rp 512.000
+            </div>
+            <span class="text-[10px] text-ink-muted mt-1">Include fee admin 5%</span>
+          </div>
+
+        </div>
+
+        <!-- c. Parameters Card (surface-1): "Parameter Perhitungan" section title (12px ink-muted caps), 4 rows -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-[12px] uppercase tracking-wider text-ink-muted font-bold">Parameter Perhitungan</h3>
+            <span class="text-[11px] text-ink-muted/80 font-mono">Standar Kalkulasi 2024</span>
+          </div>
+          
+          <div class="space-y-3 divide-y divide-hairline">
+            <!-- Row 1: Overhead 20% -->
+            <div class="flex items-center justify-between pt-2.5 first:pt-0">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-hairline"></span>
+                <span class="text-ink-muted text-sm">Overhead Pabrik & Listrik</span>
+              </div>
+              <span class="text-white font-semibold font-mono text-sm">20%</span>
+            </div>
+
+            <!-- Row 2: Margin Pabrik 10% -->
+            <div class="flex items-center justify-between pt-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-hairline"></span>
+                <span class="text-ink-muted text-sm">Margin Pabrik</span>
+              </div>
+              <span class="text-white font-semibold font-mono text-sm">10%</span>
+            </div>
+
+            <!-- Row 3: Margin Jual 20% -->
+            <div class="flex items-center justify-between pt-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-hairline"></span>
+                <span class="text-ink-muted text-sm">Margin Jual Bersih (Retail)</span>
+              </div>
+              <span class="text-white font-semibold font-mono text-sm">20%</span>
+            </div>
+
+            <!-- Row 4: Admin Marketplace 5% -->
+            <div class="flex items-center justify-between pt-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-hairline"></span>
+                <span class="text-ink-muted text-sm">Admin & Komisi Marketplace</span>
+              </div>
+              <span class="text-white font-semibold font-mono text-sm">5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- d. Bill of Materials Card (surface-1): "Komposisi Material" title, table with 3 rows + hairline dividers -->
+        <div class="bg-surface-1 rounded-card border border-hairline p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <h3 class="text-[14px] font-bold text-white tracking-heading">Komposisi Material</h3>
+              <span class="text-[10px] bg-surface-2 px-2 py-0.5 rounded text-ink-muted border border-hairline font-mono">BOM Level 1</span>
+            </div>
+            <span class="text-xs text-accent-blue font-medium cursor-pointer hover:underline">+ Tambah Material</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-hairline text-ink-muted text-[11px] uppercase tracking-wider">
+                  <th class="pb-2.5 font-semibold">Nama Material</th>
+                  <th class="pb-2.5 font-semibold">Harga Satuan</th>
+                  <th class="pb-2.5 font-semibold text-center">Qty / Rasio</th>
+                  <th class="pb-2.5 font-semibold text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-hairline">
+                <!-- Row 1 -->
+                <tr>
+                  <td class="py-3 font-medium text-white">
+                    <div class="flex flex-col">
+                      <span>Canvas Cordura 1000D</span>
+                      <span class="text-[10px] text-ink-muted">Warna Olive Dark</span>
+                    </div>
+                  </td>
+                  <td class="py-3 text-ink-muted font-mono">Rp 65.000 / meter</td>
+                  <td class="py-3 text-ink-muted text-center font-mono">1.2 m</td>
+                  <td class="py-3 text-accent-blue text-right font-mono font-semibold">Rp 78.000</td>
+                </tr>
+
+                <!-- Row 2 -->
+                <tr>
+                  <td class="py-3 font-medium text-white">
+                    <div class="flex flex-col">
+                      <span>Zipper YKK Metal Antique #5</span>
+                      <span class="text-[10px] text-ink-muted">Set Komplit Puller</span>
+                    </div>
+                  </td>
+                  <td class="py-3 text-ink-muted font-mono">Rp 18.500 / set</td>
+                  <td class="py-3 text-ink-muted text-center font-mono">2 set</td>
+                  <td class="py-3 text-accent-blue text-right font-mono font-semibold">Rp 37.000</td>
+                </tr>
+
+                <!-- Row 3 -->
+                <tr>
+                  <td class="py-3 font-medium text-white">
+                    <div class="flex flex-col">
+                      <span>Webbing Katun Tebal 38mm</span>
+                      <span class="text-[10px] text-ink-muted">Tali Selempang + Ring Buckle</span>
+                    </div>
+                  </td>
+                  <td class="py-3 text-ink-muted font-mono">Rp 14.000 / roll</td>
+                  <td class="py-3 text-ink-muted text-center font-mono">1.5 m</td>
+                  <td class="py-3 text-accent-blue text-right font-mono font-semibold">Rp 21.000</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="border-t border-hairline font-medium text-xs">
+                  <td colspan="3" class="pt-3 text-ink-muted">Total Komponen Material (Raw COGS)</td>
+                  <td class="pt-3 text-accent-blue text-right font-mono font-bold text-sm">Rp 136.000</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- e. Action Buttons: "Edit Produk" white pill primary + "Hapus" surface-1 pill with danger red text -->
+        <div class="flex items-center justify-between gap-4 pt-2">
+          <div class="flex items-center gap-3">
+            <!-- White pill primary -->
+            <button class="px-6 py-2.5 rounded-full bg-white hover:bg-white/90 text-black font-semibold text-sm shadow-lg hover:shadow-white/10 active:scale-[0.98] transition-all duration-150 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              Edit Produk
+            </button>
+
+            <!-- Charcoal secondary helper -->
+            <button class="px-5 py-2.5 rounded-full bg-surface-2 hover:bg-hairline text-ink font-medium text-sm border border-hairline transition-all duration-150 flex items-center gap-2">
+              <svg class="w-4 h-4 text-ink-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Hitung Ulang HPP
+            </button>
+          </div>
+
+          <!-- "Hapus" surface-1 pill with danger red text -->
+          <button class="px-5 py-2.5 rounded-full bg-surface-1 hover:bg-danger/10 text-danger border border-hairline hover:border-danger/30 font-medium text-sm transition-all duration-150 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+            </svg>
+            Hapus
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>

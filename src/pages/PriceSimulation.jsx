@@ -451,7 +451,7 @@ const PriceSimulation = () => {
             icon={<Factory className="w-4 h-4" />}
             label="HPP Final"
             value={formatRupiah(calculations.hppFinal)}
-            valueClass="text-accent-blue font-semibold"
+            valueClass="text-accent-blue font-bold text-xl tabular-nums"
           />
           <Divider />
           <SubRow label={`+ Margin Pabrik (${marginPabrikPercentage}%)`} value={formatRupiah(calculations.hargaPabrik - calculations.hppFinal)} />
@@ -459,7 +459,7 @@ const PriceSimulation = () => {
             icon={<Factory className="w-4 h-4" />}
             label="Harga Pabrik"
             value={formatRupiah(calculations.hargaPabrik)}
-            valueClass="text-accent-cyan font-semibold"
+            valueClass="text-accent-cyan font-semibold text-lg tabular-nums"
           />
           <Divider />
           <SubRow label={`+ Margin Jual (${marginJualPercentage}%)`} value={formatRupiah(calculations.hargaJual - calculations.hargaPabrik)} />
@@ -467,7 +467,7 @@ const PriceSimulation = () => {
             icon={<TrendingUp className="w-4 h-4" />}
             label="Harga Jual"
             value={formatRupiah(calculations.hargaJual)}
-            valueClass="text-success font-bold text-lg"
+            valueClass="text-success font-bold text-2xl tabular-nums"
           />
           <Divider />
           <SubRow label={`+ Admin Marketplace (${adminMarketplacePercentage}%)`} value={formatRupiah(calculations.hargaMarketplace - calculations.hargaJual)} />

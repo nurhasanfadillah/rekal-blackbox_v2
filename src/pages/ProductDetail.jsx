@@ -189,7 +189,7 @@ const ProductDetail = () => {
           {/* Hero Card — Harga Jual */}
           <div
             className="rounded-2xl p-5 mb-3 border border-success/30"
-            style={{ background: 'linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(9,9,9,0.95) 100%)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(9,9,9,0.95) 100%)' }}
           >
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-success" />
@@ -215,7 +215,7 @@ const ProductDetail = () => {
                 <Calculator className="w-3.5 h-3.5 text-ink-muted" />
                 <span className="text-xs font-medium text-ink-muted uppercase tracking-wide">HPP Final</span>
               </div>
-              <p className="text-base font-bold text-white tabular-nums">{formatRupiah(product.production_cost)}</p>
+              <p className="text-base font-bold text-accent-blue tabular-nums">{formatRupiah(product.production_cost)}</p>
               <p className="text-xs text-ink-muted mt-1">Biaya produksi</p>
             </div>
 

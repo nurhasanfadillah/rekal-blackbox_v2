@@ -1,6 +1,6 @@
 # ROADMAP.md — ReKal Blackbox v2
 
-> Updated: 2026-06-06
+> Updated: 2026-09-12
 
 ## Project Overview
 
@@ -49,12 +49,8 @@ PWA mobile-first berbasis React + Supabase, dengan desktop mode yang sedang dike
 
 **Outcome:** Dashboard desktop two-column layout (left 38% sticky overview, right flex-1 scrollable). Stitch design digunakan sebagai referensi. Mobile single-column tidak berubah.
 
----
-
-## Active Milestone
-
-### v0.5 — Framer UI Redesign 🔵
-*Status: In Progress — Started 2026-06-06*
+### v0.5 — Framer UI Redesign ✅
+*Completed: 2026-09-12*
 
 Total visual overhaul menggunakan Framer design system sebagai referensi. Hapus glass-panel slate theme sepenuhnya, ganti dengan Framer's pure black canvas system — Inter Variable dengan tight tracking, white pill CTAs, gradient spotlight cards, dan monochrome surface hierarchy.
 
@@ -65,14 +61,10 @@ Total visual overhaul menggunakan Framer design system sebagai referensi. Hapus 
 | 07 | design-system | CSS tokens, Inter font, color vars, base utilities, komponen primitif | ✅ Complete |
 | 08 | shell-navigation | Sidebar desktop + mobile nav — Framer black canvas | ✅ Complete |
 | 09 | list-views | Dashboard, Products, Materials, Categories — design baru | ✅ Complete |
-| 10 | detail-views | ProductDetail, ProductForm, PriceSimulation — detail + form | 🔵 Planning |
+| 10 | detail-views | ProductDetail, ProductForm, PriceSimulation — detail + form | ✅ Complete |
 | 11 | color-scheme-fix | Fix missing tokens + migrate slate→Framer + formalisasi semantic colors | ✅ Complete |
 
-**Success criteria:**
-- Seluruh UI menggunakan Framer design system (canvas #090909, pill CTAs, Inter Variable)
-- Stitch digunakan untuk generate visual reference tiap halaman sebelum implementasi
-- Mobile tetap fungsional di semua halaman
-- Semua data/logic tidak berubah — hanya visual layer
+**Outcome:** Total visual overhaul selesai — seluruh UI (canvas #090909, Inter Variable, white pill CTAs, gradient spotlight cards). 14 files dimigrasikan bersih dari slate/emerald/amber. Stitch-driven per fase. Mobile fungsional. Data/logic tidak berubah.
 
 ---
 

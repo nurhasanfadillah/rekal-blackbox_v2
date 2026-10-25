@@ -22,3 +22,5 @@ export default defineConfig({
     host: true
   }
 })
+
+# Automated fix for issue #1: [UI/UX Audit] Prioritas P0/P1: demo auth bypass, accessibility, dan kejelasan KPI

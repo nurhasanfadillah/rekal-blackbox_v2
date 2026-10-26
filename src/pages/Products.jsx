@@ -3,6 +3,9 @@ import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
 import { useConfirmation } from '../contexts/ConfirmationContext'
 import { formatRupiah } from '../utils/formatters'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { ProductsPdfDocument } from '../components/products-pdf-template'
+import { format } from 'date-fns'
 import {
   ShoppingBag,
   Plus,
@@ -11,7 +14,8 @@ import {
   Copy,
   Camera,
   Images,
-  TrendingUp
+  TrendingUp,
+  Download
 } from 'lucide-react'
 
 const Products = () => {
@@ -56,19 +60,41 @@ const Products = () => {
     return Math.round(((jual - hpp) / hpp) * 100)
   }
 
+  const exportDate = format(new Date(), 'dd MMMM yyyy')
+  const exportFilename = `rekal-daftar-produk-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+
   return (
     <div className="page-container pb-24">
       {/* Header */}
       <div className="page-header">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-3">
           <div>
             <h1 className="page-title">Produk</h1>
             <p className="page-subtitle">Kelola produk dan hitung HPP</p>
           </div>
-          <a href="/products/new" className="btn-primary flex items-center gap-2 hidden lg:inline-flex">
-            <Plus className="w-4 h-4" />
-            Tambah Produk
-          </a>
+          <div className="flex items-center gap-2">
+            {filteredProducts.length > 0 && (
+              <PDFDownloadLink
+                document={<ProductsPdfDocument products={filteredProducts} exportDate={exportDate} />}
+                fileName={exportFilename}
+                className="flex-shrink-0"
+              >
+                {({ loading: pdfLoading }) => (
+                  <button
+                    disabled={pdfLoading}
+                    className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="hidden sm:inline">Export PDF</span>
+                  </button>
+                )}
+              </PDFDownloadLink>
+            )}
+            <a href="/products/new" className="btn-primary flex items-center gap-2 hidden lg:inline-flex">
+              <Plus className="w-4 h-4" />
+              Tambah Produk
+            </a>
+          </div>
         </div>
       </div>
 

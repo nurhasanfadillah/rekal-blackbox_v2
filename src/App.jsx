@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -64,6 +65,17 @@ function AppContent() {
   const Layout = ({ children }) => isDesktop
     ? <WebLayout>{children}</WebLayout>
     : <AppLayout>{children}</AppLayout>
+
+  useEffect(() => {
+    const handleWheel = (e) => {
+      const el = document.activeElement
+      if (el && el.tagName === 'INPUT' && el.type === 'number') {
+        el.blur()
+      }
+    }
+    document.addEventListener('wheel', handleWheel, { passive: true })
+    return () => document.removeEventListener('wheel', handleWheel)
+  }, [])
 
   return (
     <ToastProvider>

@@ -63,6 +63,7 @@ Total visual overhaul menggunakan Framer design system sebagai referensi. Hapus 
 | 09 | list-views | Dashboard, Products, Materials, Categories — design baru | ✅ Complete |
 | 10 | detail-views | ProductDetail, ProductForm, PriceSimulation — detail + form | ✅ Complete |
 | 11 | color-scheme-fix | Fix missing tokens + migrate slate→Framer + formalisasi semantic colors | ✅ Complete |
+| 12 | pdf-export | Ekspor daftar produk (HPP + harga jual) ke PDF — direct download | ✅ Complete |
 
 **Outcome:** Total visual overhaul selesai — seluruh UI (canvas #090909, Inter Variable, white pill CTAs, gradient spotlight cards). 14 files dimigrasikan bersih dari slate/emerald/amber. Stitch-driven per fase. Mobile fungsional. Data/logic tidak berubah.
 

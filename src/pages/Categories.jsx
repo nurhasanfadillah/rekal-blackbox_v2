@@ -171,7 +171,7 @@ const Categories = () => {
             const hasMaterials = materialCount > 0
 
             return (
-              <div key={category.id} className="list-item">
+              <div key={category.id} className="list-row">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded bg-surface-2 flex items-center justify-center">

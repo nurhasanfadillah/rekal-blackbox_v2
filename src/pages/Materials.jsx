@@ -269,7 +269,7 @@ const Materials = () => {
             const isInUse = usageCount > 0
 
             return (
-              <div key={material.id} className="list-item">
+              <div key={material.id} className="list-row">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded bg-success/10 flex items-center justify-center">

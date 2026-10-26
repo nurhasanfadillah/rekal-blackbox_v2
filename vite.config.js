@@ -14,6 +14,9 @@ export default defineConfig({
       }
     })
   ],
+  optimizeDeps: {
+    include: ['@react-pdf/renderer'],
+  },
   server: {
     port: 3000,
     host: true

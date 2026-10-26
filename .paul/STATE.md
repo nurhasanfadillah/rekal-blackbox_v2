@@ -1,14 +1,16 @@
 # STATE.md — Project State
 
-> Updated: 2026-09-12
+> Updated: 2026-10-24
 
 ## Current Position
 
 Milestone: v0.5 Framer UI Redesign — **COMPLETE ✅**
 Phase: 10 (detail-views) — COMPLETE ✅ (PLAN ✓ → APPLY ✓ → UNIFY ✓)
-Plan: 10-01 — COMPLETE ✅
-Status: Milestone closed — ready for new milestone or release
-Last activity: 2026-09-12 — Phase 10 detail-views selesai, v0.5 milestone closed
+Phase: 12 (pdf-export) — COMPLETE ✅
+Phase: 12 (theme-redesign) — COMPLETE ✅
+Plan: All plans complete
+Status: Milestone closed — all phases done
+Last activity: 2026-10-26 — Theme redesign (dark→light) + PDF export merged
 
 Progress:
 - Phase 1–6: [██████████] 100% (v0.1–v0.4 complete)
@@ -17,6 +19,7 @@ Progress:
 - Phase 9 (list-views):        [██████████] 100% ✅
 - Phase 10 (detail-views):     [██████████] 100% ✅
 - Phase 11 (color-scheme-fix): [██████████] 100% ✅
+- Phase 12 (pdf-export):       [██████████] 100% ✅
 
 **v0.5 Framer UI Redesign: 5/5 phases complete (100%)** 🎉
 
@@ -32,12 +35,15 @@ PLAN ──▶ APPLY ──▶ UNIFY
   ✓        ✓        ✓     [Loop 11-01 complete — Token foundation + 7 komponen/Login dimigrasikan]
   ✓        ✓        ✓     [Loop 11-02 complete — 7 page files dimigrasikan, seluruh app bersih]
   ✓        ✓        ✓     [Loop 10-01 complete — Detail views Framer validation, v0.5 milestone closed]
+  ✓        ✓        ✓     [Loop 10-02 complete — input number polish (spinner + scroll wheel)]
+  ✓        ✓        ✓     [Loop 12-01 complete — PDF export tombol + template A4 + direct download]
+  ✓        ✓        ✓     [Loop 12-02 complete — dark→light Modern Corporate theme migration]
 ```
 
 ## Session Continuity
 
-Last session: 2026-09-12
-Stopped at: v0.5 milestone complete — semua 5 fase Framer UI Redesign selesai
+Last session: 2026-10-26
+Stopped at: v0.5 milestone complete — theme redesign (dark→light) + PDF export merged
 Next action: Define next milestone (v0.6?) atau review v0.5 deliverables
 Resume file: .paul/ROADMAP.md
 
@@ -59,6 +65,9 @@ Resume file: .paul/ROADMAP.md
 | CHART_COLORS dikecualikan dari token migration | Data chart (intentionally hardcoded), bukan UI color scheme | Tepat sasaran |
 | ProductForm Phase 10: 0 changes | Stitch comparison tidak menunjukkan gap — glass-panel sudah Framer-correct dari Phase 11 | Skip task lebih baik dari unnecessary changes |
 | HPP Final accent-blue di ProductDetail | Konsistensi warna dengan PriceSimulation result panel | Unified accent hierarchy: HPP=blue, Harga Pabrik=cyan, Harga Jual=success |
+| Input number polish sebagai PLAN 10-02 terpisah | Quick-fix track, parallel Wave 1 dengan 10-01 | Separation of concerns, PLAN 10-01 stays intact |
+| Scroll wheel disable via `el.blur()` bukan `preventDefault` | Passive listener, tidak block page scroll | Zero perf impact, UX-correct |
+| Override: Proceed tanpa stitch-design di 12-01 | btn-secondary existing class, bukan komponen visual baru | Tidak ada Stitch reference untuk tombol Export PDF |
 
 ## Phase Summary
 
@@ -82,9 +91,12 @@ Resume file: .paul/ROADMAP.md
 ### Phase 10: detail-views — COMPLETE ✅
 **Outcome:** Stitch validation untuk ProductDetail, ProductForm, PriceSimulation. 5 className-only changes: hero card gradient diperkuat (0.08→0.12), HPP Final accent-blue, PriceSimulation display numbers font-bold/tabular-nums/ukuran naik. ProductForm tidak memerlukan perubahan. **v0.5 milestone CLOSED.**
 
+### Phase 12: pdf-export — COMPLETE ✅
+**Outcome:** @react-pdf/renderer v4.9.0 diinstall. `products-pdf-template.jsx` (A4 white, tabel 5 kolom: No/Nama Produk/HPP/Harga Jual/Margin%). Tombol "Export PDF" di Products header (conditional, filteredProducts). Direct download tanpa preview. Build clean.
+
 ## Git State
 
-Last commit: eec3d5a — feat(10-detail-views): Framer validation — ProductDetail + PriceSimulation visual polish
+Last commit: 1390906 — feat(12-theme-redesign): dark → light Modern Corporate theme migration
 Branch: main
 Feature branches merged: none
 

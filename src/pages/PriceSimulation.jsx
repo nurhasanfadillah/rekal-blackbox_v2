@@ -92,9 +92,9 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
         ref={triggerRef}
         type="button"
         onClick={() => { setOpen(o => !o); setQuery('') }}
-        className="w-full flex items-center justify-between gap-2 h-11 px-3 bg-surface-1 border border-hairline hover:border-ink-muted focus:border-accent-blue rounded-xl text-sm transition-colors"
+        className="w-full flex items-center justify-between gap-2 h-11 px-3 bg-surface-1 border border-hairline hover:border-ink-muted focus:border-accent-blue rounded text-sm transition-colors"
       >
-        <span className={selected ? 'text-white font-medium truncate' : 'text-ink-muted'}>
+        <span className={selected ? 'text-ink font-medium truncate' : 'text-ink-muted'}>
           {selected ? selected.name : loading ? 'Memuat produk...' : 'Cari & pilih produk...'}
         </span>
         <div className="flex items-center gap-1 flex-shrink-0">
@@ -112,7 +112,7 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
         <div
           ref={dropdownRef}
           style={dropdownStyle}
-          className="bg-surface-1 border border-hairline rounded-xl shadow-2xl overflow-hidden"
+          className="bg-surface-1 border border-hairline rounded shadow-2xl overflow-hidden"
         >
           <div className="p-2 border-b border-hairline-soft">
             <div className="relative">
@@ -123,7 +123,7 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Ketik nama produk..."
-                className="w-full h-9 bg-surface-2 border border-hairline rounded-lg pl-8 pr-3 text-sm text-white placeholder-ink-muted outline-none focus:border-accent-blue"
+                className="w-full h-9 bg-surface-2 border border-hairline rounded-lg pl-8 pr-3 text-sm text-ink placeholder-ink-muted outline-none focus:border-accent-blue"
               />
             </div>
           </div>
@@ -365,7 +365,7 @@ const PriceSimulation = () => {
                   <button
                     type="button"
                     onClick={() => openMaterialSelector(index)}
-                    className={`flex-1 flex items-center justify-between h-10 px-3 rounded-xl border text-sm transition-all ${
+                    className={`flex-1 flex items-center justify-between h-10 px-3 rounded border text-sm transition-all ${
                       item.material
                         ? 'bg-surface-1 border-hairline text-ink'
                         : 'bg-surface-1/50 border-hairline-soft text-ink-muted'
@@ -432,8 +432,8 @@ const PriceSimulation = () => {
       {/* Kolom kanan — results */}
       <div className="lg:w-7/12 space-y-4 mt-4 lg:mt-0">
       {/* Calculation Results */}
-      <div className="glass-panel p-4 bg-gradient-to-br from-gradient-violet/10 to-canvas mb-3 lg:mb-0">
-        <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+      <div className="glass-panel p-4 mb-3 lg:mb-0">
+        <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
           <DollarSign className="w-4 h-4 text-accent-blue" />
           Hasil Perhitungan
         </h3>
@@ -443,7 +443,7 @@ const PriceSimulation = () => {
             icon={<Package className="w-4 h-4" />}
             label="Total Material"
             value={formatRupiah(calculations.totalMaterialCost)}
-            valueClass="text-white"
+            valueClass="text-ink"
           />
           <Divider />
           <SubRow label={`+ Overhead (${overheadPercentage}%)`} value={formatRupiah(calculations.overheadAmount)} />
@@ -459,7 +459,7 @@ const PriceSimulation = () => {
             icon={<Factory className="w-4 h-4" />}
             label="Harga Pabrik"
             value={formatRupiah(calculations.hargaPabrik)}
-            valueClass="text-accent-cyan font-semibold text-lg tabular-nums"
+            valueClass="text-accent-blue font-semibold text-lg tabular-nums"
           />
           <Divider />
           <SubRow label={`+ Margin Jual (${marginJualPercentage}%)`} value={formatRupiah(calculations.hargaJual - calculations.hargaPabrik)} />
@@ -475,7 +475,7 @@ const PriceSimulation = () => {
             icon={<DollarSign className="w-4 h-4" />}
             label="Harga Marketplace"
             value={formatRupiah(calculations.hargaMarketplace)}
-            valueClass="text-white font-bold text-lg"
+            valueClass="text-ink font-bold text-lg"
           />
         </div>
       </div>
@@ -495,7 +495,7 @@ const PriceSimulation = () => {
       {/* ── Sticky Result Bar ── */}
       {hasData && (
         <div className="fixed bottom-16 left-0 right-0 z-10 px-4 pb-2 pointer-events-none lg:hidden">
-          <div className="bg-surface-1/95 backdrop-blur-md border border-hairline rounded-2xl px-4 py-3 shadow-2xl pointer-events-auto">
+          <div className="bg-surface-1 backdrop-blur-md border border-hairline rounded-lg px-4 py-3 shadow-2xl pointer-events-auto">
             <div className="grid grid-cols-3 divide-x divide-hairline text-center">
               <div className="pr-3">
                 <p className="text-[10px] text-ink-muted mb-0.5">HPP</p>
@@ -507,7 +507,7 @@ const PriceSimulation = () => {
               </div>
               <div className="pl-3">
                 <p className="text-[10px] text-ink-muted mb-0.5">Marketplace</p>
-                <p className="text-sm font-bold text-white">{formatRupiah(calculations.hargaMarketplace)}</p>
+                <p className="text-sm font-bold text-ink">{formatRupiah(calculations.hargaMarketplace)}</p>
               </div>
             </div>
           </div>
@@ -522,7 +522,7 @@ const PriceSimulation = () => {
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-white">Pilih Material</h2>
+              <h2 className="text-base font-semibold text-ink">Pilih Material</h2>
               <button onClick={() => setShowMaterialSelector(false)} className="p-2 text-ink-muted hover:text-ink">
                 <X className="w-5 h-5" />
               </button>
@@ -537,7 +537,7 @@ const PriceSimulation = () => {
                 value={materialSearch}
                 onChange={e => setMaterialSearch(e.target.value)}
                 placeholder="Cari material..."
-                className="w-full h-10 bg-surface-1 border border-hairline rounded-xl pl-9 pr-3 text-sm text-white placeholder-ink-muted outline-none focus:border-accent-blue"
+                className="w-full h-10 bg-surface-1 border border-hairline rounded pl-9 pr-3 text-sm text-ink placeholder-ink-muted outline-none focus:border-accent-blue"
               />
             </div>
 
@@ -562,7 +562,7 @@ const PriceSimulation = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-medium text-white text-sm">{material.name}</p>
+                          <p className="font-medium text-ink text-sm">{material.name}</p>
                           <p className="text-xs text-ink-muted mt-0.5">
                             {formatRupiah(material.standard_price)} / {material.unit}
                           </p>

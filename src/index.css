@@ -13,10 +13,9 @@
   }
 
   body {
-    background-color: #090909;
-    color: #ffffff;
+    background-color: #F4F7FB;
+    color: #172B4D;
     font-family: 'Inter', system-ui, sans-serif;
-    font-feature-settings: 'cv01', 'cv05', 'cv09', 'cv11', 'ss03', 'ss07';
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
     overflow-x: hidden;
@@ -28,87 +27,107 @@
 }
 
 @layer components {
+  /* ── Card panels ─────────────────────────────────────────── */
   .glass-panel {
-    background: #141414;
-    border: 1px solid #262626;
-    border-radius: 20px;
+    background: #FFFFFF;
+    border: 1px solid #D8E0EA;
+    border-radius: 6px;
   }
 
   .glass-card {
-    background: #1c1c1c;
-    border: 1px solid #1a1a1a;
-    border-radius: 15px;
+    background: #EBF0F6;
+    border: 1px solid #D8E0EA;
+    border-radius: 6px;
   }
 
+  /* ── Buttons ─────────────────────────────────────────────── */
   .btn-primary {
-    background: #ffffff;
-    color: #000000;
+    background: #155EEF;
+    color: #FFFFFF;
     font-size: 14px;
-    font-weight: 500;
-    letter-spacing: -0.14px;
-    padding: 10px 20px;
-    border-radius: 9999px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 5px;
     border: none;
-    transition: all 200ms;
-    @apply active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+    transition: background 150ms;
+    @apply active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #1251CC;
   }
 
   .btn-secondary {
-    background: #141414;
-    color: #ffffff;
+    background: #FFFFFF;
+    color: #172B4D;
     font-size: 14px;
     font-weight: 500;
-    letter-spacing: -0.14px;
-    padding: 10px 20px;
-    border-radius: 9999px;
-    border: 1px solid #262626;
-    transition: all 200ms;
-    @apply active:scale-95;
+    padding: 9px 18px;
+    border-radius: 5px;
+    border: 1px solid #D8E0EA;
+    transition: background 150ms, border-color 150ms;
+    @apply active:scale-[0.98];
+  }
+
+  .btn-secondary:hover {
+    background: #F4F7FB;
+    border-color: #52627A;
   }
 
   .btn-danger {
-    background: #141414;
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: #FFFFFF;
+    color: #D92D20;
+    border: 1px solid #FAD2CF;
     font-size: 14px;
     font-weight: 500;
-    padding: 10px 20px;
-    border-radius: 9999px;
-    transition: all 200ms;
-    @apply active:scale-95;
+    padding: 9px 18px;
+    border-radius: 5px;
+    transition: background 150ms, border-color 150ms;
+    @apply active:scale-[0.98];
   }
 
+  .btn-danger:hover {
+    background: #FEF2F2;
+    border-color: #D92D20;
+  }
+
+  /* ── Form inputs ─────────────────────────────────────────── */
   .input-field {
     width: 100%;
-    background: #141414;
-    border: 1px solid #262626;
-    border-radius: 10px;
-    padding: 10px 14px;
-    color: #ffffff;
-    font-size: 15px;
-    letter-spacing: -0.15px;
+    background: #FFFFFF;
+    border: 1px solid #D8E0EA;
+    border-radius: 5px;
+    padding: 9px 12px;
+    color: #172B4D;
+    font-size: 14px;
     outline: none;
-    transition: all 200ms;
+    transition: border-color 150ms, box-shadow 150ms;
   }
 
   .input-field::placeholder {
-    color: #999999;
+    color: #99A8BA;
   }
 
   .input-field:focus {
-    border-color: #0099ff;
-    box-shadow: 0 0 0 1px rgba(0, 153, 255, 0.15);
+    border-color: #155EEF;
+    box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.10);
+  }
+
+  .input-field:disabled {
+    background: #EBF0F6;
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 
   .input-label {
     display: block;
     font-size: 13px;
-    font-weight: 500;
-    letter-spacing: -0.13px;
-    color: #999999;
-    margin-bottom: 6px;
+    font-weight: 600;
+    color: #52627A;
+    margin-bottom: 5px;
   }
 
+  /* ── Page layout ─────────────────────────────────────────── */
   .page-container {
     @apply min-h-screen pb-24 px-4 pt-4;
     @apply max-w-lg mx-auto;
@@ -123,134 +142,141 @@
   }
 
   .page-title {
-    font-size: 32px;
-    font-weight: 500;
-    letter-spacing: -1px;
-    color: #ffffff;
-    line-height: 1.13;
-    margin-bottom: 4px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #172B4D;
+    line-height: 1.2;
+    letter-spacing: -0.4px;
+    margin-bottom: 3px;
   }
 
   .page-subtitle {
-    font-size: 15px;
-    color: #999999;
-    letter-spacing: -0.15px;
+    font-size: 14px;
+    color: #52627A;
   }
 
+  /* ── Navigation ──────────────────────────────────────────── */
   .nav-item {
     @apply flex flex-col items-center gap-1 py-2 px-3;
-    color: #999999;
-    transition: color 200ms;
+    color: #52627A;
+    transition: color 150ms;
   }
 
   .nav-item.active {
-    color: #ffffff;
+    color: #155EEF;
   }
 
+  /* ── Stat cards ──────────────────────────────────────────── */
   .stat-card {
     @apply glass-panel p-4;
   }
 
   .stat-label {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: #999999;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #52627A;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .stat-value {
-    font-size: 24px;
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: -0.5px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #172B4D;
+    letter-spacing: -0.3px;
     font-variant-numeric: tabular-nums;
   }
 
+  /* ── List items ──────────────────────────────────────────── */
   .list-item {
-    background: #141414;
-    border: 1px solid #262626;
-    border-radius: 15px;
-    padding: 16px;
-    margin-bottom: 8px;
-    transition: background 150ms, transform 150ms;
-    @apply active:scale-[0.98];
+    background: #FFFFFF;
+    border: 1px solid #D8E0EA;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 6px;
+    transition: background 120ms, border-color 120ms;
   }
 
   @media (hover: hover) {
     .list-item:hover {
-      background: #1c1c1c;
+      background: #F4F7FB;
+      border-color: #99A8BA;
     }
   }
 
+  /* ── Badges ──────────────────────────────────────────────── */
   .badge {
     display: inline-flex;
     align-items: center;
-    padding: 3px 10px;
-    border-radius: 9999px;
-    font-size: 12px;
-    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
   }
 
   .badge-primary {
     @apply badge;
-    background: rgba(0, 153, 255, 0.1);
-    color: #0099ff;
-    border: 1px solid rgba(0, 153, 255, 0.2);
+    background: #EFF6FF;
+    color: #155EEF;
+    border: 1px solid #BFDBFE;
   }
 
   .badge-secondary {
     @apply badge;
-    background: #1c1c1c;
-    color: #999999;
-    border: 1px solid #262626;
+    background: #EBF0F6;
+    color: #52627A;
+    border: 1px solid #D8E0EA;
   }
 
   .badge-success {
     @apply badge;
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    background: #F0FDF4;
+    color: #16803D;
+    border: 1px solid #BBF7D0;
   }
 
+  /* ── Modal ───────────────────────────────────────────────── */
   .modal-overlay {
     @apply fixed inset-0 z-50;
-    background: rgba(9, 9, 9, 0.85);
-    backdrop-filter: blur(4px);
+    background: rgba(23, 43, 77, 0.45);
+    backdrop-filter: blur(2px);
     @apply flex items-end sm:items-center justify-center;
     @apply p-4;
   }
 
   .modal-content {
-    @apply glass-panel w-full max-w-md p-6;
+    background: #FFFFFF;
+    border: 1px solid #D8E0EA;
+    border-radius: 8px;
+    @apply w-full max-w-md p-6;
     @apply animate-slide-up;
+    box-shadow: 0 8px 32px rgba(23, 43, 77, 0.12);
   }
 
+  /* ── Empty state ─────────────────────────────────────────── */
   .empty-state {
     @apply flex flex-col items-center justify-center py-12 text-center;
   }
 
   .empty-state-icon {
-    color: #999999;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
+    color: #99A8BA;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 14px;
   }
 
   .empty-state-title {
-    font-size: 18px;
-    font-weight: 500;
-    color: #999999;
-    letter-spacing: -0.18px;
-    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #52627A;
+    margin-bottom: 6px;
   }
 
   .empty-state-desc {
-    font-size: 14px;
-    color: #999999;
-    max-width: 20rem;
-    letter-spacing: -0.14px;
+    font-size: 13px;
+    color: #99A8BA;
+    max-width: 18rem;
   }
 }
 

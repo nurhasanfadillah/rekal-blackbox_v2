@@ -208,7 +208,7 @@ const Materials = () => {
           </div>
           <button
             onClick={() => navigate('/categories')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-2 border border-hairline text-ink-muted hover:text-ink hover:border-hairline transition-all text-sm"
+            className="flex items-center gap-1.5 px-3 py-2 rounded bg-surface-2 border border-hairline text-ink-muted hover:text-ink hover:border-hairline transition-all text-sm"
           >
             <Layers className="w-4 h-4" />
             <span>Kategori</span>
@@ -236,7 +236,7 @@ const Materials = () => {
 
       {/* Error State */}
       {errors?.materials && (
-        <div className="bg-danger/10 border border-danger/30 rounded-xl p-4 mb-4">
+        <div className="bg-danger/10 border border-danger/30 rounded p-3 mb-4">
           <p className="text-danger text-sm">{errors.materials}</p>
 
           <button
@@ -272,11 +272,11 @@ const Materials = () => {
               <div key={material.id} className="list-item">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-success/15 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded bg-success/10 flex items-center justify-center">
                       <Package className="w-5 h-5 text-success" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-white">{material.name}</h3>
+                      <h3 className="font-medium text-ink">{material.name}</h3>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {category && (
                           <span className="badge-secondary">
@@ -296,7 +296,7 @@ const Materials = () => {
                   </div>
 
                   <div className="text-right">
-                    <p className="font-semibold text-white">{formatRupiah(material.standard_price)}</p>
+                    <p className="font-semibold text-ink tabular-nums">{formatRupiah(material.standard_price)}</p>
                     <div className="flex gap-2 mt-2 justify-end">
                       <button
                         onClick={() => openModal(material)}
@@ -348,7 +348,7 @@ const Materials = () => {
                         <div className="w-8 h-8 rounded-lg bg-success/15 flex items-center justify-center flex-shrink-0">
                           <Package className="w-4 h-4 text-success" />
                         </div>
-                        <span className="font-medium text-white">{material.name}</span>
+                        <span className="font-medium text-ink">{material.name}</span>
                       </div>
                     </td>
                     <td className="py-3">
@@ -365,7 +365,7 @@ const Materials = () => {
                       <span className="badge-primary">{material.unit}</span>
                     </td>
                     <td className="py-3 text-right">
-                      <span className="font-semibold text-white">{formatRupiah(material.standard_price)}</span>
+                      <span className="font-semibold text-ink tabular-nums">{formatRupiah(material.standard_price)}</span>
                     </td>
                     <td className="py-3">
                       {isInUse ? (
@@ -413,10 +413,10 @@ const Materials = () => {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-base font-semibold text-ink">
                 {editingMaterial ? 'Edit Material' : 'Tambah Material'}
               </h2>
-              <button onClick={closeModal} className="p-2 text-ink-muted hover:text-white">
+              <button onClick={closeModal} className="p-2 text-ink-muted hover:text-ink">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -477,7 +477,7 @@ const Materials = () => {
                       key={option.value}
                       type="button"
                       onClick={() => setFormData({ ...formData, unit: option.value })}
-                      className={`p-3 rounded-xl border text-sm font-medium transition-all ${
+                      className={`p-2.5 rounded border text-sm font-medium transition-all ${
                         formData.unit === option.value
                           ? 'border-ink bg-surface-2 text-ink'
                           : 'border-hairline bg-surface-2 text-ink-muted hover:border-ink'

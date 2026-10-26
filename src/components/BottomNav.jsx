@@ -9,7 +9,6 @@ const BottomNav = () => {
     { to: '/price-simulation', icon: Calculator, label: 'Simulasi' },
   ]
 
-
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-surface-1 border-t border-hairline safe-area-bottom z-40">
       <div className="max-w-lg mx-auto flex justify-around items-center">
@@ -17,6 +16,7 @@ const BottomNav = () => {
           <NavLink
             key={item.to}
             to={item.to}
+            end={item.to === '/'}
             className={({ isActive }) =>
               `nav-item ${isActive ? 'active' : ''}`
             }

@@ -210,7 +210,7 @@ const MultiPhotoUpload = ({
             onDragStart={() => handleDragStart(index)}
             onDragOver={(e) => handleDragOver(e, index)}
             onDragEnd={handleDragEnd}
-            className={`relative aspect-square rounded-xl overflow-hidden bg-surface-1 border-2 ${
+            className={`relative aspect-square rounded-lg overflow-hidden bg-surface-1 border-2 ${
               draggingIndex === index ? 'border-accent-blue opacity-50' : 'border-hairline'
             } group cursor-move`}
           >
@@ -221,7 +221,7 @@ const MultiPhotoUpload = ({
             />
             
             {/* Overlay */}
-            <div className="absolute inset-0 bg-canvas/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
               <div className="flex items-center gap-1">
                 <GripVertical className="w-4 h-4 text-white/70" />
                 <span className="text-white text-xs">Drag</span>
@@ -237,7 +237,7 @@ const MultiPhotoUpload = ({
             </div>
 
             {/* Order Badge */}
-            <div className="absolute top-2 left-2 px-2 py-1 bg-canvas/50 rounded-full text-white text-xs font-medium">
+            <div className="absolute top-2 left-2 px-2 py-1 bg-black/55 rounded-full text-white text-xs font-medium">
               {index + 1}
             </div>
 
@@ -256,7 +256,7 @@ const MultiPhotoUpload = ({
             type="button"
             onClick={triggerFileInput}
             disabled={uploading}
-            className="aspect-square rounded-xl border-2 border-dashed border-hairline hover:border-accent-blue hover:bg-accent-blue/5 flex flex-col items-center justify-center gap-2 transition-all group"
+            className="aspect-square rounded-lg border-2 border-dashed border-hairline hover:border-accent-blue hover:bg-accent-blue/5 flex flex-col items-center justify-center gap-2 transition-all group"
           >
             {uploading ? (
               <Loader2 className="w-8 h-8 animate-spin text-accent-blue" />

@@ -17,7 +17,7 @@ export const ToastProvider = ({ children }) => {
   const addToast = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now()
     setToasts(prev => [...prev, { id, message, type, duration }])
-    
+
     setTimeout(() => {
       removeToast(id)
     }, duration)
@@ -34,7 +34,7 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ success, error, info }}>
       {children}
-      <div className="fixed top-4 left-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+      <div className="fixed top-4 left-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm mx-auto">
         {toasts.map(toast => (
           <ToastItem key={toast.id} {...toast} onClose={() => removeToast(toast.id)} />
         ))}
@@ -49,28 +49,26 @@ const ToastItem = ({ message, type, onClose }) => {
     error: AlertCircle,
     info: Info
   }
-  
-  const colors = {
-    success: 'bg-success/90 text-white',
-    error: 'bg-danger/90 text-white',
-    info: 'bg-accent-blue/90 text-white'
+
+  const styles = {
+    success: 'bg-success text-white',
+    error: 'bg-danger text-white',
+    info: 'bg-accent-blue text-white'
   }
-  
+
   const Icon = icons[type]
 
   return (
-    <div className={`${colors[type]} backdrop-blur-sm rounded-xl px-4 py-3 shadow-lg flex items-center gap-3 pointer-events-auto animate-slide-up`}>
-      <Icon className="w-5 h-5 flex-shrink-0" />
+    <div className={`${styles[type]} rounded px-4 py-3 shadow-lg flex items-center gap-3 pointer-events-auto animate-slide-up`}>
+      <Icon className="w-4 h-4 flex-shrink-0" />
       <p className="text-sm font-medium flex-1">{message}</p>
-
-      <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-lg transition-colors">
-        <X className="w-4 h-4" />
+      <button onClick={onClose} className="p-1 hover:bg-white/20 rounded transition-colors flex-shrink-0">
+        <X className="w-3.5 h-3.5" />
       </button>
     </div>
   )
 }
 
-// Default export for App.jsx
 const Toast = () => {
   return <ToastProvider />
 }

@@ -139,7 +139,7 @@ const Categories = () => {
 
       {/* Error State */}
       {errors?.categories && (
-        <div className="bg-danger/10 border border-danger/30 rounded-xl p-4 mb-4">
+        <div className="bg-danger/10 border border-danger/30 rounded p-3 mb-4">
           <p className="text-danger text-sm">{errors.categories}</p>
 
           <button
@@ -174,11 +174,11 @@ const Categories = () => {
               <div key={category.id} className="list-item">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded bg-surface-2 flex items-center justify-center">
                       <Layers className="w-5 h-5 text-ink-muted" />
                     </div>
                     <div>
-                      <h3 className="font-medium text-white">{category.name}</h3>
+                      <h3 className="font-medium text-ink">{category.name}</h3>
                       <div className="flex items-center gap-2 text-xs mt-1 flex-wrap">
                         {hasMaterials ? (
                           <span className="badge-primary bg-warning/20 text-warning border-warning/30">
@@ -241,7 +241,7 @@ const Categories = () => {
                         <div className="w-8 h-8 rounded-lg bg-surface-2 flex items-center justify-center flex-shrink-0">
                           <Layers className="w-4 h-4 text-ink-muted" />
                         </div>
-                        <span className="font-medium text-white">{category.name}</span>
+                        <span className="font-medium text-ink">{category.name}</span>
                       </div>
                     </td>
                     <td className="py-3">
@@ -290,10 +290,10 @@ const Categories = () => {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-base font-semibold text-ink">
                 {editingCategory ? 'Edit Kategori' : 'Tambah Kategori'}
               </h2>
-              <button onClick={closeModal} className="p-2 text-ink-muted hover:text-white">
+              <button onClick={closeModal} className="p-2 text-ink-muted hover:text-ink">
                 <X className="w-5 h-5" />
               </button>
             </div>

@@ -115,7 +115,7 @@ const ProductPhotoGallery = ({
   if (!hasPhotos) {
     return (
       <div
-        className="w-full bg-surface-1/50 rounded-2xl border-2 border-dashed border-hairline flex flex-col items-center justify-center"
+        className="w-full bg-surface-2 rounded-lg border-2 border-dashed border-hairline flex flex-col items-center justify-center"
         style={{ height: maxHeight }}
       >
         <ImageIcon className="w-16 h-16 text-ink-muted mb-4" />
@@ -127,8 +127,8 @@ const ProductPhotoGallery = ({
   return (
     <div className="w-full">
       {/* Main Image Viewer */}
-      <div 
-        className="relative w-full bg-surface-1 rounded-2xl overflow-hidden group"
+      <div
+        className="relative w-full bg-surface-2 rounded-lg overflow-hidden group"
         style={{ height: maxHeight }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -146,13 +146,13 @@ const ProductPhotoGallery = ({
           <>
             <button
               onClick={handlePrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-canvas/50 hover:bg-canvas/70 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/55 hover:bg-black/75 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-canvas/50 hover:bg-canvas/70 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/55 hover:bg-black/75 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -163,14 +163,14 @@ const ProductPhotoGallery = ({
         <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={() => handleDownload(currentPhoto, currentIndex)}
-            className="p-2 bg-canvas/50 hover:bg-canvas/70 text-white rounded-lg transition-colors"
+            className="p-2 bg-black/55 hover:bg-black/75 text-white rounded-lg transition-colors"
             title="Download foto"
           >
             <Download className="w-4 h-4" />
           </button>
           <button
             onClick={() => setLightboxOpen(true)}
-            className="p-2 bg-canvas/50 hover:bg-canvas/70 text-white rounded-lg transition-colors"
+            className="p-2 bg-black/55 hover:bg-black/75 text-white rounded-lg transition-colors"
             title="Lihat fullscreen"
           >
             <ZoomIn className="w-4 h-4" />
@@ -179,7 +179,7 @@ const ProductPhotoGallery = ({
 
         {/* Photo Counter */}
         {sortedPhotos.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-canvas/50 rounded-full text-white text-sm">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-black/60 rounded-full text-white text-sm">
             {currentIndex + 1} / {sortedPhotos.length}
           </div>
         )}
@@ -232,7 +232,7 @@ const ProductPhotoGallery = ({
       {/* Lightbox */}
       {lightboxOpen && (
         <div 
-          className="fixed inset-0 z-50 bg-canvas/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
           onClick={() => setLightboxOpen(false)}
         >
           <button

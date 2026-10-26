@@ -7,47 +7,44 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Framer surfaces
-        canvas: '#090909',
-        'surface-1': '#141414',
-        'surface-2': '#1c1c1c',
-        hairline: '#262626',
-        'hairline-soft': '#1a1a1a',
-        // Framer text
-        ink: '#ffffff',
-        'ink-muted': '#999999',
-        // Framer accent (links/focus ONLY)
-        'accent-blue': '#0099ff',
-        // Framer gradients (spotlight cards)
-        'gradient-violet': '#6a4cf5',
-        'gradient-magenta': '#d44df0',
-        'gradient-orange': '#ff7a3d',
-        'gradient-coral': '#ff5577',
-        // Semantic
-        success: '#22c55e',
-        danger: '#ef4444',
-        // Semantic aliases (matching existing values)
-        'accent-rose': '#ef4444',
-        'accent-emerald': '#22c55e',
-        // New accents
-        'accent-cyan': '#06b6d4',
-        'accent-violet': '#6a4cf5',
-        // Warning semantic
-        warning: '#f59e0b',
-        // Primary palette (temporary — tech debt)
+        // ── Backgrounds & surfaces ──────────────────────────────
+        canvas: '#F4F7FB',
+        'surface-1': '#FFFFFF',
+        'surface-2': '#EBF0F6',
+        hairline: '#D8E0EA',
+        'hairline-soft': '#E8EDF4',
+        // ── Text ───────────────────────────────────────────────
+        ink: '#172B4D',
+        'ink-muted': '#52627A',
+        // ── Brand ──────────────────────────────────────────────
+        'accent-blue': '#155EEF',
+        'deep-blue': '#0B3B8C',
+        'accent-amber': '#FFB020',
+        // ── Semantic ───────────────────────────────────────────
+        success: '#16803D',
+        danger: '#D92D20',
+        warning: '#B54708',
+        // ── Aliases (backward-compat) ──────────────────────────
+        'accent-rose': '#D92D20',
+        'accent-emerald': '#16803D',
+        // ── Primary scale ──────────────────────────────────────
         primary: {
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          900: '#1e3a5f',
+          50: '#EFF6FF',
+          100: '#DBEAFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#155EEF',
+          600: '#1D4ED8',
+          700: '#1E40AF',
+          900: '#0B3B8C',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
+        'fade-in': 'fadeIn 0.2s ease-out',
+        'slide-up': 'slideUp 0.25s ease-out',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
@@ -56,7 +53,7 @@ export default {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '0%': { transform: 'translateY(8px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },

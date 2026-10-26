@@ -60,27 +60,35 @@ const Products = () => {
     <div className="page-container pb-24">
       {/* Header */}
       <div className="page-header">
-        <h1 className="page-title">Produk</h1>
-        <p className="page-subtitle">Kelola produk dan hitung HPP</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="page-title">Produk</h1>
+            <p className="page-subtitle">Kelola produk dan hitung HPP</p>
+          </div>
+          <a href="/products/new" className="btn-primary flex items-center gap-2 hidden lg:inline-flex">
+            <Plus className="w-4 h-4" />
+            Tambah Produk
+          </a>
+        </div>
       </div>
 
       {/* Search Bar */}
       <div className="mb-4">
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Cari produk..."
-            className="w-full h-12 bg-surface-2 border border-hairline hover:border-hairline focus:border-ink-muted rounded-xl pl-11 pr-4 text-white placeholder-ink-muted text-sm outline-none transition-colors"
+            className="input-field pl-9"
           />
         </div>
       </div>
 
       {/* Error State */}
       {errors?.products && (
-        <div className="bg-danger/10 border border-danger/30 rounded-xl p-4 mb-4">
+        <div className="bg-danger/8 border border-danger/30 rounded p-3 mb-4">
           <p className="text-danger text-sm">{errors.products}</p>
           <button
             onClick={fetchProducts}
@@ -94,7 +102,7 @@ const Products = () => {
       {/* Products List */}
       {loading.products ? (
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-ink-muted"></div>
+          <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-accent-blue"></div>
         </div>
       ) : filteredProducts.length === 0 ? (
         <div className="empty-state">
@@ -110,7 +118,7 @@ const Products = () => {
         <>
           {/* Mobile card list */}
           <div className="lg:hidden">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {filteredProducts.map(product => {
                 const photos = product.product_photos || []
                 const hasPhotos = photos.length > 0
@@ -122,12 +130,12 @@ const Products = () => {
                 return (
                   <div
                     key={product.id}
-                    className="group bg-surface-1 hover:bg-surface-2 rounded-2xl border border-hairline transition-all duration-200 overflow-hidden flex"
+                    className="bg-surface-1 border border-hairline rounded transition-colors duration-150 overflow-hidden flex group"
                   >
-                    {/* Foto Produk — 80x80 */}
+                    {/* Foto Produk */}
                     <a
                       href={`/products/${product.id}`}
-                      className="block relative flex-shrink-0 w-20 h-20 self-center ml-3 rounded-xl overflow-hidden bg-surface-2"
+                      className="block relative flex-shrink-0 w-20 h-20 self-center ml-3 rounded overflow-hidden bg-surface-2"
                     >
                       {firstPhoto ? (
                         <>
@@ -137,7 +145,7 @@ const Products = () => {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                           {photos.length > 1 && (
-                            <div className="absolute top-1 right-1 px-1 py-0.5 bg-black/60 backdrop-blur-sm rounded flex items-center gap-0.5 text-white text-[10px]">
+                            <div className="absolute top-1 right-1 px-1 py-0.5 bg-black/60 rounded flex items-center gap-0.5 text-white text-[10px]">
                               <Images className="w-2.5 h-2.5" />
                               <span>{photos.length}</span>
                             </div>
@@ -153,9 +161,8 @@ const Products = () => {
                     {/* Info Produk */}
                     <div className="flex-1 px-3 py-3 flex flex-col justify-between min-w-0">
                       <div>
-                        {/* Nama */}
                         <a href={`/products/${product.id}`} className="block mb-1.5">
-                          <h3 className="font-bold text-white text-base leading-tight group-hover:text-ink-muted transition-colors line-clamp-1">
+                          <h3 className="font-semibold text-ink text-sm leading-tight line-clamp-1">
                             {product.name}
                           </h3>
                           {product.description && (
@@ -163,18 +170,17 @@ const Products = () => {
                           )}
                         </a>
 
-                        {/* Harga */}
                         <div className="flex items-end gap-3">
                           <div>
                             <p className="text-[10px] text-ink-muted leading-none mb-0.5">HPP</p>
-                            <p className="text-sm text-ink font-medium">{formatRupiah(product.production_cost)}</p>
+                            <p className="text-sm text-ink-muted font-medium tabular-nums">{formatRupiah(product.production_cost)}</p>
                           </div>
                           <div>
                             <p className="text-[10px] text-ink-muted leading-none mb-0.5">Jual</p>
-                            <p className="text-base text-white font-bold">{formatRupiah(product.estimated_selling_price)}</p>
+                            <p className="text-sm text-ink font-bold tabular-nums">{formatRupiah(product.estimated_selling_price)}</p>
                           </div>
                           {margin !== null && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 bg-success/15 rounded-lg">
+                            <div className="flex items-center gap-1 px-2 py-0.5 bg-success/10 rounded">
                               <TrendingUp className="w-3 h-3 text-success" />
                               <span className="text-[11px] font-semibold text-success">
                                 {margin > 0 ? '+' : ''}{margin}%
@@ -185,12 +191,12 @@ const Products = () => {
                       </div>
                     </div>
 
-                    {/* Aksi — icon only, vertikal kanan */}
+                    {/* Aksi */}
                     <div className="flex flex-col items-center justify-center gap-2 pr-3 pl-1">
                       <a
                         href={`/products/copy/${product.id}`}
                         title="Salin produk"
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-2 hover:bg-surface-2 text-ink-muted hover:text-ink transition-all"
+                        className="w-8 h-8 flex items-center justify-center rounded bg-surface-2 hover:bg-hairline text-ink-muted hover:text-ink transition-all"
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </a>
@@ -198,7 +204,7 @@ const Products = () => {
                         onClick={() => handleDelete(product.id)}
                         disabled={deletingId === product.id}
                         title="Hapus produk"
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-2 hover:bg-danger/20 text-ink-muted hover:text-danger transition-all disabled:opacity-40"
+                        className="w-8 h-8 flex items-center justify-center rounded bg-surface-2 hover:bg-danger/10 text-ink-muted hover:text-danger transition-all disabled:opacity-40"
                       >
                         {deletingId === product.id ? (
                           <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-danger"></div>
@@ -218,7 +224,7 @@ const Products = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-hairline">
-                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 w-16">Foto</th>
+                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 w-12">Foto</th>
                   <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Nama Produk</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">HPP</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Harga Jual</th>
@@ -226,7 +232,7 @@ const Products = () => {
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-surface-2">
+              <tbody>
                 {filteredProducts.map(product => {
                   const photos = product.product_photos || []
                   const firstPhoto = photos.length > 0
@@ -235,31 +241,31 @@ const Products = () => {
                   const margin = calcMargin(product.production_cost, product.estimated_selling_price)
 
                   return (
-                    <tr key={product.id} className="hover:bg-surface-2/50 transition-colors group">
+                    <tr key={product.id} className="border-b border-hairline hover:bg-surface-2/60 transition-colors group">
                       <td className="py-3 pr-3">
                         <a href={`/products/${product.id}`}>
                           {firstPhoto ? (
-                            <img src={firstPhoto.photo_url} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
+                            <img src={firstPhoto.photo_url} alt={product.name} className="w-9 h-9 rounded object-cover" />
                           ) : (
-                            <div className="w-10 h-10 rounded-lg bg-surface-2 flex items-center justify-center">
+                            <div className="w-9 h-9 rounded bg-surface-2 flex items-center justify-center">
                               <Camera className="w-4 h-4 text-ink-muted" />
                             </div>
                           )}
                         </a>
                       </td>
                       <td className="py-3 pr-4">
-                        <a href={`/products/${product.id}`} className="block group-hover:text-ink-muted transition-colors">
-                          <p className="font-medium text-white text-sm">{product.name}</p>
+                        <a href={`/products/${product.id}`} className="block">
+                          <p className="font-medium text-ink text-sm">{product.name}</p>
                           {product.description && (
                             <p className="text-xs text-ink-muted mt-0.5 line-clamp-1">{product.description}</p>
                           )}
                         </a>
                       </td>
-                      <td className="py-3 pr-4 text-right text-sm text-ink">{formatRupiah(product.production_cost)}</td>
-                      <td className="py-3 pr-4 text-right text-sm font-bold text-white">{formatRupiah(product.estimated_selling_price)}</td>
+                      <td className="py-3 pr-4 text-right text-sm text-ink-muted tabular-nums">{formatRupiah(product.production_cost)}</td>
+                      <td className="py-3 pr-4 text-right text-sm font-bold text-ink tabular-nums">{formatRupiah(product.estimated_selling_price)}</td>
                       <td className="py-3 pr-4 text-right">
                         {margin !== null && (
-                          <span className={`text-sm font-semibold ${margin >= 0 ? 'text-success' : 'text-danger'}`}>
+                          <span className={`text-sm font-semibold tabular-nums ${margin >= 0 ? 'text-success' : 'text-danger'}`}>
                             {margin > 0 ? '+' : ''}{margin}%
                           </span>
                         )}
@@ -269,7 +275,7 @@ const Products = () => {
                           <a
                             href={`/products/copy/${product.id}`}
                             title="Salin produk"
-                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-2 hover:bg-surface-2 text-ink-muted hover:text-ink transition-all"
+                            className="w-8 h-8 flex items-center justify-center rounded bg-surface-2 hover:bg-hairline text-ink-muted hover:text-ink transition-all"
                           >
                             <Copy className="w-3.5 h-3.5" />
                           </a>
@@ -277,7 +283,7 @@ const Products = () => {
                             onClick={() => handleDelete(product.id)}
                             disabled={deletingId === product.id}
                             title="Hapus produk"
-                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-2 hover:bg-danger/20 text-ink-muted hover:text-danger transition-all disabled:opacity-40"
+                            className="w-8 h-8 flex items-center justify-center rounded bg-surface-2 hover:bg-danger/10 text-ink-muted hover:text-danger transition-all disabled:opacity-40"
                           >
                             {deletingId === product.id ? (
                               <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-danger"></div>
@@ -296,13 +302,14 @@ const Products = () => {
         </>
       )}
 
-      {/* FAB Tambah Produk */}
+      {/* FAB Tambah Produk (mobile) */}
       <a
         href="/products/new"
-        className="fixed bottom-24 right-5 w-14 h-14 bg-ink hover:bg-ink/90 active:scale-95 rounded-2xl flex items-center justify-center transition-all duration-200 z-20"
+        className="fixed bottom-24 right-5 w-13 h-13 bg-accent-blue hover:bg-deep-blue active:scale-95 rounded flex items-center justify-center transition-all duration-200 z-20 lg:hidden shadow-md"
         title="Tambah Produk"
+        style={{ width: 52, height: 52 }}
       >
-        <Plus className="w-6 h-6 text-canvas" />
+        <Plus className="w-6 h-6 text-white" />
       </a>
     </div>
   )

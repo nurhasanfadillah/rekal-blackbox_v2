@@ -68,6 +68,19 @@ Total visual overhaul menggunakan Framer design system sebagai referensi. Hapus 
 
 ---
 
+## Active Milestone
+
+### v0.5.1 — Post-Framer Polish 🟡 In Progress
+*Kicked off: 2026-09-12*
+
+Patch milestone melengkapi loose end dari v0.5 Framer redesign — native browser chrome (spinner arrows, wheel behavior pada number input) yang tidak sesuai dengan design system Framer.
+
+| Phase | Name | Description | Status |
+|-------|------|-------------|--------|
+| 12 | number-input-fix | Cegah scroll wheel ubah nilai + hilangkan spinner arrows di semua input number | 🟡 Discussion complete |
+
+---
+
 ## Phase Details
 
 ### Phase 07: design-system
@@ -118,6 +131,21 @@ Total visual overhaul menggunakan Framer design system sebagai referensi. Hapus 
 - **PriceSimulation** — Black canvas dengan white display numbers, accent-blue highlights
 
 **Constraint:** Stitch generate reference per halaman. Form behavior tidak berubah.
+
+---
+
+### Phase 12: number-input-fix
+**Goal:** Cegah scroll wheel mouse mengubah nilai `<input type="number">` yang sedang ter-focus, dan hilangkan spinner arrows (▲▼) di semua input number.
+
+**Root cause:** User sering ke-scroll tidak sengaja saat mengisi form → nilai berubah tanpa disadari. Bonus: spinner arrows adalah native browser chrome yang tidak sesuai Framer aesthetic.
+
+**Scope:**
+- Global CSS di `src/index.css` — hide `-webkit-inner/outer-spin-button` (WebKit) + `-moz-appearance: textfield` (Firefox)
+- Custom hook `src/hooks/useDisableNumberInputWheel.js` — mount global wheel listener, blur `activeElement` jika `type === "number"`
+- Panggil hook sekali di `src/App.jsx`
+- Zero refactor form — solusi otomatis berlaku ke semua input number aplikasi
+
+**Constraint:** Zero refactor form, zero dependency baru, arrow keys (↑↓) tetap increment/decrement, mobile keyboard numeric tetap muncul.
 
 ---
 

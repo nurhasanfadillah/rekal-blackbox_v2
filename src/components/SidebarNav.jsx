@@ -1,46 +1,70 @@
-import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingBag, Calculator } from 'lucide-react'
+import { Link, NavLink } from 'react-router-dom'
+import {
+  Calculator,
+  Database,
+  LayoutDashboard,
+  Layers,
+  Package,
+  Plus,
+  ShoppingBag
+} from 'lucide-react'
 
-const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/materials', icon: Package, label: 'Material' },
+const workspaceItems = [
+  { to: '/', icon: LayoutDashboard, label: 'Beranda', end: true },
   { to: '/products', icon: ShoppingBag, label: 'Produk' },
-  { to: '/price-simulation', icon: Calculator, label: 'Simulasi' },
+  { to: '/price-simulation', icon: Calculator, label: 'Simulasi harga' },
 ]
 
-const SidebarNav = () => {
-  return (
-    <aside className="fixed left-0 top-0 h-full w-60 bg-surface-1 border-r border-hairline z-40 flex flex-col">
-      <div className="px-6 py-5 border-b border-hairline">
-        <span className="text-base font-bold text-ink tracking-tight">ReKal</span>
-        <p className="text-xs text-ink-muted mt-0.5">Kalkulator HPP</p>
+const catalogItems = [
+  { to: '/materials', icon: Package, label: 'Material' },
+  { to: '/categories', icon: Layers, label: 'Kategori' },
+]
+
+const NavigationLink = ({ item }) => (
+  <NavLink
+    to={item.to}
+    end={item.end}
+    className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+  >
+    <item.icon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.8} />
+    <span>{item.label}</span>
+  </NavLink>
+)
+
+const SidebarNav = () => (
+  <aside className="sidebar-shell">
+    <Link to="/" className="sidebar-brand" aria-label="ReKal, beranda">
+      <span className="sidebar-brand-mark"><Calculator className="w-5 h-5" strokeWidth={2.2} /></span>
+      <span className="sidebar-brand-name">ReKal<span>.</span><small>BLACKBOX</small></span>
+    </Link>
+
+    <div className="sidebar-create-wrap">
+      <Link to="/products/new" className="sidebar-create">
+        <Plus className="w-4 h-4" strokeWidth={2.5} />
+        <span>Tambah Produk</span>
+      </Link>
+    </div>
+
+    <nav className="sidebar-navigation" aria-label="Navigasi utama">
+      <p className="sidebar-section-label">WORKSPACE</p>
+      <div className="sidebar-link-list">
+        {workspaceItems.map(item => <NavigationLink key={item.to} item={item} />)}
       </div>
 
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === '/'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded transition-colors duration-100 ${
-                isActive
-                  ? 'bg-accent-blue text-white'
-                  : 'text-ink-muted hover:text-ink hover:bg-surface-2'
-              }`
-            }
-          >
-            <item.icon className="w-4 h-4 shrink-0" />
-            <span className="text-sm font-medium">{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="px-4 py-3 border-t border-hairline">
-        <p className="text-xs text-ink-muted">PT. Redone Berkah Mandiri</p>
+      <p className="sidebar-section-label sidebar-section-spaced"><Database className="w-3.5 h-3.5" /> KATALOG</p>
+      <div className="sidebar-link-list">
+        {catalogItems.map(item => <NavigationLink key={item.to} item={item} />)}
       </div>
-    </aside>
-  )
-}
+    </nav>
+
+    <div className="sidebar-footer">
+      <span className="sidebar-footer-mark" />
+      <div>
+        <p>ReKal Costing Workspace</p>
+        <span>PT. Redone Berkah Mandiri</span>
+      </div>
+    </div>
+  </aside>
+)
 
 export default SidebarNav

@@ -90,7 +90,7 @@ const Products = () => {
                 )}
               </PDFDownloadLink>
             )}
-            <a href="/products/new" className="btn-primary flex items-center gap-2 hidden lg:inline-flex">
+            <a href="/products/new" className="btn-primary flex items-center gap-2 hidden xl:inline-flex">
               <Plus className="w-4 h-4" />
               Tambah Produk
             </a>
@@ -143,7 +143,7 @@ const Products = () => {
       ) : (
         <>
           {/* Mobile card list */}
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <div className="flex flex-col gap-2">
               {filteredProducts.map(product => {
                 const photos = product.product_photos || []
@@ -246,7 +246,7 @@ const Products = () => {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-hairline">
@@ -331,7 +331,7 @@ const Products = () => {
       {/* FAB Tambah Produk (mobile) */}
       <a
         href="/products/new"
-        className="fixed bottom-24 right-5 w-13 h-13 bg-accent-blue hover:bg-deep-blue active:scale-95 rounded flex items-center justify-center transition-all duration-200 z-20 lg:hidden shadow-md"
+        className="fixed bottom-24 right-5 w-[52px] h-[52px] bg-accent-blue hover:bg-deep-blue active:scale-95 rounded-xl flex items-center justify-center transition-all duration-200 z-20 xl:hidden shadow-lg"
         title="Tambah Produk"
         style={{ width: 52, height: 52 }}
       >

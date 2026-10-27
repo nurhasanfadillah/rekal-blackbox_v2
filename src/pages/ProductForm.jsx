@@ -348,23 +348,26 @@ const ProductForm = () => {
   return (
     <div className="page-container">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="product-form-heading flex items-center gap-3 mb-6">
         <button 
           onClick={() => navigate('/products')}
           className="p-2 text-ink-muted hover:text-ink hover:bg-surface-1 rounded-lg transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="page-title mb-0">
-          {isEditMode ? 'Edit Produk' : isCopyMode ? 'Salin Produk' : 'Tambah Produk'}
-        </h1>
+        <div>
+          <p className="eyebrow mb-1"><span className="eyebrow-mark" /> PRODUK / KALKULASI</p>
+          <h1 className="page-title mb-0">
+            {isEditMode ? 'Edit Produk' : isCopyMode ? 'Salin Produk' : 'Tambah Produk'}
+          </h1>
+        </div>
 
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="lg:flex lg:gap-6 lg:items-start">
+        <div className="product-form-layout">
         {/* Kolom kiri — form inputs */}
-        <div className="lg:w-5/12 lg:sticky lg:top-4 space-y-6">
+        <div className="product-form-primary space-y-6">
         {/* Basic Info */}
         <div className="glass-panel p-4">
           <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
@@ -509,7 +512,7 @@ const ProductForm = () => {
         </div>{/* end kolom kiri */}
 
         {/* Kolom kanan — calculator, BoM, preview */}
-        <div className="lg:w-7/12 space-y-6 mt-6 lg:mt-0">
+        <div className="product-form-secondary space-y-6 mt-6">
         {/* Material Usage Calculation */}
         <div className="glass-panel p-4">
           <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">

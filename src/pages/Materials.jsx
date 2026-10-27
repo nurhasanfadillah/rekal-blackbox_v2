@@ -6,7 +6,7 @@ import { validateMaterialForm, hasErrors } from '../utils/validators'
 import { formatRupiah } from '../utils/formatters'
 import { supabase } from '../supabase'
 
-import { useNavigate } from 'react-router-dom'
+import CatalogTabs from '../components/CatalogTabs'
 import {
   Package,
   Plus,
@@ -17,14 +17,12 @@ import {
   Layers,
   ShoppingBag,
   Link,
-  ChevronRight
 } from 'lucide-react'
 
 
 
 
 const Materials = () => {
-  const navigate = useNavigate()
   const {
     materials, 
     categories, 
@@ -201,20 +199,10 @@ const Materials = () => {
     <div className="page-container">
       {/* Header */}
       <div className="page-header">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="page-title">Material</h1>
-            <p className="page-subtitle">Katalog bahan baku produksi</p>
-          </div>
-          <button
-            onClick={() => navigate('/categories')}
-            className="flex items-center gap-1.5 px-3 py-2 rounded bg-surface-2 border border-hairline text-ink-muted hover:text-ink hover:border-hairline transition-all text-sm"
-          >
-            <Layers className="w-4 h-4" />
-            <span>Kategori</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        <p className="eyebrow"><span className="eyebrow-mark" /> KATALOG PRODUKSI</p>
+        <h1 className="page-title">Material</h1>
+        <p className="page-subtitle">Katalog bahan baku untuk komposisi produk.</p>
+        <CatalogTabs />
       </div>
 
       {/* Search & Add */}
@@ -262,7 +250,7 @@ const Materials = () => {
         </div>
       ) : (
         <>
-        <div className="space-y-3 lg:hidden">
+        <div className="space-y-3 xl:hidden">
           {filteredMaterials.map(material => {
             const category = categories.find(c => c.id === material.category_id)
             const usageCount = materialUsageCounts[material.id] || 0
@@ -324,7 +312,7 @@ const Materials = () => {
           })}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-hairline">

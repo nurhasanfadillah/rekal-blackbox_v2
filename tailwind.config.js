@@ -8,39 +8,39 @@ export default {
     extend: {
       colors: {
         // ── Backgrounds & surfaces ──────────────────────────────
-        canvas: '#F4F7FB',
-        'surface-1': '#FFFFFF',
-        'surface-2': '#EBF0F6',
-        hairline: '#D8E0EA',
-        'hairline-soft': '#E8EDF4',
+        canvas: '#0A0F14',
+        'surface-1': '#121A22',
+        'surface-2': '#1A2530',
+        hairline: '#2A3945',
+        'hairline-soft': '#22313C',
         // ── Text ───────────────────────────────────────────────
-        ink: '#172B4D',
-        'ink-muted': '#52627A',
+        ink: '#F2F6F8',
+        'ink-muted': '#9AAAB5',
         // ── Brand ──────────────────────────────────────────────
-        'accent-blue': '#155EEF',
-        'deep-blue': '#0B3B8C',
-        'accent-amber': '#FFB020',
+        'accent-blue': '#43C6F4',
+        'deep-blue': '#148DB9',
+        'accent-amber': '#F4B740',
         // ── Semantic ───────────────────────────────────────────
-        success: '#16803D',
-        danger: '#D92D20',
-        warning: '#B54708',
+        success: '#A6E66B',
+        danger: '#FF726B',
+        warning: '#F4B740',
         // ── Aliases (backward-compat) ──────────────────────────
-        'accent-rose': '#D92D20',
-        'accent-emerald': '#16803D',
+        'accent-rose': '#FF726B',
+        'accent-emerald': '#A6E66B',
         // ── Primary scale ──────────────────────────────────────
         primary: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#155EEF',
-          600: '#1D4ED8',
-          700: '#1E40AF',
-          900: '#0B3B8C',
+          50: '#E9FAFF',
+          100: '#CFF3FF',
+          300: '#8AE2FF',
+          400: '#63D4FA',
+          500: '#43C6F4',
+          600: '#1EA8D6',
+          700: '#148DB9',
+          900: '#0C4C65',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', '-apple-system', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-out',

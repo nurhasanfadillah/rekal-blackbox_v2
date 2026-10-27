@@ -153,10 +153,10 @@ const ProductDetail = () => {
       </div>
 
       {/* Two-column wrapper — flex aktif di lg+, single column di mobile */}
-      <div className="lg:flex lg:gap-6 lg:items-start">
+      <div className="product-detail-layout">
 
         {/* Kolom Kiri — gallery + nama produk (sticky di desktop) */}
-        <div className="lg:w-5/12 lg:sticky lg:top-4">
+        <div className="product-detail-primary">
           {/* Photo Gallery — diperbesar */}
           <div className="mb-5 rounded-lg overflow-hidden">
             <ProductPhotoGallery
@@ -185,12 +185,9 @@ const ProductDetail = () => {
         </div>
 
         {/* Kolom Kanan — harga, BoM, chart, parameter */}
-        <div className="lg:w-7/12">
+        <div className="product-detail-secondary">
           {/* Hero Card — Harga Jual */}
-          <div
-            className="rounded-lg p-5 mb-3 border border-success/30"
-            style={{ background: '#F0FDF4', borderColor: '#BBF7D0' }}
-          >
+          <div className="product-price-hero rounded-lg p-5 mb-3 border border-success/30">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-success" />
               <span className="text-xs font-semibold text-success uppercase tracking-widest">Harga Jual</span>

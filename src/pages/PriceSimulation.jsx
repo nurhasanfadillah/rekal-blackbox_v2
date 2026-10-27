@@ -273,11 +273,11 @@ const PriceSimulation = () => {
         <p className="page-subtitle">Hitung dan simulasikan harga jual produk</p>
       </div>
 
-      <div className="lg:flex lg:gap-6 lg:items-start">
+      <div className="simulation-layout">
       {/* Kolom kiri — inputs */}
-      <div className="lg:w-5/12 lg:sticky lg:top-4 space-y-4">
+      <div className="simulation-primary space-y-4">
       {/* Product Selection — Searchable Combobox */}
-      <div className="glass-panel p-4 mb-4 lg:mb-0">
+      <div className="glass-panel p-4 mb-4 xl:mb-0">
         <h3 className="text-sm font-semibold text-ink mb-3 flex items-center gap-2">
           <Package className="w-4 h-4 text-accent-blue" />
           Pilih Produk
@@ -292,7 +292,7 @@ const PriceSimulation = () => {
       </div>
 
       {/* Parameters */}
-      <div className="glass-panel p-4 mb-4 lg:mb-0">
+      <div className="glass-panel p-4 mb-4 xl:mb-0">
         <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-accent-blue" />
           Parameter Perhitungan
@@ -321,7 +321,7 @@ const PriceSimulation = () => {
       </div>
 
       {/* Bill of Materials — with editable price */}
-      <div className="glass-panel p-4 mb-4 lg:mb-0">
+      <div className="glass-panel p-4 mb-4 xl:mb-0">
         <div className="flex items-center justify-between mb-4">
           <button
             type="button"
@@ -430,9 +430,9 @@ const PriceSimulation = () => {
       </div>{/* end kolom kiri */}
 
       {/* Kolom kanan — results */}
-      <div className="lg:w-7/12 space-y-4 mt-4 lg:mt-0">
+      <div className="simulation-secondary space-y-4 mt-4 xl:mt-0">
       {/* Calculation Results */}
-      <div className="glass-panel p-4 mb-3 lg:mb-0">
+      <div className="glass-panel p-4 mb-3 xl:mb-0">
         <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
           <DollarSign className="w-4 h-4 text-accent-blue" />
           Hasil Perhitungan

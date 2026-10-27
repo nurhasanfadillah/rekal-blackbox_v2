@@ -3,13 +3,12 @@ import { useData } from '../contexts/DataContext'
 import { useToast } from '../components/Toast'
 import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateCategoryForm, hasErrors } from '../utils/validators'
-import { useNavigate } from 'react-router-dom'
-import { Layers, Plus, Search, Edit2, Trash2, X, Package, Link, ChevronLeft } from 'lucide-react'
+import { Layers, Plus, Search, Edit2, Trash2, X, Package, Link } from 'lucide-react'
+import CatalogTabs from '../components/CatalogTabs'
 
 
 
 const Categories = () => {
-  const navigate = useNavigate()
   const { categories, materials, loading, errors, fetchCategories, createCategory, updateCategory, deleteCategory } = useData()
 
   const { success, error: showError } = useToast()
@@ -109,15 +108,10 @@ const Categories = () => {
     <div className="page-container">
       {/* Header */}
       <div className="page-header">
-        <button
-          onClick={() => navigate('/materials')}
-          className="flex items-center gap-1 text-ink-muted hover:text-ink transition-colors mb-3 text-sm"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span>Material</span>
-        </button>
+        <p className="eyebrow"><span className="eyebrow-mark" /> KATALOG PRODUKSI</p>
         <h1 className="page-title">Kategori</h1>
-        <p className="page-subtitle">Kelompokkan material berdasarkan kategori</p>
+        <p className="page-subtitle">Kelompokkan bahan baku agar komposisi produk mudah disusun.</p>
+        <CatalogTabs />
       </div>
 
       {/* Search & Add */}
@@ -165,7 +159,7 @@ const Categories = () => {
         </div>
       ) : (
         <>
-        <div className="space-y-3 lg:hidden">
+        <div className="space-y-3 xl:hidden">
           {filteredCategories.map(category => {
             const materialCount = getMaterialCount(category.id)
             const hasMaterials = materialCount > 0
@@ -221,7 +215,7 @@ const Categories = () => {
           })}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-hairline">

@@ -4,6 +4,9 @@ import { useToast } from '../components/Toast'
 import { useConfirmation } from '../contexts/ConfirmationContext'
 import { validateMaterialForm, hasErrors } from '../utils/validators'
 import { formatRupiah } from '../utils/formatters'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { MaterialsPdfDocument } from '../components/materials-pdf-template'
+import { format } from 'date-fns'
 import { supabase } from '../supabase'
 
 import CatalogTabs from '../components/CatalogTabs'
@@ -17,6 +20,7 @@ import {
   Layers,
   ShoppingBag,
   Link,
+  Download,
 } from 'lucide-react'
 
 
@@ -81,6 +85,8 @@ const Materials = () => {
     mat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     mat.categories?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   )
+  const exportDate = format(new Date(), 'dd MMMM yyyy')
+  const exportFilename = `rekal-daftar-material-${format(new Date(), 'yyyy-MM-dd')}.pdf`
 
   const getMaterialUsageCount = async (materialId) => {
     try {
@@ -217,6 +223,25 @@ const Materials = () => {
             className="input-field pl-10"
           />
         </div>
+        {filteredMaterials.length > 0 && (
+          <PDFDownloadLink
+            document={<MaterialsPdfDocument materials={filteredMaterials} exportDate={exportDate} />}
+            fileName={exportFilename}
+            className="flex-shrink-0"
+          >
+            {({ loading: pdfLoading }) => (
+              <button
+                type="button"
+                disabled={pdfLoading}
+                aria-label={pdfLoading ? 'Menyiapkan PDF' : 'Ekspor daftar material ke PDF'}
+                className="btn-secondary flex items-center gap-2 px-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{pdfLoading ? 'Menyiapkan…' : 'Ekspor PDF'}</span>
+              </button>
+            )}
+          </PDFDownloadLink>
+        )}
         <button onClick={() => openModal()} className="btn-primary px-4">
           <Plus className="w-5 h-5" />
         </button>

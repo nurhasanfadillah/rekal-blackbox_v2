@@ -124,7 +124,7 @@ const Dashboard = () => {
           <div>
             <p className="eyebrow">ARSIP KALKULASI</p>
             <h2 id="documents-title" className="section-title">Dokumentasi Produk</h2>
-            <p className="section-description">Produk tersimpan dengan rincian HPP dan harga jualnya.</p>
+            <p className="section-description">Produk tersimpan dengan rincian harga pabrik dan HPP.</p>
           </div>
           <Link to="/products" className="section-link">Semua produk <ArrowUpRight className="w-4 h-4" /></Link>
         </div>
@@ -155,21 +155,20 @@ const Dashboard = () => {
                     <div className="document-thumb">
                       {photoUrl ? <img src={photoUrl} alt="" /> : <Camera className="w-5 h-5" />}
                     </div>
-                    <span className="document-type">TERSIMPAN</span>
+                    <div className="document-card-title">
+                      <h3>{product.name}</h3>
+                      <p>{product.description || 'Dokumentasi kalkulasi produk'}</p>
+                    </div>
                     <ArrowUpRight className="document-open w-4 h-4" />
-                  </div>
-                  <div className="document-card-title">
-                    <h3>{product.name}</h3>
-                    <p>{product.description || 'Dokumentasi kalkulasi produk'}</p>
                   </div>
                   <div className="document-values">
                     <div>
-                      <span>HPP FINAL</span>
-                      <strong>{formatRupiah(product.production_cost)}</strong>
+                      <span>HARGA PABRIK</span>
+                      <strong className="document-primary-price">{formatRupiah(product.harga_pabrik)}</strong>
                     </div>
                     <div>
-                      <span>HARGA JUAL</span>
-                      <strong className="document-selling-price">{formatRupiah(product.estimated_selling_price)}</strong>
+                      <span>HPP</span>
+                      <strong>{formatRupiah(product.production_cost)}</strong>
                     </div>
                   </div>
                   <div className="document-card-footer">

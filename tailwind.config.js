@@ -8,35 +8,35 @@ export default {
     extend: {
       colors: {
         // ── Backgrounds & surfaces ──────────────────────────────
-        canvas: '#0A0F14',
-        'surface-1': '#121A22',
-        'surface-2': '#1A2530',
-        hairline: '#2A3945',
-        'hairline-soft': '#22313C',
+        canvas: '#F1F2F2',
+        'surface-1': '#FFFFFF',
+        'surface-2': '#E7E8E8',
+        hairline: '#D4D6D5',
+        'hairline-soft': '#E1E2E0',
         // ── Text ───────────────────────────────────────────────
-        ink: '#F2F6F8',
-        'ink-muted': '#9AAAB5',
+        ink: '#202326',
+        'ink-muted': '#62696D',
         // ── Brand ──────────────────────────────────────────────
-        'accent-blue': '#43C6F4',
-        'deep-blue': '#148DB9',
-        'accent-amber': '#F4B740',
+        'accent-blue': '#A95C19',
+        'deep-blue': '#A95C19',
+        'accent-amber': '#C78324',
         // ── Semantic ───────────────────────────────────────────
-        success: '#A6E66B',
-        danger: '#FF726B',
-        warning: '#F4B740',
+        success: '#58763A',
+        danger: '#A64038',
+        warning: '#C78324',
         // ── Aliases (backward-compat) ──────────────────────────
-        'accent-rose': '#FF726B',
-        'accent-emerald': '#A6E66B',
+        'accent-rose': '#A64038',
+        'accent-emerald': '#58763A',
         // ── Primary scale ──────────────────────────────────────
         primary: {
-          50: '#E9FAFF',
-          100: '#CFF3FF',
-          300: '#8AE2FF',
-          400: '#63D4FA',
-          500: '#43C6F4',
-          600: '#1EA8D6',
-          700: '#148DB9',
-          900: '#0C4C65',
+          50: '#FBF5EC',
+          100: '#F5E2CA',
+          300: '#E7B77F',
+          400: '#D9954A',
+          500: '#A95C19',
+          600: '#974F16',
+          700: '#A95C19',
+          900: '#6B431B',
         },
       },
       fontFamily: {

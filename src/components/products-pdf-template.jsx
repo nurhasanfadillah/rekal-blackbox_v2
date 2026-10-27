@@ -4,226 +4,119 @@ import { formatRupiah } from '../utils/formatters'
 const styles = StyleSheet.create({
   page: {
     backgroundColor: '#FFFFFF',
-    paddingTop: 40,
-    paddingBottom: 50,
-    paddingLeft: 40,
-    paddingRight: 40,
-    fontSize: 10,
-    color: '#111111',
+    paddingTop: 30,
+    paddingBottom: 48,
+    paddingHorizontal: 38,
+    fontSize: 9,
+    color: '#20201E',
+    fontFamily: 'Helvetica',
   },
   header: {
-    marginBottom: 20,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    borderBottomStyle: 'solid',
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: '#20201E',
+    borderLeftWidth: 5,
+    borderLeftColor: '#C86B2A',
+  },
+  brand: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+    letterSpacing: 1.6,
+    color: '#E28A4A',
+    marginBottom: 8,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Helvetica-Bold',
-    color: '#111111',
-    marginBottom: 4,
+    color: '#FFFFFF',
+    marginBottom: 5,
   },
-  subtitle: {
-    fontSize: 9,
-    fontFamily: 'Helvetica',
-    color: '#666666',
-  },
-  table: {
-    width: '100%',
-  },
-  // Header row
+  subtitle: { fontSize: 8, color: '#D0CECA' },
+  table: { width: '100%' },
   tableHeaderRow: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
-    marginBottom: 1,
+    backgroundColor: '#20201E',
+    borderBottomWidth: 2,
+    borderBottomColor: '#C86B2A',
   },
-  thNo: {
-    width: '8%',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    textAlign: 'center',
-    color: '#FFFFFF',
+  thNo: { width: '8%', textAlign: 'center' },
+  thNama: { width: '42%' },
+  thHarga: { width: '25%', textAlign: 'right' },
+  thHpp: { width: '25%', textAlign: 'right' },
+  cellHeader: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    fontSize: 8,
     fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
-  },
-  thNama: {
-    width: '40%',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
     color: '#FFFFFF',
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
   },
-  thHpp: {
-    width: '20%',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    textAlign: 'right',
-    color: '#FFFFFF',
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
-  },
-  thJual: {
-    width: '20%',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    textAlign: 'right',
-    color: '#FFFFFF',
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
-  },
-  thMargin: {
-    width: '12%',
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
-  },
-  // Data rows
-  tableRow: {
+  tableRow: { flexDirection: 'row', borderBottomWidth: 0.6, borderBottomColor: '#D9D7D2' },
+  tableRowAlt: { flexDirection: 'row', backgroundColor: '#F3F2EF', borderBottomWidth: 0.6, borderBottomColor: '#D9D7D2' },
+  cell: { paddingVertical: 7, paddingHorizontal: 6, fontSize: 8, color: '#20201E' },
+  tdNo: { width: '8%', textAlign: 'center', color: '#66635E' },
+  tdNama: { width: '42%', fontFamily: 'Helvetica-Bold' },
+  tdHarga: { width: '25%', textAlign: 'right', fontFamily: 'Helvetica-Bold' },
+  tdHpp: { width: '25%', textAlign: 'right', color: '#55534E' },
+  summary: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-    borderBottomStyle: 'solid',
+    justifyContent: 'space-between',
+    padding: 9,
+    marginTop: 8,
+    backgroundColor: '#20201E',
+    borderLeftWidth: 4,
+    borderLeftColor: '#C86B2A',
   },
-  tableRowAlt: {
-    flexDirection: 'row',
-    backgroundColor: '#F7F7F7',
-    borderBottomWidth: 1,
-    borderBottomColor: '#EBEBEB',
-    borderBottomStyle: 'solid',
-  },
-  tdNo: {
-    width: '8%',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    textAlign: 'center',
-    fontFamily: 'Helvetica',
-    color: '#555555',
-    fontSize: 9,
-  },
-  tdNama: {
-    width: '40%',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    fontFamily: 'Helvetica',
-    color: '#111111',
-    fontSize: 9,
-  },
-  tdHpp: {
-    width: '20%',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    textAlign: 'right',
-    fontFamily: 'Helvetica',
-    color: '#111111',
-    fontSize: 9,
-  },
-  tdJual: {
-    width: '20%',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    textAlign: 'right',
-    fontFamily: 'Helvetica',
-    color: '#111111',
-    fontSize: 9,
-  },
-  tdMargin: {
-    width: '12%',
-    paddingVertical: 5,
-    paddingHorizontal: 4,
-    textAlign: 'center',
-    fontFamily: 'Helvetica',
-    color: '#333333',
-    fontSize: 9,
-  },
+  summaryLabel: { fontFamily: 'Helvetica-Bold', fontSize: 9, color: '#FFFFFF' },
+  summaryCount: { fontSize: 9, color: '#D0CECA' },
   footer: {
     position: 'absolute',
     bottom: 20,
-    right: 40,
-    fontSize: 8,
-    fontFamily: 'Helvetica',
-    color: '#999999',
-  },
-  totalRow: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: '#CCCCCC',
-    borderTopStyle: 'solid',
-    marginTop: 2,
+    left: 38,
+    right: 38,
     paddingTop: 6,
-  },
-  totalLabel: {
-    flex: 1,
-    fontFamily: 'Helvetica-Bold',
-    fontSize: 9,
-    color: '#333333',
-    paddingHorizontal: 4,
-  },
-  totalCount: {
-    fontFamily: 'Helvetica',
-    fontSize: 9,
-    color: '#666666',
-    paddingHorizontal: 4,
+    borderTopWidth: 0.5,
+    borderTopColor: '#B8B5AF',
+    color: '#66635E',
+    fontSize: 8,
+    textAlign: 'right',
   },
 })
 
-const calcMargin = (hpp, jual) => {
-  if (!hpp || !jual || hpp <= 0 || jual <= 0) return '–'
-  return `${Math.round(((jual - hpp) / hpp) * 100)}%`
-}
-
 const ProductsPdfDocument = ({ products, exportDate }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      {/* Header */}
+  <Document title="Daftar Produk ReKal" author="ReKal">
+    <Page size="A4" style={styles.page} wrap>
       <View style={styles.header}>
-        <Text style={styles.title}>ReKal — Daftar Produk HPP</Text>
-        <Text style={styles.subtitle}>Diekspor pada: {exportDate}</Text>
+        <Text style={styles.brand}>REKAL / DOKUMENTASI PRODUK</Text>
+        <Text style={styles.title}>Daftar Produk</Text>
+        <Text style={styles.subtitle}>Diekspor pada {exportDate}</Text>
       </View>
 
-      {/* Table */}
       <View style={styles.table}>
-        {/* Header Row */}
         <View style={styles.tableHeaderRow}>
-          <Text style={styles.thNo}>No</Text>
-          <Text style={styles.thNama}>Nama Produk</Text>
-          <Text style={styles.thHpp}>HPP</Text>
-          <Text style={styles.thJual}>Harga Jual</Text>
-          <Text style={styles.thMargin}>Margin</Text>
+          <Text style={[styles.cellHeader, styles.thNo]}>No</Text>
+          <Text style={[styles.cellHeader, styles.thNama]}>Nama Produk</Text>
+          <Text style={[styles.cellHeader, styles.thHarga]}>Harga Pabrik</Text>
+          <Text style={[styles.cellHeader, styles.thHpp]}>HPP Final</Text>
         </View>
 
-        {/* Data Rows */}
         {products.map((product, index) => (
-          <View
-            key={product.id}
-            style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
-          >
-            <Text style={styles.tdNo}>{index + 1}</Text>
-            <Text style={styles.tdNama}>{product.name}</Text>
-            <Text style={styles.tdHpp}>{formatRupiah(product.production_cost)}</Text>
-            <Text style={styles.tdJual}>{formatRupiah(product.estimated_selling_price)}</Text>
-            <Text style={styles.tdMargin}>
-              {calcMargin(product.production_cost, product.estimated_selling_price)}
-            </Text>
+          <View key={product.id} style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt} wrap={false}>
+            <Text style={[styles.cell, styles.tdNo]}>{index + 1}</Text>
+            <Text style={[styles.cell, styles.tdNama]}>{product.name}</Text>
+            <Text style={[styles.cell, styles.tdHarga]}>{formatRupiah(product.harga_pabrik)}</Text>
+            <Text style={[styles.cell, styles.tdHpp]}>{formatRupiah(product.production_cost)}</Text>
           </View>
         ))}
-
-        {/* Total row */}
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Total produk</Text>
-          <Text style={styles.totalCount}>{products.length} produk</Text>
-        </View>
       </View>
 
-      {/* Footer - page number */}
+      <View style={styles.summary}>
+        <Text style={styles.summaryLabel}>Total produk</Text>
+        <Text style={styles.summaryCount}>{products.length} produk</Text>
+      </View>
+
       <Text
         style={styles.footer}
-        render={({ pageNumber, totalPages }) => `Halaman ${pageNumber} / ${totalPages}`}
+        render={({ pageNumber, totalPages }) => `ReKal · Daftar produk · Halaman ${pageNumber} / ${totalPages}`}
         fixed
       />
     </Page>

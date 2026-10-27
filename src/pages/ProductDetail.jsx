@@ -2,8 +2,14 @@ import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useData } from '../contexts/DataContext'
 import { useConfirmation } from '../contexts/ConfirmationContext'
+import { useToast } from '../components/Toast'
 import { formatRupiah, formatPercentage } from '../utils/formatters'
+import { validatePercentage } from '../utils/validators'
+import { calculateAllCostsExtended } from '../utils/calculations'
 import ProductPhotoGallery from '../components/ProductPhotoGallery'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { ProductDetailPdfDocument } from '../components/product-detail-pdf-template'
+import { format } from 'date-fns'
 import {
   ArrowLeft,
   Edit2,
@@ -17,7 +23,9 @@ import {
   Factory,
   Images,
   BarChart2,
-  ChevronRight
+  Download,
+  Save,
+  X
 } from 'lucide-react'
 
 const CHART_COLORS = [
@@ -28,12 +36,16 @@ const CHART_COLORS = [
 const ProductDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { getProduct, deleteProduct } = useData()
+  const { getProduct, deleteProduct, updateProduct } = useData()
   const { confirm } = useConfirmation()
+  const { success, error: showError } = useToast()
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState(false)
+  const [editingParameters, setEditingParameters] = useState(false)
+  const [savingParameters, setSavingParameters] = useState(false)
+  const [parameterDraft, setParameterDraft] = useState({})
 
   useEffect(() => {
     loadProduct()
@@ -70,6 +82,59 @@ const ProductDetail = () => {
     }
   }
 
+  const startParameterEdit = () => {
+    setParameterDraft({
+      overhead_percentage: String(product.overhead_percentage ?? 0),
+      target_margin_percentage: String(product.target_margin_percentage ?? 0),
+      margin_jual_percentage: String(product.margin_jual_percentage ?? 20),
+      admin_marketplace_percentage: String(product.admin_marketplace_percentage ?? 5),
+    })
+    setEditingParameters(true)
+  }
+
+  const handleParameterSave = async () => {
+    const parameterLabels = {
+      overhead_percentage: 'Overhead',
+      target_margin_percentage: 'Margin Pabrik',
+      margin_jual_percentage: 'Margin Jual',
+      admin_marketplace_percentage: 'Admin Marketplace',
+    }
+    const invalidParameter = Object.entries(parameterLabels).find(([key, label]) =>
+      validatePercentage(parameterDraft[key], label)
+    )
+    if (invalidParameter) {
+      showError(validatePercentage(parameterDraft[invalidParameter[0]], invalidParameter[1]))
+      return
+    }
+
+    setSavingParameters(true)
+    try {
+      const productData = {
+        name: product.name,
+        description: product.description || '',
+        photo_url: product.photo_url || null,
+        overhead_percentage: Number(parameterDraft.overhead_percentage),
+        target_margin_percentage: Number(parameterDraft.target_margin_percentage),
+        margin_jual_percentage: Number(parameterDraft.margin_jual_percentage),
+        admin_marketplace_percentage: Number(parameterDraft.admin_marketplace_percentage),
+      }
+      const bomItems = (product.bill_of_materials || []).map(item => ({
+        material_id: item.material_id,
+        price: item.price,
+        quantity: item.quantity,
+      }))
+      const updatedProduct = await updateProduct(id, productData, bomItems)
+      setProduct(current => ({ ...current, ...updatedProduct }))
+      setEditingParameters(false)
+      success('Parameter dan harga produk berhasil diperbarui')
+    } catch (err) {
+      console.error('Failed to update product parameters:', err)
+      showError(err.message || 'Gagal memperbarui parameter produk')
+    } finally {
+      setSavingParameters(false)
+    }
+  }
+
   const bomWithPct = useMemo(() => {
     if (!product) return []
     const total = product.total_material_cost || 0
@@ -81,6 +146,20 @@ const ProductDetail = () => {
       })
       .sort((a, b) => b.subtotal - a.subtotal)
   }, [product])
+
+  const parameterPreview = useMemo(() => {
+    if (!product) return null
+    const percentage = key => editingParameters
+      ? Number(parameterDraft[key]) || 0
+      : Number(product[key] ?? (key === 'margin_jual_percentage' ? 20 : key === 'admin_marketplace_percentage' ? 5 : 0))
+    return calculateAllCostsExtended(
+      (product.bill_of_materials || []).map(item => ({ price: item.price, quantity: item.quantity })),
+      percentage('overhead_percentage'),
+      percentage('target_margin_percentage'),
+      percentage('margin_jual_percentage'),
+      percentage('admin_marketplace_percentage'),
+    )
+  }, [product, editingParameters, parameterDraft])
 
   if (loading) {
     return (
@@ -108,6 +187,8 @@ const ProductDetail = () => {
   const hasPhotos = photos.length > 0
   const marginJualPct = product.margin_jual_percentage ?? 20
   const adminPct = product.admin_marketplace_percentage ?? 5
+  const exportDate = format(new Date(), 'dd MMMM yyyy')
+  const exportFilename = `rekal-detail-${product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${format(new Date(), 'yyyy-MM-dd')}.pdf`
 
   return (
     <div className="page-container">
@@ -123,6 +204,24 @@ const ProductDetail = () => {
           <h1 className="page-title mb-0">Detail Produk</h1>
         </div>
         <div className="flex gap-1">
+          <PDFDownloadLink
+            document={<ProductDetailPdfDocument product={product} exportDate={exportDate} />}
+            fileName={exportFilename}
+            className="flex-shrink-0"
+          >
+            {({ loading: pdfLoading }) => (
+              <button
+                type="button"
+                disabled={pdfLoading}
+                aria-label={pdfLoading ? 'Menyiapkan PDF' : 'Ekspor detail produk ke PDF'}
+                title="Ekspor PDF"
+                className="btn-secondary flex items-center gap-2 px-3 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">{pdfLoading ? 'Menyiapkan…' : 'Ekspor PDF'}</span>
+              </button>
+            )}
+          </PDFDownloadLink>
           <a
             href={`/products/copy/${id}`}
             className="p-2.5 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded transition-colors"
@@ -186,63 +285,112 @@ const ProductDetail = () => {
 
         {/* Kolom Kanan — harga, BoM, chart, parameter */}
         <div className="product-detail-secondary">
-          {/* Hero Card — Harga Jual */}
+          {/* Primary price — Harga Pabrik */}
           <div className="product-price-hero rounded-lg p-5 mb-3 border border-success/30">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-success" />
-              <span className="text-xs font-semibold text-success uppercase tracking-widest">Harga Jual</span>
+            <div className="flex items-center justify-center gap-2 mb-2 text-center">
+              <Factory className="w-4 h-4 text-success" />
+              <span className="text-xs font-semibold text-success uppercase tracking-widest">Harga Pabrik</span>
             </div>
-            <p className="text-3xl font-bold text-success mb-3 tabular-nums">
-              {formatRupiah(product.estimated_selling_price)}
+            <p className="text-4xl sm:text-5xl font-bold text-success mb-3 tabular-nums text-center">
+              {formatRupiah(product.harga_pabrik)}
             </p>
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center justify-center gap-2 text-sm">
               <span
                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/30"
               >
-                Margin {marginJualPct}%
+                Margin pabrik {product.target_margin_percentage}%
               </span>
-              <span className="text-ink-muted text-xs">dari harga jual</span>
             </div>
           </div>
 
-          {/* Secondary price cards — HPP + Pabrik */}
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <div className="bg-surface-1 rounded-lg p-4 border border-hairline hover:border-ink-muted transition-colors">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Calculator className="w-3.5 h-3.5 text-ink-muted" />
-                <span className="text-xs font-medium text-ink-muted uppercase tracking-wide">HPP Final</span>
+          {/* Supporting prices — shown in calculation order */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-ink-muted transition-colors">
+              <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
+                <Calculator className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-ink-muted" />
+                <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">HPP Final</span>
               </div>
-              <p className="text-base font-bold text-accent-blue tabular-nums">{formatRupiah(product.production_cost)}</p>
-              <p className="text-xs text-ink-muted mt-1">Biaya produksi</p>
+              <p className="text-[clamp(0.625rem,3vw,1.125rem)] sm:text-lg font-bold text-accent-blue tabular-nums whitespace-nowrap truncate text-center">{formatRupiah(product.production_cost)}</p>
+              <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Biaya produksi</p>
             </div>
 
-            <div className="bg-surface-1 rounded-lg p-4 border border-hairline hover:border-accent-blue/30 transition-colors">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Factory className="w-3.5 h-3.5 text-accent-blue" />
-                <span className="text-xs font-medium text-ink-muted uppercase tracking-wide">Harga Pabrik</span>
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-success/30 transition-colors">
+              <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
+                <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-success" />
+                <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">Harga Jual</span>
               </div>
-              <p className="text-base font-bold tabular-nums text-accent-blue">
-                {formatRupiah(product.harga_pabrik)}
-              </p>
-              <p className="text-xs text-ink-muted mt-1">Margin pabrik {product.target_margin_percentage}%</p>
+              <p className="text-[clamp(0.625rem,3vw,1.125rem)] sm:text-lg font-bold tabular-nums text-success whitespace-nowrap truncate text-center">{formatRupiah(product.estimated_selling_price)}</p>
+              <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Margin jual {marginJualPct}%</p>
+            </div>
+
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-accent-blue/30 transition-colors">
+              <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
+                <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-accent-blue" />
+                <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight line-clamp-2">Marketplace</span>
+              </div>
+              <p className="text-[clamp(0.625rem,3vw,1.125rem)] sm:text-lg font-bold tabular-nums text-accent-blue whitespace-nowrap truncate text-center">{formatRupiah(product.harga_marketplace)}</p>
+              <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Termasuk admin {adminPct}%</p>
             </div>
           </div>
 
-          {/* Marketplace card */}
-          <div className="bg-surface-1 rounded-lg p-4 mb-5 border border-hairline hover:border-accent-blue/30 transition-colors">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-accent-blue/10">
-                  <Layers className="w-4 h-4 text-accent-blue" />
+          {/* Calculation Parameters — with edit shortcut */}
+          <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
+                <Calculator className="w-4 h-4 text-accent-blue" />
+                Parameter Perhitungan
+              </h3>
+              {editingParameters ? (
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={() => setEditingParameters(false)} disabled={savingParameters} className="btn-secondary flex items-center gap-1 px-2.5 py-1.5 text-xs">
+                    <X className="w-3.5 h-3.5" /> Batal
+                  </button>
+                  <button type="button" onClick={handleParameterSave} disabled={savingParameters} className="btn-primary flex items-center gap-1 px-2.5 py-1.5 text-xs disabled:opacity-50">
+                    <Save className="w-3.5 h-3.5" /> {savingParameters ? 'Menyimpan…' : 'Simpan'}
+                  </button>
                 </div>
-                <div>
-                  <span className="text-xs font-medium text-ink-muted uppercase tracking-wide block">Harga Marketplace</span>
-                  <span className="text-xs text-ink-muted">Termasuk admin {adminPct}%</span>
+              ) : (
+                <button type="button" onClick={startParameterEdit} className="flex items-center gap-1 text-xs text-accent-blue hover:text-accent-blue/80 transition-colors">
+                  <Edit2 className="w-3 h-3" /> Quick edit
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              {[
+                { label: 'Overhead', key: 'overhead_percentage', value: product.overhead_percentage, amount: parameterPreview?.overheadAmount },
+                { label: 'Margin Pabrik', key: 'target_margin_percentage', value: product.target_margin_percentage, amount: parameterPreview?.hargaPabrik - parameterPreview?.hppFinal },
+                { label: 'Margin Jual', key: 'margin_jual_percentage', value: marginJualPct, amount: parameterPreview?.hargaJual - parameterPreview?.hargaPabrik },
+                { label: 'Admin Marketplace', key: 'admin_marketplace_percentage', value: adminPct, amount: parameterPreview?.hargaMarketplace - parameterPreview?.hargaJual },
+              ].map(({ label, key, value, amount }) => (
+                <div key={label} className="flex items-center justify-between gap-3 py-2.5 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
+                  <div>
+                    <span className="text-sm text-ink block">{label}</span>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    {editingParameters ? (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="0"
+                          max="99.99"
+                          step="0.01"
+                          inputMode="decimal"
+                          aria-label={`${label} dalam persen`}
+                          value={parameterDraft[key] ?? ''}
+                          onChange={event => setParameterDraft(current => ({ ...current, [key]: event.target.value }))}
+                          className="input-field w-20 py-2 text-right tabular-nums"
+                          disabled={savingParameters}
+                        />
+                        <span className="text-sm text-ink-muted">%</span>
+                      </div>
+                    ) : null}
+                    <span className="text-xs text-ink-muted tabular-nums">
+                      {formatRupiah(amount)} ({formatPercentage(editingParameters ? Number(parameterDraft[key]) || 0 : value)})
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <p className="text-lg font-bold tabular-nums text-accent-blue">
-                {formatRupiah(product.harga_marketplace)}
-              </p>
+              ))}
             </div>
           </div>
 
@@ -283,43 +431,6 @@ const ProductDetail = () => {
               </div>
             </div>
           )}
-
-          {/* Calculation Parameters — with edit shortcut */}
-          <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
-                <Calculator className="w-4 h-4 text-accent-blue" />
-                Parameter Perhitungan
-              </h3>
-              <a
-                href={`/products/${id}/edit`}
-                className="flex items-center gap-1 text-xs text-accent-blue hover:text-accent-blue/80 transition-colors"
-              >
-                <Edit2 className="w-3 h-3" />
-                Ubah
-              </a>
-            </div>
-
-            <div className="space-y-2">
-              {[
-                { label: 'Overhead', sub: '% dari total material', value: formatPercentage(product.overhead_percentage), color: '#999999' },
-                { label: 'Margin Pabrik', sub: '% dari harga pabrik', value: formatPercentage(product.target_margin_percentage), color: '#0099ff' },
-                { label: 'Margin Jual', sub: '% dari harga jual', value: formatPercentage(marginJualPct), color: '#22c55e' },
-                { label: 'Admin Marketplace', sub: '% dari harga marketplace', value: formatPercentage(adminPct), color: '#6a4cf5' },
-              ].map(({ label, sub, value, color }) => (
-                <div key={label} className="flex items-center justify-between py-2.5 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
-                  <div>
-                    <span className="text-sm text-ink block">{label}</span>
-                    <span className="text-xs text-ink-muted">{sub}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold tabular-nums" style={{ color }}>{value}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-ink-muted" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Bill of Materials */}
           <div className="mb-6">

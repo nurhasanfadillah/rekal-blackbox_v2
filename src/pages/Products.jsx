@@ -14,7 +14,6 @@ import {
   Copy,
   Camera,
   Images,
-  TrendingUp,
   Download
 } from 'lucide-react'
 
@@ -53,11 +52,6 @@ const Products = () => {
     } finally {
       setDeletingId(null)
     }
-  }
-
-  const calcMargin = (hpp, jual) => {
-    if (!hpp || !jual || hpp <= 0) return null
-    return Math.round(((jual - hpp) / hpp) * 100)
   }
 
   const exportDate = format(new Date(), 'dd MMMM yyyy')
@@ -151,8 +145,6 @@ const Products = () => {
                 const firstPhoto = hasPhotos
                   ? photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))[0]
                   : null
-                const margin = calcMargin(product.production_cost, product.estimated_selling_price)
-
                 return (
                   <div
                     key={product.id}
@@ -198,21 +190,13 @@ const Products = () => {
 
                         <div className="flex items-end gap-3">
                           <div>
+                            <p className="text-[10px] text-ink-muted leading-none mb-0.5">Harga Pabrik</p>
+                            <p className="text-sm text-ink font-bold tabular-nums">{formatRupiah(product.harga_pabrik)}</p>
+                          </div>
+                          <div>
                             <p className="text-[10px] text-ink-muted leading-none mb-0.5">HPP</p>
                             <p className="text-sm text-ink-muted font-medium tabular-nums">{formatRupiah(product.production_cost)}</p>
                           </div>
-                          <div>
-                            <p className="text-[10px] text-ink-muted leading-none mb-0.5">Jual</p>
-                            <p className="text-sm text-ink font-bold tabular-nums">{formatRupiah(product.estimated_selling_price)}</p>
-                          </div>
-                          {margin !== null && (
-                            <div className="flex items-center gap-1 px-2 py-0.5 bg-success/10 rounded">
-                              <TrendingUp className="w-3 h-3 text-success" />
-                              <span className="text-[11px] font-semibold text-success">
-                                {margin > 0 ? '+' : ''}{margin}%
-                              </span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -252,9 +236,8 @@ const Products = () => {
                 <tr className="border-b border-hairline">
                   <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 w-12">Foto</th>
                   <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Nama Produk</th>
+                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Harga Pabrik</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">HPP</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Harga Jual</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Margin</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Aksi</th>
                 </tr>
               </thead>
@@ -264,8 +247,6 @@ const Products = () => {
                   const firstPhoto = photos.length > 0
                     ? photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))[0]
                     : null
-                  const margin = calcMargin(product.production_cost, product.estimated_selling_price)
-
                   return (
                     <tr key={product.id} className="border-b border-hairline hover:bg-surface-2/60 transition-colors group">
                       <td className="py-3 pr-3">
@@ -287,15 +268,8 @@ const Products = () => {
                           )}
                         </a>
                       </td>
+                      <td className="py-3 pr-4 text-right text-sm font-bold text-ink tabular-nums">{formatRupiah(product.harga_pabrik)}</td>
                       <td className="py-3 pr-4 text-right text-sm text-ink-muted tabular-nums">{formatRupiah(product.production_cost)}</td>
-                      <td className="py-3 pr-4 text-right text-sm font-bold text-ink tabular-nums">{formatRupiah(product.estimated_selling_price)}</td>
-                      <td className="py-3 pr-4 text-right">
-                        {margin !== null && (
-                          <span className={`text-sm font-semibold tabular-nums ${margin >= 0 ? 'text-success' : 'text-danger'}`}>
-                            {margin > 0 ? '+' : ''}{margin}%
-                          </span>
-                        )}
-                      </td>
                       <td className="py-3 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <a

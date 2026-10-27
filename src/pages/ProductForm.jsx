@@ -170,11 +170,12 @@ const ProductForm = () => {
   const handleSelectMaterial = (material) => {
     if (selectedMaterialIndex !== null) {
       const newBomItems = [...bomItems]
+      const currentQuantity = newBomItems[selectedMaterialIndex].quantity
       newBomItems[selectedMaterialIndex] = {
         material_id: material.id,
         material: material,
         price: material.standard_price,
-        quantity: 1
+        quantity: currentQuantity
       }
       setBomItems(newBomItems)
     }
@@ -186,7 +187,7 @@ const ProductForm = () => {
     const newBomItems = [...bomItems]
     newBomItems[index] = {
       ...newBomItems[index],
-      [field]: field === 'quantity' || field === 'price' ? parseFloat(value) || 0 : value
+      [field]: value
     }
     setBomItems(newBomItems)
   }
@@ -443,7 +444,8 @@ const ProductForm = () => {
             <div>
               <label className="input-label">Overhead (%)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={formData.overhead_percentage}
                 onChange={(e) => setFormData({ ...formData, overhead_percentage: e.target.value })}
                 className={`input-field ${formErrors.overhead_percentage ? 'border-accent-rose' : ''}`}
@@ -460,7 +462,8 @@ const ProductForm = () => {
             <div>
               <label className="input-label">Margin Pabrik (%)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={formData.target_margin_percentage}
                 onChange={(e) => setFormData({ ...formData, target_margin_percentage: e.target.value })}
                 className={`input-field ${formErrors.target_margin_percentage ? 'border-accent-rose' : ''}`}
@@ -477,7 +480,8 @@ const ProductForm = () => {
             <div>
               <label className="input-label">Margin Jual (%)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={formData.margin_jual_percentage}
                 onChange={(e) => setFormData({ ...formData, margin_jual_percentage: e.target.value })}
                 className={`input-field ${formErrors.margin_jual_percentage ? 'border-accent-rose' : ''}`}
@@ -494,7 +498,8 @@ const ProductForm = () => {
             <div>
               <label className="input-label">Admin Marketplace (%)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={formData.admin_marketplace_percentage}
                 onChange={(e) => setFormData({ ...formData, admin_marketplace_percentage: e.target.value })}
                 className={`input-field ${formErrors.admin_marketplace_percentage ? 'border-accent-rose' : ''}`}
@@ -524,7 +529,8 @@ const ProductForm = () => {
           <div className="mb-4">
             <label className="input-label">Lebar Material</label>
             <input
-              type="number"
+              type="text"
+                inputMode="decimal"
               value={materialWidth}
               onChange={(e) => setMaterialWidth(e.target.value)}
               className="input-field"
@@ -542,7 +548,8 @@ const ProductForm = () => {
                     <div>
                       <label className="text-xs text-ink-muted mb-1 block">P (Panjang)</label>
                       <input
-                        type="number"
+                        type="text"
+                inputMode="decimal"
                         value={item.L}
                         onChange={(e) => handleUsageChange(index, 'L', e.target.value)}
                         className="input-field py-2"
@@ -553,7 +560,8 @@ const ProductForm = () => {
                     <div>
                       <label className="text-xs text-ink-muted mb-1 block">L (Lebar)</label>
                       <input
-                        type="number"
+                        type="text"
+                inputMode="decimal"
                         value={item.W}
                         onChange={(e) => handleUsageChange(index, 'W', e.target.value)}
                         className="input-field py-2"
@@ -564,7 +572,8 @@ const ProductForm = () => {
                     <div>
                       <label className="text-xs text-ink-muted mb-1 block">x (Qty)</label>
                       <input
-                        type="number"
+                        type="text"
+                inputMode="decimal"
                         value={item.x}
                         onChange={(e) => handleUsageChange(index, 'x', e.target.value)}
                         className="input-field py-2"
@@ -679,7 +688,8 @@ const ProductForm = () => {
                           <div>
                             <label className="text-xs text-ink-muted mb-1 block">Harga</label>
                             <input
-                              type="number"
+                              type="text"
+                inputMode="decimal"
                               value={item.price}
                               onChange={(e) => handleBomChange(index, 'price', e.target.value)}
                               className="input-field py-2"
@@ -691,7 +701,8 @@ const ProductForm = () => {
                               Qty ({item.material.unit})
                             </label>
                             <input
-                              type="number"
+                              type="text"
+                inputMode="decimal"
                               value={item.quantity}
                               onChange={(e) => handleBomChange(index, 'quantity', e.target.value)}
                               className="input-field py-2"

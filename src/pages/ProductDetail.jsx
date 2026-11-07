@@ -340,23 +340,24 @@ const ProductDetail = () => {
 
           {/* Photo Gallery */}
           <div className="mb-5">
-            {/* Mobile: 2-kolom horizontal scroll */}
+            {/* Mobile: thumbnail strip horizontal scroll */}
             <div className="xl:hidden">
               {!hasPhotos ? (
                 <div className="bg-white/5 rounded-xl flex items-center justify-center h-28 border border-white/10">
                   <Package className="w-8 h-8 text-white/30" />
                 </div>
-              ) : photos.length === 1 ? (
-                <div className="w-full aspect-[4/3] rounded-xl overflow-hidden">
-                  <img src={photos[0].photo_url} alt={product.name} className="w-full h-full object-cover" />
-                </div>
               ) : (
-                <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory">
-                  {[...photos].sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map((photo, idx) => (
-                    <div key={photo.id} className="flex-shrink-0 w-[calc(50%-4px)] aspect-square rounded-xl overflow-hidden snap-start">
-                      <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
+                <div className="relative">
+                  <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-0.5">
+                    {[...photos].sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map((photo, idx) => (
+                      <div key={photo.id} className="flex-shrink-0 w-28 aspect-square rounded-xl overflow-hidden snap-start">
+                        <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                  {photos.length > 3 && (
+                    <div className="pointer-events-none absolute right-0 top-0 bottom-0.5 w-12 bg-gradient-to-l from-[#0B1B3C] to-transparent" />
+                  )}
                 </div>
               )}
             </div>

@@ -41,6 +41,9 @@ const ProductDetailPdfDocument = ({ product, exportDate }) => {
   const materials = product.bill_of_materials || []
   const marginJual = product.margin_jual_percentage ?? 20
   const admin = product.admin_marketplace_percentage ?? 5
+  const cmtCost = product.cmt_cost ?? 0
+  const hppProdukJadi = (product.total_material_cost ?? 0) + cmtCost
+  const cmtPct = hppProdukJadi > 0 ? ((cmtCost / hppProdukJadi) * 100).toFixed(1) : '0.0'
 
   return (
     <Document title={`Detail Produk - ${product.name}`} author="ReKal">
@@ -54,7 +57,7 @@ const ProductDetailPdfDocument = ({ product, exportDate }) => {
 
         <View style={styles.summaryGrid}>
           <View style={[styles.summaryCard, styles.primarySummaryCard]}><Text style={[styles.summaryLabel, styles.primarySummaryLabel]}>HARGA PABRIK</Text><Text style={[styles.summaryValue, styles.primarySummaryValue]}>{formatRupiah(product.harga_pabrik)}</Text></View>
-          <View style={styles.summaryCard}><Text style={styles.summaryLabel}>HPP FINAL</Text><Text style={styles.summaryValue}>{formatRupiah(product.production_cost)}</Text></View>
+          <View style={styles.summaryCard}><Text style={styles.summaryLabel}>HPP PRODUK</Text><Text style={styles.summaryValue}>{formatRupiah(hppProdukJadi)}</Text></View>
           <View style={styles.summaryCard}><Text style={styles.summaryLabel}>HARGA JUAL</Text><Text style={styles.summaryValue}>{formatRupiah(product.estimated_selling_price)}</Text></View>
           <View style={styles.summaryCard}><Text style={styles.summaryLabel}>HARGA MARKETPLACE</Text><Text style={styles.summaryValue}>{formatRupiah(product.harga_marketplace)}</Text></View>
         </View>
@@ -83,8 +86,12 @@ const ProductDetailPdfDocument = ({ product, exportDate }) => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Parameter Perhitungan</Text>
+          <View style={styles.parameterRow} wrap={false}>
+            <Text style={styles.parameterLabel}>Biaya CMT ({cmtPct}% dari HPP Produk Jadi)</Text>
+            <Text style={styles.parameterValue}>{formatRupiah(cmtCost)}</Text>
+          </View>
           {[
-            ['Overhead (% dari total material)', product.overhead_percentage],
+            ['Overhead (% dari HPP Produk Jadi)', product.overhead_percentage],
             ['Margin Pabrik (% dari harga pabrik)', product.target_margin_percentage],
             ['Margin Jual (% dari harga jual)', marginJual],
             ['Admin Marketplace (% dari harga marketplace)', admin],

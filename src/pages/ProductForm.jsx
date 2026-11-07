@@ -49,6 +49,7 @@ const ProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    cmt_cost: '0',
     overhead_percentage: '20',
     target_margin_percentage: '10',
     margin_jual_percentage: '20',
@@ -77,6 +78,8 @@ const ProductForm = () => {
 
   const [calculations, setCalculations] = useState({
     totalMaterialCost: 0,
+    cmtCost: 0,
+    hppProdukJadi: 0,
     overheadAmount: 0,
     hppFinal: 0,
     hargaPabrik: 0,
@@ -103,9 +106,10 @@ const ProductForm = () => {
     const marginPabrik = parseFloat(formData.target_margin_percentage) || 0
     const marginJual = parseFloat(formData.margin_jual_percentage) || 0
     const admin = parseFloat(formData.admin_marketplace_percentage) || 0
-    const newCalculations = calculateAllCostsExtended(bomItems, overhead, marginPabrik, marginJual, admin)
+    const cmt = parseFloat(formData.cmt_cost) || 0
+    const newCalculations = calculateAllCostsExtended(bomItems, overhead, marginPabrik, marginJual, admin, cmt)
     setCalculations(newCalculations)
-  }, [bomItems, formData.overhead_percentage, formData.target_margin_percentage, formData.margin_jual_percentage, formData.admin_marketplace_percentage])
+  }, [bomItems, formData.overhead_percentage, formData.target_margin_percentage, formData.margin_jual_percentage, formData.admin_marketplace_percentage, formData.cmt_cost])
 
   // Calculate material usage in real-time
   useEffect(() => {
@@ -121,6 +125,7 @@ const ProductForm = () => {
       setFormData({
         name: isCopyMode ? '' : product.name,
         description: product.description || '',
+        cmt_cost: (product.cmt_cost ?? 0).toString(),
         overhead_percentage: product.overhead_percentage.toString(),
         target_margin_percentage: product.target_margin_percentage.toString(),
         margin_jual_percentage: (product.margin_jual_percentage ?? 20).toString(),
@@ -296,6 +301,7 @@ const ProductForm = () => {
       const productData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
+        cmt_cost: parseFloat(formData.cmt_cost) || 0,
         overhead_percentage: parseFloat(formData.overhead_percentage),
         target_margin_percentage: parseFloat(formData.target_margin_percentage),
         margin_jual_percentage: parseFloat(formData.margin_jual_percentage),
@@ -441,6 +447,20 @@ const ProductForm = () => {
           </h3>
           
           <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="input-label">Biaya CMT (Rp)</label>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={formData.cmt_cost}
+                onChange={(e) => setFormData({ ...formData, cmt_cost: e.target.value })}
+                className="input-field"
+                placeholder="0"
+                min="0"
+              />
+              <p className="text-xs text-ink-muted mt-1">Biaya Cut, Make & Trim per unit produk</p>
+            </div>
+
             <div>
               <label className="input-label">Overhead (%)</label>
               <input
@@ -453,7 +473,7 @@ const ProductForm = () => {
                 min="0"
                 max="99"
               />
-              <p className="text-xs text-ink-muted mt-1">% dari total material</p>
+              <p className="text-xs text-ink-muted mt-1">% dari HPP Produk Jadi</p>
               {formErrors.overhead_percentage && (
                 <p className="text-accent-rose text-xs mt-1">{formErrors.overhead_percentage}</p>
               )}
@@ -745,6 +765,14 @@ const ProductForm = () => {
             <div className="flex justify-between items-center">
               <span className="text-sm text-ink-muted">Total Material</span>
               <span className="font-medium text-ink">{formatRupiah(calculations.totalMaterialCost)}</span>
+            </div>
+            <div className="flex justify-between items-center pl-3 text-xs text-ink-muted">
+              <span>+ Biaya CMT</span>
+              <span>{formatRupiah(calculations.cmtCost)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-ink-muted">HPP Produk Jadi</span>
+              <span className="font-medium text-ink">{formatRupiah(calculations.hppProdukJadi)}</span>
             </div>
             <div className="h-px bg-hairline-soft" />
             <div className="flex justify-between items-center pl-3 text-xs text-ink-muted">

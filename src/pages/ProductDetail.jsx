@@ -84,6 +84,7 @@ const ProductDetail = () => {
 
   const startParameterEdit = () => {
     setParameterDraft({
+      cmt_cost: String(product.cmt_cost ?? 0),
       overhead_percentage: String(product.overhead_percentage ?? 0),
       target_margin_percentage: String(product.target_margin_percentage ?? 0),
       margin_jual_percentage: String(product.margin_jual_percentage ?? 20),
@@ -113,6 +114,7 @@ const ProductDetail = () => {
         name: product.name,
         description: product.description || '',
         photo_url: product.photo_url || null,
+        cmt_cost: Number(parameterDraft.cmt_cost) || 0,
         overhead_percentage: Number(parameterDraft.overhead_percentage),
         target_margin_percentage: Number(parameterDraft.target_margin_percentage),
         margin_jual_percentage: Number(parameterDraft.margin_jual_percentage),
@@ -152,12 +154,16 @@ const ProductDetail = () => {
     const percentage = key => editingParameters
       ? Number(parameterDraft[key]) || 0
       : Number(product[key] ?? (key === 'margin_jual_percentage' ? 20 : key === 'admin_marketplace_percentage' ? 5 : 0))
+    const cmtCost = editingParameters
+      ? Number(parameterDraft.cmt_cost) || 0
+      : Number(product.cmt_cost ?? 0)
     return calculateAllCostsExtended(
       (product.bill_of_materials || []).map(item => ({ price: item.price, quantity: item.quantity })),
       percentage('overhead_percentage'),
       percentage('target_margin_percentage'),
       percentage('margin_jual_percentage'),
       percentage('admin_marketplace_percentage'),
+      cmtCost,
     )
   }, [product, editingParameters, parameterDraft])
 
@@ -308,10 +314,10 @@ const ProductDetail = () => {
             <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-ink-muted transition-colors">
               <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
                 <Calculator className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-ink-muted" />
-                <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">HPP Final</span>
+                <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">HPP Produk</span>
               </div>
-              <p className="text-[clamp(0.625rem,3vw,1.125rem)] sm:text-lg font-bold text-accent-blue tabular-nums whitespace-nowrap truncate text-center">{formatRupiah(product.production_cost)}</p>
-              <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Biaya produksi</p>
+              <p className="text-[clamp(0.625rem,3vw,1.125rem)] sm:text-lg font-bold text-accent-blue tabular-nums whitespace-nowrap truncate text-center">{formatRupiah((product.total_material_cost ?? 0) + (product.cmt_cost ?? 0))}</p>
+              <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Material + CMT</p>
             </div>
 
             <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-success/30 transition-colors">
@@ -357,6 +363,39 @@ const ProductDetail = () => {
             </div>
 
             <div className="space-y-2">
+              {/* Biaya CMT — flat value row */}
+              <div className="flex items-center justify-between gap-3 py-2.5 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
+                <div>
+                  <span className="text-sm text-ink block">Biaya CMT</span>
+                  <span className="text-xs text-ink-muted">
+                    {(() => {
+                      const cmt = editingParameters ? Number(parameterDraft.cmt_cost) || 0 : (product.cmt_cost ?? 0)
+                      const hppPJ = parameterPreview?.hppProdukJadi || 0
+                      const pct = hppPJ > 0 ? ((cmt / hppPJ) * 100).toFixed(1) : '0.0'
+                      return `${pct}% dari HPP Produk Jadi`
+                    })()}
+                  </span>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  {editingParameters ? (
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      inputMode="decimal"
+                      aria-label="Biaya CMT"
+                      value={parameterDraft.cmt_cost ?? ''}
+                      onChange={event => setParameterDraft(current => ({ ...current, cmt_cost: event.target.value }))}
+                      className="input-field w-32 py-2 text-right tabular-nums"
+                      disabled={savingParameters}
+                    />
+                  ) : null}
+                  <span className="text-xs text-ink-muted tabular-nums">
+                    {formatRupiah(editingParameters ? Number(parameterDraft.cmt_cost) || 0 : (product.cmt_cost ?? 0))}
+                  </span>
+                </div>
+              </div>
+
               {[
                 { label: 'Overhead', key: 'overhead_percentage', value: product.overhead_percentage, amount: parameterPreview?.overheadAmount },
                 { label: 'Margin Pabrik', key: 'target_margin_percentage', value: product.target_margin_percentage, amount: parameterPreview?.hargaPabrik - parameterPreview?.hppFinal },

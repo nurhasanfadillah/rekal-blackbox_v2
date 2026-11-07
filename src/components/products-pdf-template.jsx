@@ -96,7 +96,7 @@ const ProductsPdfDocument = ({ products, exportDate }) => (
           <Text style={[styles.cellHeader, styles.thNo]}>No</Text>
           <Text style={[styles.cellHeader, styles.thNama]}>Nama Produk</Text>
           <Text style={[styles.cellHeader, styles.thHarga]}>Harga Pabrik</Text>
-          <Text style={[styles.cellHeader, styles.thHpp]}>HPP Final</Text>
+          <Text style={[styles.cellHeader, styles.thHpp]}>HPP Produk</Text>
         </View>
 
         {products.map((product, index) => (
@@ -104,7 +104,7 @@ const ProductsPdfDocument = ({ products, exportDate }) => (
             <Text style={[styles.cell, styles.tdNo]}>{index + 1}</Text>
             <Text style={[styles.cell, styles.tdNama]}>{product.name}</Text>
             <Text style={[styles.cell, styles.tdHarga]}>{formatRupiah(product.harga_pabrik)}</Text>
-            <Text style={[styles.cell, styles.tdHpp]}>{formatRupiah(product.production_cost)}</Text>
+            <Text style={[styles.cell, styles.tdHpp]}>{formatRupiah((product.total_material_cost ?? 0) + (product.cmt_cost ?? 0))}</Text>
           </View>
         ))}
       </View>

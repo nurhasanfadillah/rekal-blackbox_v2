@@ -175,7 +175,8 @@ export const db = {
       product.overhead_percentage || 0,
       product.target_margin_percentage || 0,
       product.margin_jual_percentage || 0,
-      product.admin_marketplace_percentage || 0
+      product.admin_marketplace_percentage || 0,
+      product.cmt_cost || 0
     )
 
     // Insert product
@@ -223,7 +224,8 @@ export const db = {
       product.overhead_percentage || 0,
       product.target_margin_percentage || 0,
       product.margin_jual_percentage || 0,
-      product.admin_marketplace_percentage || 0
+      product.admin_marketplace_percentage || 0,
+      product.cmt_cost || 0
     )
 
     // Update product

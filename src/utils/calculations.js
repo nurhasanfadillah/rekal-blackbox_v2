@@ -34,16 +34,21 @@ export const calculateHargaMarketplace = (hargaJual, adminPercentage) => {
 }
 
 // Full 5-step calculation (digunakan di halaman simulasi)
-export const calculateAllCostsExtended = (bomItems, overheadPct, marginPabrikPct, marginJualPct, adminPct) => {
+// cmtCost: biaya CMT flat per unit, dijumlahkan ke total material sebelum overhead
+export const calculateAllCostsExtended = (bomItems, overheadPct, marginPabrikPct, marginJualPct, adminPct, cmtCost = 0) => {
   const totalMaterialCost = calculateTotalMaterialCost(bomItems)
-  const overheadAmount = totalMaterialCost * (overheadPct / 100)
-  const hppFinal = totalMaterialCost + overheadAmount
+  const cmt = cmtCost || 0
+  const hppProdukJadi = totalMaterialCost + cmt
+  const overheadAmount = hppProdukJadi * (overheadPct / 100)
+  const hppFinal = hppProdukJadi + overheadAmount
   const hargaPabrik = calculateHargaPabrik(hppFinal, marginPabrikPct)
   const hargaJual = calculateHargaJual(hargaPabrik, marginJualPct)
   const hargaMarketplace = calculateHargaMarketplace(hargaJual, adminPct)
 
   return {
     totalMaterialCost: Math.round(totalMaterialCost),
+    cmtCost: Math.round(cmt),
+    hppProdukJadi: Math.round(hppProdukJadi),
     overheadAmount: Math.round(overheadAmount),
     hppFinal: Math.round(hppFinal),
     hargaPabrik: Math.round(hargaPabrik),

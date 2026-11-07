@@ -194,8 +194,8 @@ const Products = () => {
                             <p className="text-sm text-ink font-bold tabular-nums">{formatRupiah(product.harga_pabrik)}</p>
                           </div>
                           <div>
-                            <p className="text-[10px] text-ink-muted leading-none mb-0.5">HPP</p>
-                            <p className="text-sm text-ink-muted font-medium tabular-nums">{formatRupiah(product.production_cost)}</p>
+                            <p className="text-[10px] text-ink-muted leading-none mb-0.5">HPP Produk</p>
+                            <p className="text-sm text-ink-muted font-medium tabular-nums">{formatRupiah((product.total_material_cost ?? 0) + (product.cmt_cost ?? 0))}</p>
                           </div>
                         </div>
                       </div>
@@ -237,7 +237,7 @@ const Products = () => {
                   <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 w-12">Foto</th>
                   <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Nama Produk</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Harga Pabrik</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">HPP</th>
+                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">HPP Produk</th>
                   <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Aksi</th>
                 </tr>
               </thead>
@@ -269,7 +269,7 @@ const Products = () => {
                         </a>
                       </td>
                       <td className="py-3 pr-4 text-right text-sm font-bold text-ink tabular-nums">{formatRupiah(product.harga_pabrik)}</td>
-                      <td className="py-3 pr-4 text-right text-sm text-ink-muted tabular-nums">{formatRupiah(product.production_cost)}</td>
+                      <td className="py-3 pr-4 text-right text-sm text-ink-muted tabular-nums">{formatRupiah((product.total_material_cost ?? 0) + (product.cmt_cost ?? 0))}</td>
                       <td className="py-3 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <a

@@ -92,7 +92,7 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
         ref={triggerRef}
         type="button"
         onClick={() => { setOpen(o => !o); setQuery('') }}
-        className="w-full flex items-center justify-between gap-2 h-11 px-3 bg-surface-1 border border-hairline hover:border-ink-muted focus:border-accent-blue rounded text-sm transition-colors"
+        className="w-full flex items-center justify-between gap-2 h-11 px-3 bg-surface-1 border border-hairline-on-surface hover:border-ink-muted focus:border-accent-blue rounded text-sm transition-colors"
       >
         <span className={selected ? 'text-ink font-medium truncate' : 'text-ink-muted'}>
           {selected ? selected.name : loading ? 'Memuat produk...' : 'Cari & pilih produk...'}
@@ -112,9 +112,9 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
         <div
           ref={dropdownRef}
           style={dropdownStyle}
-          className="bg-surface-1 border border-hairline rounded shadow-2xl overflow-hidden"
+          className="bg-surface-1 border border-hairline-on-surface rounded-xl shadow-2xl overflow-hidden"
         >
-          <div className="p-2 border-b border-hairline-soft">
+          <div className="p-2 border-b border-hairline-on-surface">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-muted" />
               <input
@@ -136,7 +136,7 @@ const ProductCombobox = ({ products, value, onChange, loading }) => {
                   key={product.id}
                   type="button"
                   onClick={() => handleSelect(product)}
-                  className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${
+                  className={`w-full text-left px-3 py-3 text-sm transition-colors ${
                     product.id === value
                       ? 'bg-accent-blue/20 text-accent-blue'
                       : 'text-ink hover:bg-surface-2'
@@ -367,8 +367,8 @@ const PriceSimulation = () => {
                     onClick={() => openMaterialSelector(index)}
                     className={`flex-1 flex items-center justify-between h-10 px-3 rounded border text-sm transition-all ${
                       item.material
-                        ? 'bg-surface-1 border-hairline text-ink'
-                        : 'bg-surface-1/50 border-hairline-soft text-ink-muted'
+                        ? 'bg-surface-1 border-hairline-on-surface text-ink'
+                        : 'bg-surface-1/50 border-hairline-on-surface text-ink-muted'
                     }`}
                   >
                     <span className="truncate font-medium">
@@ -387,7 +387,7 @@ const PriceSimulation = () => {
 
                 {/* Quantity, Price (editable), Subtotal */}
                 {item.material && (
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-hairline-soft">
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-hairline-on-surface">
                     <div>
                       <label className="text-[10px] text-ink-muted block mb-1">
                         Jumlah ({item.material.unit})
@@ -495,8 +495,8 @@ const PriceSimulation = () => {
       {/* ── Sticky Result Bar ── */}
       {hasData && (
         <div className="fixed bottom-16 left-0 right-0 z-10 px-4 pb-2 pointer-events-none lg:hidden">
-          <div className="bg-surface-1 backdrop-blur-md border border-hairline rounded-lg px-4 py-3 shadow-2xl pointer-events-auto">
-            <div className="grid grid-cols-3 divide-x divide-hairline text-center">
+          <div className="bg-surface-1 backdrop-blur-md border border-hairline-on-surface rounded-lg px-4 py-3 shadow-2xl pointer-events-auto">
+            <div className="grid grid-cols-3 divide-x divide-hairline-on-surface text-center">
               <div className="pr-3">
                 <p className="text-[10px] text-ink-muted mb-0.5">HPP</p>
                 <p className="text-sm font-bold text-accent-blue">{formatRupiah(calculations.hppFinal)}</p>
@@ -537,7 +537,7 @@ const PriceSimulation = () => {
                 value={materialSearch}
                 onChange={e => setMaterialSearch(e.target.value)}
                 placeholder="Cari material..."
-                className="w-full h-10 bg-surface-1 border border-hairline rounded pl-9 pr-3 text-sm text-ink placeholder-ink-muted outline-none focus:border-accent-blue"
+                className="w-full h-10 bg-surface-1 border border-hairline-on-surface rounded pl-9 pr-3 text-sm text-ink placeholder-ink-muted outline-none focus:border-accent-blue"
               />
             </div>
 

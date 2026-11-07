@@ -142,7 +142,7 @@ const Products = () => {
         <>
           {/* Mobile card list */}
           <div className="xl:hidden">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               {filteredProducts.map(product => {
                 const photos = product.product_photos || []
                 const hasPhotos = photos.length > 0
@@ -152,7 +152,7 @@ const Products = () => {
                 return (
                   <div
                     key={product.id}
-                    className="bg-surface-1 border border-hairline rounded transition-colors duration-150 overflow-hidden flex group"
+                    className="bg-surface-1 border border-hairline rounded-xl transition-colors duration-150 overflow-hidden flex group"
                   >
                     {/* Foto Produk */}
                     <a
@@ -237,15 +237,15 @@ const Products = () => {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden xl:block">
+          <div className="hidden xl:block bg-surface-1 border border-hairline-on-surface rounded-xl px-4">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-hairline">
-                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 w-12">Foto</th>
-                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Nama Produk</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Harga Pabrik</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">HPP Produk</th>
-                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3">Aksi</th>
+                <tr className="border-b border-hairline-on-surface">
+                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 pt-4 w-12">Foto</th>
+                  <th className="text-left text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 pt-4">Nama Produk</th>
+                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 pt-4">Harga Pabrik</th>
+                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 pt-4">HPP Produk</th>
+                  <th className="text-right text-xs font-semibold text-ink-muted uppercase tracking-wider pb-3 pt-4">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -255,7 +255,7 @@ const Products = () => {
                     ? photos.sort((a, b) => (a.display_order || 0) - (b.display_order || 0))[0]
                     : null
                   return (
-                    <tr key={product.id} className="border-b border-hairline hover:bg-surface-2/60 transition-colors group">
+                    <tr key={product.id} className="border-b border-hairline-on-surface hover:bg-surface-2/60 transition-colors group">
                       <td className="py-3 pr-3">
                         <a href={`/products/${product.id}`}>
                           {firstPhoto ? (

@@ -378,7 +378,7 @@ const ProductForm = () => {
       <div className="product-form-heading flex items-center gap-3 mb-6">
         <button 
           onClick={() => navigate('/products')}
-          className="p-2 text-ink-muted hover:text-ink hover:bg-surface-1 rounded-lg transition-colors"
+          className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -633,9 +633,9 @@ const ProductForm = () => {
                         type="button"
                         onClick={() => openMaterialSelector(index)}
                         className={`w-full flex items-center justify-between p-3 rounded border transition-all ${
-                          item.material 
-                            ? 'bg-surface-1 border-hairline text-ink'
-                            : 'bg-surface-1/50 border-hairline-soft text-ink-muted'
+                          item.material
+                            ? 'bg-surface-1 border-hairline-on-surface text-ink'
+                            : 'bg-surface-1/50 border-hairline-on-surface text-ink-muted'
                         }`}
                       >
                         <span className="font-medium">
@@ -874,14 +874,14 @@ const ProductForm = () => {
               <button
                 type="button"
                 onClick={handleAddUsageItem}
-                className="w-full py-2 border border-dashed border-hairline rounded text-ink-muted hover:text-accent-blue hover:border-accent-blue/50 transition-colors flex items-center justify-center gap-2 mb-4"
+                className="w-full py-2 border border-dashed border-hairline-on-surface rounded text-ink-muted hover:text-accent-blue hover:border-accent-blue/50 transition-colors flex items-center justify-center gap-2 mb-4"
               >
                 <Plus className="w-4 h-4" />
                 Tambah Item
               </button>
 
               {/* Calculation Result */}
-              <div className="bg-surface-1/50 rounded p-4 border border-hairline-soft">
+              <div className="bg-surface-1/50 rounded p-4 border border-hairline-on-surface">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs text-ink-muted mb-1">Hasil Perhitungan</p>

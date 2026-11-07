@@ -215,16 +215,16 @@ const Categories = () => {
           })}
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden xl:block bg-surface-1 border border-hairline-on-surface rounded-xl px-4">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-hairline">
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pl-2">Kategori</th>
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3">Jumlah Material</th>
-                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pr-2">Aksi</th>
+              <tr className="border-b border-hairline-on-surface">
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4 pl-2">Kategori</th>
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4">Jumlah Material</th>
+                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4 pr-2">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-2">
+            <tbody className="divide-y divide-hairline-on-surface">
               {filteredCategories.map(category => {
                 const materialCount = getMaterialCount(category.id)
                 const hasMaterials = materialCount > 0

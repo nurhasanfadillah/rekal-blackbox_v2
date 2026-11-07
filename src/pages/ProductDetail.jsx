@@ -21,11 +21,11 @@ import {
   Layers,
   Copy,
   Factory,
-  Images,
   BarChart2,
   Download,
   Save,
-  X
+  X,
+  MoreVertical
 } from 'lucide-react'
 
 const CHART_COLORS = [
@@ -46,6 +46,7 @@ const ProductDetail = () => {
   const [editingParameters, setEditingParameters] = useState(false)
   const [savingParameters, setSavingParameters] = useState(false)
   const [parameterDraft, setParameterDraft] = useState({})
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   useEffect(() => {
     loadProduct()
@@ -202,14 +203,75 @@ const ProductDetail = () => {
       <div className="flex items-center gap-3 mb-5">
         <button
           onClick={() => navigate('/products')}
-          className="p-2 text-ink-muted hover:text-ink hover:bg-surface-1 rounded transition-colors"
+          className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex-1">
           <h1 className="page-title mb-0">Detail Produk</h1>
         </div>
-        <div className="flex gap-1">
+        {/* Mobile: tombol aksi + dropdown */}
+        <div className="relative xl:hidden">
+          <button
+            onClick={() => setDrawerOpen(v => !v)}
+            className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors"
+            title="Aksi"
+          >
+            <MoreVertical className="w-5 h-5" />
+          </button>
+
+          {drawerOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setDrawerOpen(false)} />
+              <div className="absolute right-0 top-full mt-1.5 z-50 w-52 rounded-2xl border border-white/[0.12] bg-[#0D2040] shadow-2xl shadow-black/50 overflow-hidden">
+                <PDFDownloadLink
+                  document={<ProductDetailPdfDocument product={product} exportDate={exportDate} />}
+                  fileName={exportFilename}
+                >
+                  {({ loading: pdfLoading }) => (
+                    <button
+                      type="button"
+                      disabled={pdfLoading}
+                      onClick={() => !pdfLoading && setDrawerOpen(false)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/[0.07] text-white/85 text-sm font-medium transition-colors disabled:opacity-50"
+                    >
+                      <Download className="w-4 h-4 text-accent-blue flex-shrink-0" />
+                      {pdfLoading ? 'Menyiapkan…' : 'Ekspor PDF'}
+                    </button>
+                  )}
+                </PDFDownloadLink>
+                <a
+                  href={`/products/copy/${id}`}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.07] text-white/85 text-sm font-medium transition-colors"
+                >
+                  <Copy className="w-4 h-4 text-white/50 flex-shrink-0" />
+                  Salin Produk
+                </a>
+                <a
+                  href={`/products/${id}/edit`}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.07] text-white/85 text-sm font-medium transition-colors"
+                >
+                  <Edit2 className="w-4 h-4 text-white/50 flex-shrink-0" />
+                  Edit Produk
+                </a>
+                <div className="border-t border-white/10" />
+                <button
+                  onClick={() => { setDrawerOpen(false); handleDelete() }}
+                  disabled={deleting}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-danger/10 text-danger text-sm font-medium transition-colors disabled:opacity-50"
+                >
+                  {deleting
+                    ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-danger flex-shrink-0" />
+                    : <Trash2 className="w-4 h-4 flex-shrink-0" />
+                  }
+                  {deleting ? 'Menghapus…' : 'Hapus Produk'}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+        {/* Desktop: tombol aksi inline */}
+        <div className="hidden xl:flex gap-1">
           <PDFDownloadLink
             document={<ProductDetailPdfDocument product={product} exportDate={exportDate} />}
             fileName={exportFilename}
@@ -230,14 +292,14 @@ const ProductDetail = () => {
           </PDFDownloadLink>
           <a
             href={`/products/copy/${id}`}
-            className="p-2.5 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded transition-colors"
+            className="p-2.5 text-white/60 hover:text-accent-secondary hover:bg-accent-blue/20 rounded transition-colors"
             title="Salin Produk"
           >
             <Copy className="w-5 h-5" />
           </a>
           <a
             href={`/products/${id}/edit`}
-            className="p-2.5 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded transition-colors"
+            className="p-2.5 text-white/60 hover:text-accent-secondary hover:bg-accent-blue/20 rounded transition-colors"
             title="Edit Produk"
           >
             <Edit2 className="w-5 h-5" />
@@ -245,7 +307,7 @@ const ProductDetail = () => {
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="p-2.5 text-ink-muted hover:text-danger hover:bg-danger/10 rounded transition-colors disabled:opacity-50"
+            className="p-2.5 text-white/60 hover:text-danger hover:bg-danger/15 rounded transition-colors disabled:opacity-50"
             title="Hapus Produk"
           >
             {deleting ? (
@@ -260,34 +322,51 @@ const ProductDetail = () => {
       {/* Two-column wrapper — flex aktif di lg+, single column di mobile */}
       <div className="product-detail-layout">
 
-        {/* Kolom Kiri — gallery + nama produk (sticky di desktop) */}
+        {/* Kolom Kiri — nama + gallery (sticky di desktop) */}
         <div className="product-detail-primary">
-          {/* Photo Gallery — diperbesar */}
-          <div className="mb-5 rounded-lg overflow-hidden">
-            <ProductPhotoGallery
-              photos={photos}
-              productName={product.name}
-              maxHeight="380px"
-            />
+
+          {/* Nama & Deskripsi — tanpa card di mobile, card di desktop */}
+          <div className="mb-4 xl:bg-surface-1 xl:border xl:border-hairline-on-surface xl:rounded-xl xl:p-4">
+            {product.sku && (
+              <span className="inline-block text-[10px] font-mono font-semibold text-white/50 xl:text-ink-muted bg-white/10 xl:bg-surface-2 border border-white/20 xl:border-hairline-on-surface px-1.5 py-0.5 rounded mb-2">{product.sku}</span>
+            )}
+            <h2 className="text-xl font-bold text-white xl:text-ink leading-tight mb-1">{product.name}</h2>
+            {product.description ? (
+              <p className="text-white/60 xl:text-ink-muted text-sm leading-relaxed">{product.description}</p>
+            ) : (
+              <p className="text-white/40 xl:text-ink-muted text-sm italic">Tidak ada deskripsi</p>
+            )}
           </div>
 
-          {/* Product Name & Description */}
-          <div className="bg-surface-1 rounded-lg p-4 mb-5 border border-hairline">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded bg-accent-blue/10 flex items-center justify-center flex-shrink-0">
-                {hasPhotos ? <Images className="w-5 h-5 text-accent-blue" /> : <Package className="w-5 h-5 text-accent-blue" />}
-              </div>
-              <div className="flex-1 min-w-0">
-                {product.sku && (
-                  <span className="inline-block text-[10px] font-mono font-semibold text-ink-muted bg-surface-2 border border-hairline px-1.5 py-0.5 rounded mb-1.5">{product.sku}</span>
-                )}
-                <h2 className="text-xl font-bold text-ink leading-tight mb-1">{product.name}</h2>
-                {product.description ? (
-                  <p className="text-ink-muted text-sm leading-relaxed">{product.description}</p>
-                ) : (
-                  <p className="text-ink-muted text-sm italic">Tidak ada deskripsi</p>
-                )}
-              </div>
+          {/* Photo Gallery */}
+          <div className="mb-5">
+            {/* Mobile: 2-kolom horizontal scroll */}
+            <div className="xl:hidden">
+              {!hasPhotos ? (
+                <div className="bg-white/5 rounded-xl flex items-center justify-center h-28 border border-white/10">
+                  <Package className="w-8 h-8 text-white/30" />
+                </div>
+              ) : photos.length === 1 ? (
+                <div className="w-full aspect-[4/3] rounded-xl overflow-hidden">
+                  <img src={photos[0].photo_url} alt={product.name} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory">
+                  {[...photos].sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map((photo, idx) => (
+                    <div key={photo.id} className="flex-shrink-0 w-[calc(50%-4px)] aspect-square rounded-xl overflow-hidden snap-start">
+                      <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Desktop: full gallery */}
+            <div className="hidden xl:block rounded-lg overflow-hidden">
+              <ProductPhotoGallery
+                photos={photos}
+                productName={product.name}
+                maxHeight="clamp(180px, 55vw, 380px)"
+              />
             </div>
           </div>
         </div>
@@ -314,7 +393,7 @@ const ProductDetail = () => {
 
           {/* Supporting prices — shown in calculation order */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
-            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-ink-muted transition-colors">
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline-on-surface hover:border-ink-muted transition-colors">
               <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
                 <Calculator className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-ink-muted" />
                 <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">HPP Produk</span>
@@ -323,7 +402,7 @@ const ProductDetail = () => {
               <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Material + CMT</p>
             </div>
 
-            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-success/30 transition-colors">
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline-on-surface hover:border-success/30 transition-colors">
               <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
                 <TrendingUp className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-success" />
                 <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight">Harga Jual</span>
@@ -332,7 +411,7 @@ const ProductDetail = () => {
               <p className="hidden sm:block text-xs text-ink-muted mt-1 text-center">Margin jual {marginJualPct}%</p>
             </div>
 
-            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline hover:border-accent-blue/30 transition-colors">
+            <div className="min-w-0 bg-surface-1 rounded-lg p-2 sm:p-4 border border-hairline-on-surface hover:border-accent-blue/30 transition-colors">
               <div className="flex items-center justify-center gap-1 mb-1.5 sm:gap-1.5 sm:mb-2 min-h-[24px] text-center">
                 <Layers className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-accent-blue" />
                 <span className="text-[10px] sm:text-xs font-medium text-ink-muted uppercase tracking-tight sm:tracking-wide leading-tight line-clamp-2">Marketplace</span>
@@ -343,7 +422,7 @@ const ProductDetail = () => {
           </div>
 
           {/* Calculation Parameters — with edit shortcut */}
-          <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline">
+          <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline-on-surface">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
                 <Calculator className="w-4 h-4 text-accent-blue" />
@@ -367,7 +446,7 @@ const ProductDetail = () => {
 
             <div className="space-y-2">
               {/* Biaya CMT — flat value row */}
-              <div className="flex items-center justify-between gap-3 py-2.5 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
+              <div className="flex items-center justify-between gap-3 py-3 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
                 <div>
                   <span className="text-sm text-ink block">Biaya CMT</span>
                   <span className="text-xs text-ink-muted">
@@ -405,7 +484,7 @@ const ProductDetail = () => {
                 { label: 'Margin Jual', key: 'margin_jual_percentage', value: marginJualPct, amount: parameterPreview?.hargaJual - parameterPreview?.hargaPabrik },
                 { label: 'Admin Marketplace', key: 'admin_marketplace_percentage', value: adminPct, amount: parameterPreview?.hargaMarketplace - parameterPreview?.hargaJual },
               ].map(({ label, key, value, amount }) => (
-                <div key={label} className="flex items-center justify-between gap-3 py-2.5 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
+                <div key={label} className="flex items-center justify-between gap-3 py-3 px-3 rounded bg-surface-2/60 hover:bg-surface-2 transition-colors">
                   <div>
                     <span className="text-sm text-ink block">{label}</span>
                   </div>
@@ -438,7 +517,7 @@ const ProductDetail = () => {
 
           {/* Cost Breakdown Chart */}
           {bomWithPct.length > 0 && (
-            <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline">
+            <div className="bg-surface-1 rounded-lg p-5 mb-5 border border-hairline-on-surface">
               <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
                 <BarChart2 className="w-4 h-4 text-accent-blue" />
                 Breakdown Biaya Material
@@ -456,7 +535,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Legend rows */}
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {bomWithPct.map((item) => (
                   <div key={item.id} className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
@@ -467,7 +546,7 @@ const ProductDetail = () => {
                 ))}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-hairline-soft flex justify-between items-center">
+              <div className="mt-4 pt-3 border-t border-hairline-on-surface flex justify-between items-center">
                 <span className="text-xs text-ink-muted">Total Biaya Material</span>
                 <span className="text-sm font-bold text-ink tabular-nums">{formatRupiah(product.total_material_cost)}</span>
               </div>
@@ -476,13 +555,13 @@ const ProductDetail = () => {
 
           {/* Bill of Materials */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-ink mb-3 flex items-center gap-2">
-              <Package className="w-4 h-4 text-accent-blue" />
+            <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+              <Package className="w-4 h-4 text-accent-secondary" />
               Komposisi Material (BoM)
             </h3>
 
             {product.bill_of_materials?.length === 0 ? (
-              <div className="bg-surface-1 rounded-lg p-8 text-center border border-hairline/30">
+              <div className="bg-surface-1 rounded-lg p-8 text-center border border-hairline-on-surface">
                 <Package className="w-10 h-10 text-ink-muted mx-auto mb-3" />
                 <p className="text-ink-muted text-sm">Tidak ada material</p>
                 <a href={`/products/${id}/edit`} className="text-accent-blue text-sm mt-2 inline-block hover:underline">
@@ -490,14 +569,14 @@ const ProductDetail = () => {
                 </a>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {(product.bill_of_materials || []).map((item, index) => {
                   const subtotal = item.subtotal ?? (item.price * item.quantity)
                   const color = CHART_COLORS[index % CHART_COLORS.length]
                   return (
                     <div
                       key={item.id}
-                      className="bg-surface-1 rounded-lg p-4 border border-hairline/50 hover:border-ink-muted transition-colors"
+                      className="bg-surface-1 rounded-lg p-4 border border-hairline-on-surface hover:border-ink-muted transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3 flex-1 min-w-0">

@@ -337,19 +337,19 @@ const Materials = () => {
           })}
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden xl:block bg-surface-1 border border-hairline-on-surface rounded-xl px-4">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-hairline">
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pl-2">Material</th>
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3">Kategori</th>
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3">Satuan</th>
-                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3">Harga Standar</th>
-                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3">Dipakai di</th>
-                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pr-2">Aksi</th>
+              <tr className="border-b border-hairline-on-surface">
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4 pl-2">Material</th>
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4">Kategori</th>
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4">Satuan</th>
+                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4">Harga Standar</th>
+                <th className="text-left text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4">Dipakai di</th>
+                <th className="text-right text-xs font-medium text-ink-muted uppercase tracking-wider pb-3 pt-4 pr-2">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-2">
+            <tbody className="divide-y divide-hairline-on-surface">
               {filteredMaterials.map(material => {
                 const category = categories.find(c => c.id === material.category_id)
                 const usageCount = materialUsageCounts[material.id] || 0
@@ -490,10 +490,10 @@ const Materials = () => {
                       key={option.value}
                       type="button"
                       onClick={() => setFormData({ ...formData, unit: option.value })}
-                      className={`p-2.5 rounded border text-sm font-medium transition-all ${
+                      className={`p-3 rounded border text-sm font-medium transition-all ${
                         formData.unit === option.value
                           ? 'border-ink bg-surface-2 text-ink'
-                          : 'border-hairline bg-surface-2 text-ink-muted hover:border-ink'
+                          : 'border-hairline-on-surface bg-surface-2 text-ink-muted hover:border-ink'
                       }`}
                     >
                       {option.label}

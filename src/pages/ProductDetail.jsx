@@ -347,25 +347,31 @@ const ProductDetail = () => {
           <div className="mb-5">
             {/* Mobile: thumbnail strip horizontal scroll */}
             <div className="xl:hidden">
-              {hasPhotos && (
-                <div className="relative">
-                  <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-0.5">
-                    {sortedPhotos.map((photo, idx) => (
-                      <button
-                        key={photo.id}
-                        type="button"
-                        onClick={() => { setLightboxIndex(idx); setLightboxOpen(true) }}
-                        className="flex-shrink-0 w-28 aspect-square rounded-xl overflow-hidden snap-start active:opacity-75 transition-opacity"
-                      >
-                        <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                      </button>
-                    ))}
-                  </div>
-                  {sortedPhotos.length > 3 && (
-                    <div className="pointer-events-none absolute right-0 top-0 bottom-0.5 w-12 bg-gradient-to-l from-[#0B1B3C] to-transparent" />
-                  )}
+              <div className="relative">
+                <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-0.5">
+                  {sortedPhotos.map((photo, idx) => (
+                    <button
+                      key={photo.id}
+                      type="button"
+                      onClick={() => { setLightboxIndex(idx); setLightboxOpen(true) }}
+                      className="flex-shrink-0 w-28 aspect-square rounded-xl overflow-hidden snap-start active:opacity-75 transition-opacity"
+                    >
+                      <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                  {Array.from({ length: Math.max(0, 3 - sortedPhotos.length) }).map((_, i) => (
+                    <div
+                      key={`dummy-${i}`}
+                      className="flex-shrink-0 w-28 aspect-square rounded-xl border border-dashed border-white/[0.15] bg-white/[0.04] snap-start flex items-center justify-center"
+                    >
+                      <Package className="w-6 h-6 text-white/[0.18]" />
+                    </div>
+                  ))}
                 </div>
-              )}
+                {sortedPhotos.length > 3 && (
+                  <div className="pointer-events-none absolute right-0 top-0 bottom-0.5 w-12 bg-gradient-to-l from-[#0B1B3C] to-transparent" />
+                )}
+              </div>
             </div>
             {/* Desktop: full gallery */}
             <div className="hidden xl:block rounded-lg overflow-hidden">

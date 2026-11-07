@@ -52,10 +52,10 @@ const ProductForm = () => {
     description: '',
     sku: '',
     cmt_cost: '0',
-    overhead_percentage: '20',
-    target_margin_percentage: '10',
-    margin_jual_percentage: '20',
-    admin_marketplace_percentage: '5'
+    overhead_percentage: '15',
+    target_margin_percentage: '20',
+    margin_jual_percentage: '25',
+    admin_marketplace_percentage: '18'
   })
   const [generatingSku, setGeneratingSku] = useState(false)
 
@@ -514,7 +514,7 @@ const ProductForm = () => {
                 value={formData.overhead_percentage}
                 onChange={(e) => setFormData({ ...formData, overhead_percentage: e.target.value })}
                 className={`input-field ${formErrors.overhead_percentage ? 'border-accent-rose' : ''}`}
-                placeholder="20"
+                placeholder="15"
                 min="0"
                 max="99"
               />
@@ -532,7 +532,7 @@ const ProductForm = () => {
                 value={formData.target_margin_percentage}
                 onChange={(e) => setFormData({ ...formData, target_margin_percentage: e.target.value })}
                 className={`input-field ${formErrors.target_margin_percentage ? 'border-accent-rose' : ''}`}
-                placeholder="10"
+                placeholder="20"
                 min="0"
                 max="99"
               />
@@ -550,7 +550,7 @@ const ProductForm = () => {
                 value={formData.margin_jual_percentage}
                 onChange={(e) => setFormData({ ...formData, margin_jual_percentage: e.target.value })}
                 className={`input-field ${formErrors.margin_jual_percentage ? 'border-accent-rose' : ''}`}
-                placeholder="20"
+                placeholder="25"
                 min="0"
                 max="99"
               />
@@ -568,7 +568,7 @@ const ProductForm = () => {
                 value={formData.admin_marketplace_percentage}
                 onChange={(e) => setFormData({ ...formData, admin_marketplace_percentage: e.target.value })}
                 className={`input-field ${formErrors.admin_marketplace_percentage ? 'border-accent-rose' : ''}`}
-                placeholder="5"
+                placeholder="18"
                 min="0"
                 max="99"
               />

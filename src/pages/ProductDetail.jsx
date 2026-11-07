@@ -25,7 +25,9 @@ import {
   Download,
   Save,
   X,
-  MoreVertical
+  MoreVertical,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 
 const CHART_COLORS = [
@@ -47,6 +49,8 @@ const ProductDetail = () => {
   const [savingParameters, setSavingParameters] = useState(false)
   const [parameterDraft, setParameterDraft] = useState({})
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   useEffect(() => {
     loadProduct()
@@ -192,6 +196,7 @@ const ProductDetail = () => {
 
   const photos = product.product_photos || []
   const hasPhotos = photos.length > 0
+  const sortedPhotos = [...photos].sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
   const marginJualPct = product.margin_jual_percentage ?? 20
   const adminPct = product.admin_marketplace_percentage ?? 5
   const exportDate = format(new Date(), 'dd MMMM yyyy')
@@ -342,20 +347,21 @@ const ProductDetail = () => {
           <div className="mb-5">
             {/* Mobile: thumbnail strip horizontal scroll */}
             <div className="xl:hidden">
-              {!hasPhotos ? (
-                <div className="bg-white/5 rounded-xl flex items-center justify-center h-28 border border-white/10">
-                  <Package className="w-8 h-8 text-white/30" />
-                </div>
-              ) : (
+              {hasPhotos && (
                 <div className="relative">
                   <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-0.5">
-                    {[...photos].sort((a, b) => (a.display_order || 0) - (b.display_order || 0)).map((photo, idx) => (
-                      <div key={photo.id} className="flex-shrink-0 w-28 aspect-square rounded-xl overflow-hidden snap-start">
+                    {sortedPhotos.map((photo, idx) => (
+                      <button
+                        key={photo.id}
+                        type="button"
+                        onClick={() => { setLightboxIndex(idx); setLightboxOpen(true) }}
+                        className="flex-shrink-0 w-28 aspect-square rounded-xl overflow-hidden snap-start active:opacity-75 transition-opacity"
+                      >
                         <img src={photo.photo_url} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                      </div>
+                      </button>
                     ))}
                   </div>
-                  {photos.length > 3 && (
+                  {sortedPhotos.length > 3 && (
                     <div className="pointer-events-none absolute right-0 top-0 bottom-0.5 w-12 bg-gradient-to-l from-[#0B1B3C] to-transparent" />
                   )}
                 </div>
@@ -613,6 +619,51 @@ const ProductDetail = () => {
         </div>
 
       </div>
+
+      {/* Lightbox — mobile thumbnail tap */}
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded-lg transition-colors z-10"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {sortedPhotos.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => i === 0 ? sortedPhotos.length - 1 : i - 1) }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => i === sortedPhotos.length - 1 ? 0 : i + 1) }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
+
+          <img
+            src={sortedPhotos[lightboxIndex]?.photo_url}
+            alt={`${product.name} ${lightboxIndex + 1}`}
+            className="max-w-full max-h-[90vh] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {sortedPhotos.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/60 rounded-full text-white text-sm">
+              {lightboxIndex + 1} / {sortedPhotos.length}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

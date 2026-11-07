@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#C86B2A',
   },
   thNo: { width: '8%', textAlign: 'center' },
-  thNama: { width: '42%' },
+  thSku: { width: '15%' },
+  thNama: { width: '27%' },
   thHarga: { width: '25%', textAlign: 'right' },
   thHpp: { width: '25%', textAlign: 'right' },
   cellHeader: {
@@ -54,7 +55,8 @@ const styles = StyleSheet.create({
   tableRowAlt: { flexDirection: 'row', backgroundColor: '#F3F2EF', borderBottomWidth: 0.6, borderBottomColor: '#D9D7D2' },
   cell: { paddingVertical: 7, paddingHorizontal: 6, fontSize: 8, color: '#20201E' },
   tdNo: { width: '8%', textAlign: 'center', color: '#66635E' },
-  tdNama: { width: '42%', fontFamily: 'Helvetica-Bold' },
+  tdSku: { width: '15%', color: '#66635E', fontFamily: 'Helvetica-Oblique' },
+  tdNama: { width: '27%', fontFamily: 'Helvetica-Bold' },
   tdHarga: { width: '25%', textAlign: 'right', fontFamily: 'Helvetica-Bold' },
   tdHpp: { width: '25%', textAlign: 'right', color: '#55534E' },
   summary: {
@@ -94,6 +96,7 @@ const ProductsPdfDocument = ({ products, exportDate }) => (
       <View style={styles.table}>
         <View style={styles.tableHeaderRow}>
           <Text style={[styles.cellHeader, styles.thNo]}>No</Text>
+          <Text style={[styles.cellHeader, styles.thSku]}>SKU</Text>
           <Text style={[styles.cellHeader, styles.thNama]}>Nama Produk</Text>
           <Text style={[styles.cellHeader, styles.thHarga]}>Harga Pabrik</Text>
           <Text style={[styles.cellHeader, styles.thHpp]}>HPP Produk</Text>
@@ -102,6 +105,7 @@ const ProductsPdfDocument = ({ products, exportDate }) => (
         {products.map((product, index) => (
           <View key={product.id} style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlt} wrap={false}>
             <Text style={[styles.cell, styles.tdNo]}>{index + 1}</Text>
+            <Text style={[styles.cell, styles.tdSku]}>{product.sku || '—'}</Text>
             <Text style={[styles.cell, styles.tdNama]}>{product.name}</Text>
             <Text style={[styles.cell, styles.tdHarga]}>{formatRupiah(product.harga_pabrik)}</Text>
             <Text style={[styles.cell, styles.tdHpp]}>{formatRupiah((product.total_material_cost ?? 0) + (product.cmt_cost ?? 0))}</Text>

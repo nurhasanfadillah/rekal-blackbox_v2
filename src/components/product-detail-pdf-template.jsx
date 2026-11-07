@@ -50,6 +50,7 @@ const ProductDetailPdfDocument = ({ product, exportDate }) => {
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header}>
           <Text style={styles.brand}>REKAL / DOKUMENTASI PRODUK</Text>
+          {product.sku ? <Text style={[styles.muted, { marginBottom: 4 }]}>{product.sku}</Text> : null}
           <Text style={styles.title}>{product.name}</Text>
           <Text style={styles.muted}>Diekspor pada {exportDate}</Text>
           {product.description ? <Text style={styles.description}>{product.description}</Text> : null}

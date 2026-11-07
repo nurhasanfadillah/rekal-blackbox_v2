@@ -278,6 +278,9 @@ const ProductDetail = () => {
                 {hasPhotos ? <Images className="w-5 h-5 text-accent-blue" /> : <Package className="w-5 h-5 text-accent-blue" />}
               </div>
               <div className="flex-1 min-w-0">
+                {product.sku && (
+                  <span className="inline-block text-[10px] font-mono font-semibold text-ink-muted bg-surface-2 border border-hairline px-1.5 py-0.5 rounded mb-1.5">{product.sku}</span>
+                )}
                 <h2 className="text-xl font-bold text-ink leading-tight mb-1">{product.name}</h2>
                 {product.description ? (
                   <p className="text-ink-muted text-sm leading-relaxed">{product.description}</p>
@@ -372,7 +375,7 @@ const ProductDetail = () => {
                       const cmt = editingParameters ? Number(parameterDraft.cmt_cost) || 0 : (product.cmt_cost ?? 0)
                       const hppPJ = parameterPreview?.hppProdukJadi || 0
                       const pct = hppPJ > 0 ? ((cmt / hppPJ) * 100).toFixed(1) : '0.0'
-                      return `${pct}% dari HPP Produk Jadi`
+                      return `${pct}% dari HPP Produk`
                     })()}
                   </span>
                 </div>

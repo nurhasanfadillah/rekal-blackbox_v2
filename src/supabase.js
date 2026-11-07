@@ -272,6 +272,23 @@ export const db = {
     return updatedProduct
   },
   
+  async generateSku() {
+    const { data, error } = await supabase
+      .from('products')
+      .select('sku')
+      .not('sku', 'is', null)
+    if (error) throw error
+
+    let maxNum = 0
+    for (const p of data || []) {
+      if (p.sku && p.sku.startsWith('RBM')) {
+        const num = parseInt(p.sku.slice(3), 10)
+        if (!isNaN(num) && num > maxNum) maxNum = num
+      }
+    }
+    return `RBM${String(maxNum + 1).padStart(3, '0')}`
+  },
+
   async deleteProduct(id) {
     // First, delete all associated photos from storage
     await this.deleteProductPhotosFromStorage(id)

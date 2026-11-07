@@ -8,17 +8,18 @@ import { validateProductForm, hasErrors } from '../utils/validators'
 import { calculateAllCostsExtended, calculateMaterialUsage } from '../utils/calculations'
 import { formatRupiah } from '../utils/formatters'
 import { 
-  ArrowLeft, 
-  Plus, 
-  Trash2, 
-  X, 
+  ArrowLeft,
+  Plus,
+  Trash2,
+  X,
   Package,
   Calculator,
   ChevronDown,
   Loader2,
   Images,
   Copy,
-  Check
+  Check,
+  RefreshCw
 } from 'lucide-react'
 
 import MultiPhotoUpload from '../components/MultiPhotoUpload'
@@ -49,12 +50,14 @@ const ProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    sku: '',
     cmt_cost: '0',
     overhead_percentage: '20',
     target_margin_percentage: '10',
     margin_jual_percentage: '20',
     admin_marketplace_percentage: '5'
   })
+  const [generatingSku, setGeneratingSku] = useState(false)
 
   const [productPhotos, setProductPhotos] = useState([])
   const [removedPhotoUrls, setRemovedPhotoUrls] = useState([]) // Track deleted photos for storage cleanup
@@ -90,6 +93,19 @@ const ProductForm = () => {
   // Material selector state
   const [showMaterialSelector, setShowMaterialSelector] = useState(false)
   const [selectedMaterialIndex, setSelectedMaterialIndex] = useState(null)
+  const [showCalculatorModal, setShowCalculatorModal] = useState(false)
+
+  const generateNewSku = async () => {
+    setGeneratingSku(true)
+    try {
+      const sku = await db.generateSku()
+      setFormData(prev => ({ ...prev, sku }))
+    } catch (err) {
+      console.error('Failed to generate SKU:', err)
+    } finally {
+      setGeneratingSku(false)
+    }
+  }
 
   useEffect(() => {
     fetchMaterials()
@@ -97,6 +113,7 @@ const ProductForm = () => {
       loadProduct()
     } else {
       fetchProducts()
+      generateNewSku()
     }
   }, [fetchMaterials, fetchProducts, isEditMode, isCopyMode])
 
@@ -125,12 +142,14 @@ const ProductForm = () => {
       setFormData({
         name: isCopyMode ? '' : product.name,
         description: product.description || '',
+        sku: isEditMode ? (product.sku || '') : '',
         cmt_cost: (product.cmt_cost ?? 0).toString(),
         overhead_percentage: product.overhead_percentage.toString(),
         target_margin_percentage: product.target_margin_percentage.toString(),
         margin_jual_percentage: (product.margin_jual_percentage ?? 20).toString(),
         admin_marketplace_percentage: (product.admin_marketplace_percentage ?? 5).toString()
       })
+      if (isCopyMode) generateNewSku()
       
       // Load product photos
       const photos = product.product_photos || []
@@ -301,6 +320,7 @@ const ProductForm = () => {
       const productData = {
         name: formData.name.trim(),
         description: formData.description.trim(),
+        sku: formData.sku.trim() || null,
         cmt_cost: parseFloat(formData.cmt_cost) || 0,
         overhead_percentage: parseFloat(formData.overhead_percentage),
         target_margin_percentage: parseFloat(formData.target_margin_percentage),
@@ -427,6 +447,31 @@ const ProductForm = () => {
             </div>
 
             <div>
+              <label className="input-label">No. SKU</label>
+              <div className="relative flex gap-2">
+                <input
+                  type="text"
+                  value={formData.sku}
+                  onChange={(e) => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
+                  className="input-field font-mono flex-1"
+                  placeholder="RBM001"
+                  disabled={generatingSku}
+                />
+                <button
+                  type="button"
+                  onClick={generateNewSku}
+                  disabled={generatingSku}
+                  title="Generate ulang SKU"
+                  className="px-3 py-2 rounded bg-surface-2 hover:bg-hairline text-ink-muted hover:text-ink transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-medium flex-shrink-0"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${generatingSku ? 'animate-spin' : ''}`} />
+                  Generate
+                </button>
+              </div>
+              <p className="text-xs text-ink-muted mt-1">Otomatis atau isi manual. Harus unik.</p>
+            </div>
+
+            <div>
               <label className="input-label">Deskripsi (Opsional)</label>
               <textarea
                 value={formData.description}
@@ -536,122 +581,8 @@ const ProductForm = () => {
         </div>
         </div>{/* end kolom kiri */}
 
-        {/* Kolom kanan — calculator, BoM, preview */}
+        {/* Kolom kanan — BoM, preview */}
         <div className="product-form-secondary space-y-6 mt-6">
-        {/* Material Usage Calculation */}
-        <div className="glass-panel p-4">
-          <h3 className="text-sm font-semibold text-ink mb-4 flex items-center gap-2">
-            <Calculator className="w-4 h-4 text-accent-blue" />
-            Perhitungan Penggunaan Material
-          </h3>
-
-          {/* Material Width Input */}
-          <div className="mb-4">
-            <label className="input-label">Lebar Material</label>
-            <input
-              type="text"
-                inputMode="decimal"
-              value={materialWidth}
-              onChange={(e) => setMaterialWidth(e.target.value)}
-              className="input-field"
-              placeholder="Contoh: 140"
-              min="0"
-            />
-          </div>
-
-          {/* Usage Items */}
-          <div className="space-y-3 mb-4">
-            {usageItems.map((item, index) => (
-              <div key={index} className="glass-card p-3">
-                <div className="flex items-start gap-3">
-                  <div className="flex-1 grid grid-cols-3 gap-2">
-                    <div>
-                      <label className="text-xs text-ink-muted mb-1 block">P (Panjang)</label>
-                      <input
-                        type="text"
-                inputMode="decimal"
-                        value={item.L}
-                        onChange={(e) => handleUsageChange(index, 'L', e.target.value)}
-                        className="input-field py-2"
-                        placeholder="L"
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-ink-muted mb-1 block">L (Lebar)</label>
-                      <input
-                        type="text"
-                inputMode="decimal"
-                        value={item.W}
-                        onChange={(e) => handleUsageChange(index, 'W', e.target.value)}
-                        className="input-field py-2"
-                        placeholder="W"
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-ink-muted mb-1 block">x (Qty)</label>
-                      <input
-                        type="text"
-                inputMode="decimal"
-                        value={item.x}
-                        onChange={(e) => handleUsageChange(index, 'x', e.target.value)}
-                        className="input-field py-2"
-                        placeholder="x"
-                        min="0"
-                      />
-                    </div>
-                  </div>
-                  {usageItems.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveUsageItem(index)}
-                      className="p-2 text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors mt-5"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Add Usage Item Button */}
-          <button
-            type="button"
-            onClick={handleAddUsageItem}
-            className="w-full py-2 border border-dashed border-hairline rounded text-ink-muted hover:text-accent-blue hover:border-accent-blue/50 transition-colors flex items-center justify-center gap-2 mb-4"
-          >
-            <Plus className="w-4 h-4" />
-            Tambah Item
-          </button>
-
-          {/* Calculation Result */}
-          <div className="bg-surface-1/50 rounded p-4 border border-hairline-soft">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-ink-muted mb-1">Hasil Perhitungan</p>
-                <p className="text-lg font-semibold text-accent-blue">
-                  {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleCopyResult}
-                className="p-2 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors"
-                title="Salin hasil"
-              >
-                {copied ? <Check className="w-5 h-5 text-success" /> : <Copy className="w-5 h-5" />}
-              </button>
-            </div>
-            {materialWidth > 0 && (
-              <p className="text-xs text-ink-muted mt-2">
-                Total: {usageItems.reduce((sum, item) => sum + ((parseFloat(item.L) || 0) * (parseFloat(item.W) || 0) * (parseFloat(item.x) || 0)), 0)} / {materialWidth} = {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
-              </p>
-            )}
-          </div>
-        </div>
-
         {/* Bill of Materials */}
         <div className="glass-panel p-4">
           <div className="flex items-center justify-between mb-4">
@@ -660,13 +591,23 @@ const ProductForm = () => {
               Komposisi Material
             </h3>
 
-            <button
-              type="button"
-              onClick={handleAddBomItem}
-              className="p-2 text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setShowCalculatorModal(true)}
+                className="p-2 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors"
+                title="Kalkulator Bahan"
+              >
+                <Calculator className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleAddBomItem}
+                className="p-2 text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {bomItems.length === 0 ? (
@@ -838,6 +779,135 @@ const ProductForm = () => {
         </div>{/* end kolom kanan */}
         </div>{/* end lg:flex wrapper */}
       </form>
+
+      {/* Kalkulator Bahan Modal */}
+      {showCalculatorModal && (
+        <div className="modal-overlay" onClick={() => setShowCalculatorModal(false)}>
+          <div className="modal-content max-h-[85vh] overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-accent-blue" />
+                Kalkulator Bahan
+              </h2>
+              <button
+                type="button"
+                onClick={() => setShowCalculatorModal(false)}
+                className="p-2 text-ink-muted hover:text-ink"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto flex-1 -mx-6 px-6">
+              {/* Material Width Input */}
+              <div className="mb-4">
+                <label className="input-label">Lebar Material</label>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={materialWidth}
+                  onChange={(e) => setMaterialWidth(e.target.value)}
+                  className="input-field"
+                  placeholder="Contoh: 140"
+                  min="0"
+                />
+              </div>
+
+              {/* Usage Items */}
+              <div className="space-y-3 mb-4">
+                {usageItems.map((item, index) => (
+                  <div key={index} className="glass-card p-3">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-1 grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="text-xs text-ink-muted mb-1 block">P (Panjang)</label>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={item.L}
+                            onChange={(e) => handleUsageChange(index, 'L', e.target.value)}
+                            className="input-field py-2"
+                            placeholder="L"
+                            min="0"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-ink-muted mb-1 block">L (Lebar)</label>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={item.W}
+                            onChange={(e) => handleUsageChange(index, 'W', e.target.value)}
+                            className="input-field py-2"
+                            placeholder="W"
+                            min="0"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-ink-muted mb-1 block">x (Qty)</label>
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={item.x}
+                            onChange={(e) => handleUsageChange(index, 'x', e.target.value)}
+                            className="input-field py-2"
+                            placeholder="x"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      {usageItems.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveUsageItem(index)}
+                          className="p-2 text-accent-rose hover:bg-accent-rose/10 rounded-lg transition-colors mt-5"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Usage Item */}
+              <button
+                type="button"
+                onClick={handleAddUsageItem}
+                className="w-full py-2 border border-dashed border-hairline rounded text-ink-muted hover:text-accent-blue hover:border-accent-blue/50 transition-colors flex items-center justify-center gap-2 mb-4"
+              >
+                <Plus className="w-4 h-4" />
+                Tambah Item
+              </button>
+
+              {/* Calculation Result */}
+              <div className="bg-surface-1/50 rounded p-4 border border-hairline-soft">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-ink-muted mb-1">Hasil Perhitungan</p>
+                    <p className="text-lg font-semibold text-accent-blue">
+                      {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyResult}
+                    className="p-2 text-ink-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors"
+                    title="Salin hasil"
+                  >
+                    {copied ? <Check className="w-5 h-5 text-success" /> : <Copy className="w-5 h-5" />}
+                  </button>
+                </div>
+                {materialWidth > 0 && (
+                  <p className="text-xs text-ink-muted mt-2">
+                    Total: {usageItems.reduce((sum, item) => sum + ((parseFloat(item.L) || 0) * (parseFloat(item.W) || 0) * (parseFloat(item.x) || 0)), 0)} / {materialWidth} = {materialUsageResult > 0 ? materialUsageResult.toFixed(1) : '0.0'}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Material Selector Modal */}
       {showMaterialSelector && (

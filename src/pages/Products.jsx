@@ -28,9 +28,13 @@ const Products = () => {
     fetchProducts()
   }, [fetchProducts])
 
-  const filteredProducts = products.filter(prod =>
-    prod.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredProducts = products.filter(prod => {
+    const q = searchQuery.toLowerCase()
+    return (
+      prod.name.toLowerCase().includes(q) ||
+      (prod.sku && prod.sku.toLowerCase().includes(q))
+    )
+  })
 
   const handleDelete = async (id) => {
     const isConfirmed = await confirm({
@@ -100,7 +104,7 @@ const Products = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari produk..."
+            placeholder="Cari nama atau SKU..."
             className="input-field pl-9"
           />
         </div>
@@ -180,6 +184,9 @@ const Products = () => {
                     <div className="flex-1 px-3 py-3 flex flex-col justify-between min-w-0">
                       <div>
                         <a href={`/products/${product.id}`} className="block mb-1.5">
+                          {product.sku && (
+                            <span className="inline-block text-[9px] font-mono font-semibold text-ink-muted bg-surface-2 border border-hairline px-1 py-0.5 rounded mb-0.5">{product.sku}</span>
+                          )}
                           <h3 className="font-semibold text-ink text-sm leading-tight line-clamp-1">
                             {product.name}
                           </h3>
@@ -262,6 +269,9 @@ const Products = () => {
                       </td>
                       <td className="py-3 pr-4">
                         <a href={`/products/${product.id}`} className="block">
+                          {product.sku && (
+                            <span className="inline-block text-[10px] font-mono font-semibold text-ink-muted bg-surface-2 border border-hairline px-1.5 py-0.5 rounded mb-0.5">{product.sku}</span>
+                          )}
                           <p className="font-medium text-ink text-sm">{product.name}</p>
                           {product.description && (
                             <p className="text-xs text-ink-muted mt-0.5 line-clamp-1">{product.description}</p>
